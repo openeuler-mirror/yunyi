@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Server>
+  <Center>
+    <Password>123</Password>
+    <EndPoint>
+      <Host>${CENTER_SERVICE:rds-center}</Host>
+      <Port>6300</Port>
+    </EndPoint>
+  </Center>
+ </Server>

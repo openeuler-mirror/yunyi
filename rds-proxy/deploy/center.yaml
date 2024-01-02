@@ -1,0 +1,112 @@
+#
+# kubectl -n rds apply -f center.yaml
+# kubectl -n rds scale statefulset rdscenter --replicas 5
+#
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: rdscenter
+spec:
+  serviceName: rds-center
+  replicas: 3
+  selector:
+    matchLabels:
+      app: rdscenter
+  template:
+    metadata:
+      labels:
+        app: rdscenter
+      annotations:
+        pod.alpha.kubernetes.io/initialized: "true"
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: "app"
+                    operator: In
+                    values:
+                      - "rdscenter"
+              topologyKey: "kubernetes.io/hostname"
+      terminationGracePeriodSeconds: 300
+      containers:
+        - name: k8srdscenter
+          lifecycle:
+            preStop:
+              exec:
+                command: ["./StopCenter.sh"]
+          imagePullPolicy: Always
+          image: 192.168.0.89:80/library/tongrds-center:2.2.1.4
+          ports:
+          - containerPort: 8086
+            name: server
+          - containerPort: 6300
+            name: service
+          - containerPort: 26379
+            name: sentinel
+          readinessProbe:
+            tcpSocket:
+              port: 8086
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            successThreshold: 1
+
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: status.podIP
+            - name: CENTER_SERVICE
+              valueFrom:
+                configMapKeyRef:
+                  name: tong-rds-center
+                  key: center.k8s.service
+            - name: CONFIG_VOLUME_PATH
+              value: "/projected-volume"
+          volumeMounts:
+            - name: config
+              mountPath: /projected-volume
+      volumes:
+        - name: config
+          configMap:
+            name: tong-rds-center
+                  
+      imagePullSecrets:
+        - name: registry-pull-secret
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rds-center
+  labels:
+    app: rds-center
+  annotations:
+    service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
+
+spec:
+  type: ClusterIP
+  clusterIP: None
+  ports:
+  - port: 8086
+    name: server
+    targetPort: 8086
+  - port: 6300
+    name: service
+    targetPort: 6300
+  - port: 26379
+    name: sentinel
+    targetPort: 26379
+  selector:
+    app: rdscenter
+

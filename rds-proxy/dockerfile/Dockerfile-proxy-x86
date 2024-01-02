@@ -1,0 +1,31 @@
+# su -
+# service docker start
+# docker images (查新导入的镜像id号，FROM的时候用)
+# docker build -f Dockerfile-proxy -t tongrds-proxy:2.2.C.1 .
+# docker images
+# docker run -p 6200:6200 -p 6379:6379 tongrds-proxy:2.2.C.1
+# docker ps -a | head
+# docker exec -it container-id /bin/bash
+# docker kill <CONTAINER ID>
+# docker rm <CONTAINER ID>
+# docker rmi <IMAGE ID>
+#
+# docker save -o TongRDS-2.2.C.1.Proxy.docker_x86.tar tongrds-proxy:2.2.C.1
+# docker load -i TongRDS-2.2.C.1.Proxy.docker_x86.tar
+#
+# docker tag tongrds-proxy:2.2.C.1 192.168.0.89:80/library/tongrds-proxy:2.2.C.1
+# docker push 192.168.0.89:80/library/tongrds-proxy:2.2.C.1
+#
+#
+#
+FROM ubuntu
+MAINTAINER TongRDS
+COPY ./java-se-8u/jre/ /usr/lib/jvm/java-8-openjdk/
+ENV JAVA_HOME=/usr/lib/jvm/java-8-openjdk
+ENV PATH=${JAVA_HOME}/bin:$PATH
+ENV TZ=Asia/Shanghai
+COPY ./proxy/ /opt/proxy/
+WORKDIR /opt/proxy/bin
+EXPOSE 6200 6379
+ENTRYPOINT "./StartProxy.sh"
+

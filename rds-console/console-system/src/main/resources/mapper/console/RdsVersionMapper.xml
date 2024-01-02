@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tongtech.console.mapper.RdsVersionMapper">
+
+    <resultMap type="RdsVersion" id="RdsVersionResult">
+        <result property="versionId"    column="version_id"    />
+        <result property="softwareName"    column="software_name"    />
+        <result property="versionNo"    column="version_no"    />
+        <result property="defaultGroupId"    column="default_group_id"    />
+        <result property="defaultGroupName"    column="default_group_name"    />
+        <result property="defaultVersion"    column="default_version"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="packageCount"    column="packageCount"    />
+    </resultMap>
+
+    <sql id="selectRdsVersionVo">
+        select (select count(p.package_id) from cnsl_rds_version_pkg p where p.version_id = v.version_id) as packageCount,
+        v.version_id, v.software_name, v.version_no, v.default_group_id, v.default_version, v.status, v.create_by, v.create_time, v.update_by, v.update_time, v.remark
+        from cnsl_rds_version v
+    </sql>
+
+    <select id="selectRdsVersionList" parameterType="RdsVersion" resultMap="RdsVersionResult">
+        <include refid="selectRdsVersionVo"/>
+        <where>
+            <if test="softwareName != null  and softwareName != ''"> and software_name like concat('%', #{softwareName}, '%')</if>
+            <if test="versionNo != null  and versionNo != ''"> and version_no = #{versionNo}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+
+    <select id="selectListByStatus" parameterType="String" resultMap="RdsVersionResult">
+        select v.version_id, v.software_name, v.version_no, v.default_group_id, v.default_version, v.status, v.remark
+        from cnsl_rds_version v
+        <where>
+            <if test="status != null and status != ''"> and status = #{status}</if>
+        </where>
+        order by default_version, version_no desc
+    </select>
+
+    <select id="selectRdsVersionByVersionId" parameterType="Long" resultMap="RdsVersionResult">
+        <include refid="selectRdsVersionVo"/>
+        where version_id = #{versionId}
+    </select>
+
+    <select id="selectDefaultVersion" resultMap="RdsVersionResult">
+        <include refid="selectRdsVersionVo"/>
+        where default_version = 1
+    </select>
+
+    <insert id="insertRdsVersion" parameterType="RdsVersion" useGeneratedKeys="true" keyProperty="versionId">
+        insert into cnsl_rds_version
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="softwareName != null">software_name,</if>
+            <if test="versionNo != null">version_no,</if>
+            <if test="defaultGroupId != null">default_group_id,</if>
+            <if test="defaultVersion != null">default_version,</if>
+            <if test="status != null">status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="softwareName != null">#{softwareName},</if>
+            <if test="versionNo != null">#{versionNo},</if>
+            <if test="defaultGroupId != null">#{defaultGroupId},</if>
+            <if test="defaultVersion != null">#{defaultVersion},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateRdsVersion" parameterType="RdsVersion">
+        update cnsl_rds_version
+        <trim prefix="SET" suffixOverrides=",">
+            default_group_id = #{defaultGroupId},
+            <if test="softwareName != null">software_name = #{softwareName},</if>
+            <if test="versionNo != null">version_no = #{versionNo},</if>
+            <if test="defaultVersion != null">default_version = #{defaultVersion},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where version_id = #{versionId}
+    </update>
+
+    <update id="clearDefaultGroupId" parameterType="Long">
+    update cnsl_rds_version set default_group_id = null where default_group_id = #{groupId}
+    </update>
+
+
+
+    <update id="updateStatus" parameterType="RdsVersion">
+        update cnsl_rds_version
+        set status = #{status}, update_by = #{updateBy}, update_time = #{updateTime}
+        where version_id = #{versionId}
+    </update>
+
+    <update id="updateDefaultVersion" parameterType="RdsVersion">
+        update cnsl_rds_version
+        set status = #{status}, default_version = #{defaultVersion}, update_by = #{updateBy}, update_time = #{updateTime}
+        where version_id = #{versionId}
+    </update>
+
+    <update id="updateToNoDefaultVersion" parameterType="String">
+        update cnsl_rds_version
+        set default_version = 0, update_by = #{updateBy}, update_time = CURRENT_TIMESTAMP()
+        where default_version = 1
+    </update>
+
+    <delete id="deleteRdsVersionByVersionId" parameterType="Long">
+        delete from cnsl_rds_version where version_id = #{versionId}
+    </delete>
+
+    <delete id="deleteRdsVersionByVersionIds" parameterType="String">
+        delete from cnsl_rds_version where version_id in
+        <foreach item="versionId" collection="array" open="(" separator="," close=")">
+            #{versionId}
+        </foreach>
+    </delete>
+</mapper>

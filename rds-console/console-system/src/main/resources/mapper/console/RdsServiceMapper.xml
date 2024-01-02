@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tongtech.console.mapper.RdsServiceMapper">
+
+    <resultMap type="RdsServiceQueryVo" id="RdsServiceResult">
+        <result property="serviceId"    column="service_id"    />
+        <result property="sentinelServiceId"    column="sentinel_service_id"    />
+        <result property="serviceName"    column="service_name"    />
+        <result property="hostAddress"    column="host_address"    />
+        <result property="adminPort"    column="admin_port"    />
+        <result property="manualAdmin"    column="manual_admin"    />
+        <result property="deployMode"    column="deploy_mode"    />
+        <result property="secureMode"    column="secure_mode"    />
+        <result property="versionId"    column="version_id"    />
+        <result property="versionDesc"    column="version_desc"    />
+        <result property="groupId"    column="group_id"    />
+        <result property="groupName"    column="group_name"    />
+        <result property="password"    column="password"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectRdsServiceVo">
+        select s.service_id, s.sentinel_service_id, s.service_name, s.host_address, s.admin_port, s.manual_admin, s.deploy_mode, s.secure_mode, s.password, s.create_by, s.create_time, s.update_by, s.update_time, s.remark,
+        s.version_id, CONCAT(v.software_name, ' ', v.version_no) as version_desc,
+        s.group_id
+        from cnsl_rds_service s
+        left join cnsl_rds_version v on s.version_id = v.version_id
+    </sql>
+
+    <select id="selectRdsServiceList" parameterType="RdsServiceQueryVo" resultMap="RdsServiceResult">
+        select s.service_id, s.sentinel_service_id, s.service_name, s.host_address, s.admin_port, s.manual_admin, s.deploy_mode, s.secure_mode, s.remark
+        from cnsl_rds_service s
+        <where>
+            <if test="serviceName != null  and serviceName != ''"> and s.service_name like concat('%', #{serviceName}, '%')</if>
+            <if test="deployMode != null  and deployMode != ''"> and s.deploy_mode = #{deployMode}</if>
+            <if test="sentinelServiceId != null"> and s.sentinel_service_id = #{sentinelServiceId}</if>
+        </where>
+    </select>
+
+    <select id="selectRdsServiceCount" parameterType="RdsServiceQueryVo" resultType="Integer">
+        select count(s.service_id) from cnsl_rds_service s
+        <where>
+            <if test="serviceName != null  and serviceName != ''"> and s.service_name like concat('%', #{serviceName}, '%')</if>
+            <if test="deployMode != null  and deployMode != ''"> and s.deploy_mode = #{deployMode}</if>
+            <if test="sentinelServiceId != null"> and s.sentinel_service_id = #{sentinelServiceId}</if>
+        </where>
+    </select>
+
+
+    <select id="selectListInDeployModes" parameterType="RdsServiceQueryVo" resultMap="RdsServiceResult">
+        select s.service_id, s.sentinel_service_id, s.service_name, s.host_address, s.admin_port, s.manual_admin, s.deploy_mode, s.secure_mode, s.create_by, s.create_time, s.update_by, s.update_time, s.remark,
+        s.version_id, CONCAT(v.software_name, ' ', v.version_no) as version_desc,
+        s.group_id
+        from cnsl_rds_service s
+        left join cnsl_rds_version v on s.version_id = v.version_id
+        where s.deploy_mode in
+        <foreach item="deployMode" collection="deployModes" open="(" separator="," close=")">
+            #{deployMode}
+        </foreach>
+        <if test="serviceName != null  and serviceName != ''"> and s.service_name like concat('%', #{serviceName}, '%')</if>
+        <if test="sentinelServiceId != null"> and s.sentinel_service_id = #{sentinelServiceId}</if>
+    </select>
+
+
+    <select id="selectRdsServiceByServiceId" parameterType="Long" resultMap="RdsServiceResult">
+        <include refid="selectRdsServiceVo"/>
+        where service_id = #{serviceId}
+    </select>
+
+    <select id="selectByServiceName" parameterType="String" resultMap="RdsServiceResult">
+        <include refid="selectRdsServiceVo"/>
+        where service_name = #{serviceName}
+    </select>
+
+    <select id="selectNoneNodeServiceIdList" parameterType="RdsServiceQueryVo" resultType="Long">
+        select s.service_id from cnsl_rds_service s where s.manual_admin=#{manualAdmin} and s.deploy_mode != 'center' and s.update_time &lt;= #{updateTime}
+        and s.service_id not in (select service_id from cnsl_rds_node n group by service_id having count(n.node_id) > 0)
+    </select>
+
+    <insert id="insertRdsService" parameterType="RdsService" useGeneratedKeys="true" keyProperty="serviceId">
+        insert into cnsl_rds_service
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="sentinelServiceId != null">sentinel_service_id,</if>
+            <if test="serviceName != null and serviceName != ''">service_name,</if>
+            <if test="hostAddress != null">host_address,</if>
+            <if test="adminPort != null">admin_port,</if>
+            <if test="manualAdmin != null">manual_admin,</if>
+            <if test="deployMode != null and deployMode != ''">deploy_mode,</if>
+            <if test="secureMode != null">secure_mode,</if>
+            <if test="versionId != null">version_id,</if>
+            <if test="groupId != null">group_id,</if>
+            <if test="password != null">password,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="sentinelServiceId != null">#{sentinelServiceId},</if>
+            <if test="serviceName != null and serviceName != ''">#{serviceName},</if>
+            <if test="hostAddress != null">#{hostAddress},</if>
+            <if test="adminPort != null">#{adminPort},</if>
+            <if test="manualAdmin != null">#{manualAdmin},</if>
+            <if test="deployMode != null and deployMode != ''">#{deployMode},</if>
+            <if test="secureMode != null">#{secureMode},</if>
+            <if test="versionId != null">#{versionId},</if>
+            <if test="groupId != null">#{groupId},</if>
+            <if test="password != null">#{password},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateRdsService" parameterType="RdsService">
+        update cnsl_rds_service
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="sentinelServiceId != null">sentinel_service_id = #{sentinelServiceId},</if>
+            <if test="serviceName != null and serviceName != ''">service_name = #{serviceName},</if>
+            <if test="hostAddress != null">host_address = #{hostAddress},</if>
+            <if test="adminPort != null">admin_port = #{adminPort},</if>
+            <if test="deployMode != null and deployMode != ''">deploy_mode = #{deployMode},</if>
+            <if test="secureMode != null">secure_mode = #{secureMode},</if>
+            <if test="versionId != null">version_id = #{versionId},</if>
+            <if test="groupId != null">group_id = #{groupId},</if>
+            <if test="password != null">password = #{password},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where service_id = #{serviceId}
+    </update>
+
+    <update id="resetRdsService" parameterType="Long">
+        update cnsl_rds_service set
+            sentinel_service_id = null, host_address = null, admin_port = null, secure_mode = 0, password = null,
+            update_by = 'admin', update_time = CURRENT_TIMESTAMP()
+        where service_id = #{serviceId}
+    </update>
+
+    <update id="updateServicePassword" parameterType="RdsService">
+        update cnsl_rds_service set password = #{password} , update_time = #{updateTime} <if test="remark != null">, remark = #{remark}</if>
+        where service_id = #{serviceId}
+    </update>
+
+    <delete id="deleteRdsServiceByServiceId" parameterType="Long">
+        delete from cnsl_rds_service where service_id = #{serviceId}
+    </delete>
+
+    <delete id="deleteRdsServiceByServiceIds" parameterType="String">
+        delete from cnsl_rds_service where service_id in
+        <foreach item="serviceId" collection="array" open="(" separator="," close=")">
+            #{serviceId}
+        </foreach>
+    </delete>
+
+</mapper>

@@ -1,0 +1,75 @@
+# Compiled class file
+*.class
+
+# Eclipse
+.project
+.classpath
+.settings/
+
+# Intellij
+*.ipr
+*.iml
+*.iws
+.idea
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+
+### NetBeans ###
+nbproject/private/
+build/*
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+
+# Maven
+target/
+!.mvn/wrapper/maven-wrapper.jar
+
+# Gradle
+.gradle
+/build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Log file
+*.log
+log/
+
+# out
+**/out/
+
+# Mac
+.DS_Store
+
+# others
+*.jar
+*.war
+*.zip
+*.pid
+*.orig
+temp/
+
+!*/build/*.java
+!*/build/*.html
+!*/build/*.xml
+
+*.xml.versionsBackup
+*.swp
+
+#H2数据库跟踪文件#
+consoledb.trace.db
+
+/console-admin/src/main/resources/public/
+/console-release/resources/tongtech/apphome/data/package/
+/console-release/resources/inforsuite/apphome/data/package/
+/apphome/
+
+
+
+

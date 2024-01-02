@@ -1,0 +1,28 @@
+allprojects {
+    buildscript {
+        repositories {
+            mavenCentral()
+        }
+
+        dependencies {
+            classpath 'net.sf.proguard:proguard-gradle:6.2.2'
+        }
+    }
+
+    apply plugin: 'java'
+
+    group 'com.tongtech'
+
+    version = "2.2.1.4"
+    description = "TongRDS"
+
+    sourceCompatibility = 1.8
+
+    tasks.withType(JavaCompile) {
+        options.encoding = "UTF-8"
+    }
+
+    repositories {
+        mavenCentral()
+    }
+}

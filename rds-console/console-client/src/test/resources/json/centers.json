@@ -1,0 +1,53 @@
+[
+  {
+    "expired": false,
+    "remote": "192.168.0.90",
+    "port": 10300,
+    "sentinelPort": 36379,
+    "runtime": {
+      "running": 18685,
+      "currentConnections": 16,
+      "totalConnections": 99,
+      "memoryUsed": 466500192,
+      "memoryFree": 211928480,
+      "memoryTotal": 678428672,
+      "memoryAvailable": 2863661056,
+      "cpuProcessLoad(%)": 0,
+      "cpuSystemLoad(%)": 2
+    }
+  },
+  {
+    "expired": false,
+    "remote": "192.168.0.90",
+    "port": 10302,
+    "sentinelPort": 36381,
+    "runtime": {
+      "running": 18682,
+      "currentConnections": 16,
+      "totalConnections": 30,
+      "memoryUsed": 324234256,
+      "memoryFree": 417108976,
+      "memoryTotal": 741343232,
+      "memoryAvailable": 2863661056,
+      "cpuProcessLoad(%)": 0,
+      "cpuSystemLoad(%)": 2
+    }
+  },
+  {
+    "expired": false,
+    "remote": "192.168.0.90",
+    "port": 10301,
+    "sentinelPort": 36380,
+    "runtime": {
+      "running": 18682,
+      "currentConnections": 14,
+      "totalConnections": 40,
+      "memoryUsed": 433443992,
+      "memoryFree": 277490536,
+      "memoryTotal": 710934528,
+      "memoryAvailable": 2863661056,
+      "cpuProcessLoad(%)": 0,
+      "cpuSystemLoad(%)": 2
+    }
+  }
+]

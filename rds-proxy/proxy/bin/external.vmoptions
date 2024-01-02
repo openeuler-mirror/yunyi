@@ -1,0 +1,8 @@
+-Xmx10g
+-server
+-XX:+UnlockExperimentalVMOptions
+-XX:+UseG1GC
+-XX:MaxGCPauseMillis=100
+#-XX:+UseConcMarkSweepGC
+#-XX:+CMSParallelRemarkEnabled
+#-XX:+CMSClassUnloadingEnabled

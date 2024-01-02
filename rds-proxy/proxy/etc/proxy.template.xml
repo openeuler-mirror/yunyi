@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Server>
+    <Common>
+        <RedirectStdOut>false</RedirectStdOut>
+        <!--  当前节点所属服务组的名称  -->
+        <Service>${Server.Common.Service:WebSession}</Service>
+        <AccessibleAddress>${POD_IP}</AccessibleAddress>
+        <!-- 当前进程名，用于控制台唯一标识进程 -->
+        <Instance>${POD_NAMESPACE:default}:${POD_NAME:proxy}</Instance>
+        <AntiRedis>${Server.Common.AntiRedis:false}</AntiRedis>
+        <!--  多proxy间决定主节点的策略  -->
+        <!--  缺省为false，节点列表中首个健康的节点为主节点，配置为true时列表中的首个节点即为主节点  -->
+        <MasterDeterminate>${Server.Common.MasterDeterminate:false}</MasterDeterminate>
+        <!--  是否仿真为集群模式（目前支持1主多从的cluster仿真），缺省为false。  -->
+        <PretendCluster>${Server.Common.PretendCluster:true}</PretendCluster>
+        <!--  是否禁止使用指定的命令，多个命令用逗号分隔  -->
+        <!--  为了防止配置遗漏，程序会处理关联配置，如果配置了某命令，该命令的关联配置会被自动配置  -->
+        <!--  例如配置了flushdb程序会自动增加flushall命令，类似关联命令还有set和mset，get和mget  -->
+        <DangerousCommands>flushdb</DangerousCommands>
+        <!--  慢操作临界值，单位毫秒。如果配置此值，且有操作时间超过则写warn级别的日志  -->
+        <!--  该配置支持动态更新 -->
+        <SlowOperationThreshold>150</SlowOperationThreshold>
+        <!--  记录慢操作日志的最大长度  -->
+        <SlowOperationMaxLen>128</SlowOperationMaxLen>
+    </Common>
+    <!-- 事件监控配置 -->
+    <Notify>
+        <Event>keyspace, keyevent</Event>
+        <Message>all</Message>
+    </Notify>
+    <LuaObjects>
+        <!-- lua功能模块名为SC，实现类为com.server.objects.Scientific -->
+        <!-- 可以定义多个属性值作为对象的配置使用，如下配置的属性 pi -->
+        <!-- 属性 pi 在Scientific类中通过 System.getProperty("com.server.objects.Scientific-pi") 调用获得 -->
+        <!-- System.getProperty调用的key为：类名 + "-" + 属性名，返回配置的属性值 -->
+        <!-- 类中方法的返回值必须是Object或其子类，lua会根据返回类型转换为lua对象 -->
+        <SC pi="3.14159">
+            com.server.objects.Scientific
+        </SC>
+    </LuaObjects>
+    <Firewall>
+        <AuthFailedTimes>3</AuthFailedTimes>
+    </Firewall>
+    <Log>
+        <!-- nothing, error, warning, info, debug, dump. >
+        <    error is the default                      -->
+        <Level>${Server.Log.Level:error}</Level>
+        <!-- 日志保存天数，超过时间的日志会被删除，缺省为0（不删除） -->
+        <BackDates>${Server.Log.BackDates:7}</BackDates>
+    </Log>
+    <Listen>
+        <!--  业务处理线程池大小，设为“0”则不需要业务处理线程池  -->
+        <!--  缺省是可用CPU数+1  -->
+        <Threads>10</Threads>
+
+        <Backlog>1024</Backlog>
+        <!--  网络通信模式，可选项为traditional和concurrent  -->
+        <!--  traditional是传统的通信模式，兼容性更好  -->
+        <!--  concurrent是新型通信模式，对多核心系统优化，现代系统性能更好  -->
+        <!--  TongRDS2.2.1.2版本开始缺省采用concurrent模式，之前版本缺省是traditional  -->
+        <!--          <IoProcessor>traditional</IoProcessor>-->
+        <!--        <IoProcessor>concurrent</IoProcessor>-->
+
+        <!-- 该配置在 IoProcessor 为 concurrent 时有效 -->
+        <!-- unified为socket和io公用线程池；nio为标准异步线程池；缺省时自动选择最优nio。 -->
+        <!--        <ThreadPoolType>unified</ThreadPoolType>-->
+
+        <!--  最大并发连接数，缺省为1000，合法的最小值为10   -->
+        <MaxConnections>${Server.Listen.MaxConnections:1000}</MaxConnections>
+
+        <Port>6200</Port>
+        <!-- 0: telnet; 1: SSL; 2: password; 3: SSL + password. default is 1 -->
+        <Secure>2</Secure>
+        <!--  Password采用国密SM4算法加密  -->
+        <!--  454d51192b1704c60e19734ce6b38203解密后是123  -->
+        <!--  8cd42d74926b50082f6655a4b07c6458 解密后是个奇怪的长密码  -->
+        <Password>${Server.Listen.Password:8cd42d74926b50082f6655a4b07c6458}</Password>
+
+        <!-- Redis协议监听端口 -->
+        <RedisPort>6379</RedisPort>
+        <!-- Redis密码采用明文方式保存 -->
+        <RedisPlainPassword>${Server.Listen.RedisPlainPassword:true}</RedisPlainPassword>
+        <!-- Redis密码，只有Secure配置为2或3时才有效 -->
+        <!-- 特殊xml定义的特殊字符例如：123&456 需配成：123&amp;456 -->
+        <RedisPassword>${Server.Listen.RedisPassword:123}</RedisPassword>
+
+        <!-- 服务对外声明的访问地址，缺省为本机实际IP地址 -->
+        <AnnounceHost>${Server.Listen.AnnounceHost}</AnnounceHost>
+        <!-- Redis协议端口对外声明的访问端口，缺省为RedisPort -->
+        <AnnounceRedisPort>${Server.Listen.AnnounceRedisPort}</AnnounceRedisPort>
+    </Listen>
+</Server>

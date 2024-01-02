@@ -1,0 +1,4 @@
+rootProject.name = 'TongRDS-proxy'
+include 'proxy'
+
+

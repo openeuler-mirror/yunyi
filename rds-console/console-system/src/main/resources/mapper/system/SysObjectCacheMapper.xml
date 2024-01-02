@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tongtech.system.mapper.SysObjectCacheMapper">
+
+    <resultMap type="SysObjectCache" id="SysObjectCacheResult">
+        <result property="objKey"    column="obj_key"    />
+        <result property="objValue"    column="obj_value"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="expireTime"    column="expire_time"    />
+    </resultMap>
+
+    <sql id="selectSysObjectCacheVo">
+        select obj_key, obj_value, create_time, expire_time from sys_object_cache
+    </sql>
+
+    <select id="selectSysObjectCacheList" parameterType="SysObjectCache" resultMap="SysObjectCacheResult">
+        <include refid="selectSysObjectCacheVo"/>
+        <where>
+            <if test="objKey != null  and objKey != ''"> and obj_key = #{objKey}</if>
+            <if test="createTime != null "> and create_time = #{createTime}</if>
+        </where>
+    </select>
+
+    <select id="selectSysObjectCacheByObjKey" parameterType="String" resultMap="SysObjectCacheResult">
+        <include refid="selectSysObjectCacheVo"/>
+        where obj_key = #{objKey}
+    </select>
+
+    <select id="selectKeysByKey" parameterType="String" resultType="String">
+        select obj_key from sys_object_cache where obj_key like #{objKey}
+    </select>
+
+    <insert id="insertSysObjectCache" parameterType="SysObjectCache">
+        insert into sys_object_cache
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+        obj_key,obj_value,create_time,<if test="expireTime != null">expire_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+         #{objKey},#{objValue},#{createTime},<if test="expireTime != null">#{expireTime},</if>
+        </trim>
+        on duplicate key update
+        <trim suffixOverrides=",">
+            obj_value=values(obj_value),create_time=values(create_time),<if test="expireTime != null">expire_time=values(expire_time),</if>
+        </trim>
+    </insert>
+
+    <update id="updateSysObjectCache" parameterType="SysObjectCache">
+        update sys_object_cache
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="objValue != null and objValue != ''">obj_value = #{objValue},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="expireTime != null">expire_time = #{expireTime},</if>
+        </trim>
+        where obj_key = #{objKey}
+    </update>
+
+    <delete id="deleteSysObjectCacheByObjKey" parameterType="String">
+        delete from sys_object_cache where obj_key = #{objKey}
+    </delete>
+
+    <delete id="deleteSysObjectCacheByObjKeys" parameterType="String">
+        delete from sys_object_cache where obj_key in
+        <foreach item="objKey" collection="array" open="(" separator="," close=")">
+            #{objKey}
+        </foreach>
+    </delete>
+
+    <delete id="deleteExpiredSysObjectCache" parameterType="Long">
+        delete from sys_object_cache where #{time}>=expire_time
+    </delete>
+
+    <delete id="deleteAll" parameterType="Long">
+        truncate table sys_object_cache
+    </delete>
+
+</mapper>

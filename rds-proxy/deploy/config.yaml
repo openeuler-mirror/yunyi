@@ -1,0 +1,37 @@
+# kubectl -n rds apply -f config.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tong-rds-center
+data:
+  center.k8s.service: "rds-center"
+  active.7e4f22b2931f320ab01e2745ab62e1ea07a8d1e4b7c8f4b53dc6dc2e7f327c7c: "*"
+  license.signature: "nsqgusegwukdl6bwwntn0ptxp4og0k2lsgz11zmnc8xqdaembwtutidn6bpgh1lx5mke1kptr09ypnll4jxqrti1sug0nkgcm4uoxze2wxrxv3k5035rrq3ig74mrhsr3chq87j9br9yrx5g7aiqqam8z7cp1drgtk5k1yo9did61tvl78udpam3dvwgg3uqqahue80dcpraogtkoejzxum6a1sov5ieh38n23yq5y39k9csqb7fk06ujm0fjnvjkakaoq46pd1iaf647wqyu2pte8ctmmy9g2dr52729yo82pce27jm5wmzm8bsiu0v2pk6l0aqiko5qj8rzc8jv5e7brit03ssitx2p4ghba50nuo01dyzrazzaghf8z96hzrpa881fabg4lqwgiocxpd4hyvn2pt8r7vjd4hsbkkmc4xgdx6wbr83vp8m0yll0m3gak0kljq2vagog19o8014kk78wi7os7od1b0gx7cu03su1lqal160urp01vhrgyxy304mez54rxshbx491g2iuef5am9ig1i84l6eh906ot2j6wqu6zksbiuol2jtp6cgqg1guflee9a8r3eq6fly3w4xttwqkobmjgghjo32grfbgyzqopggmbqendqtaxwmfh82rg7d7hwujym264fztttq4np9akhchmhlutx2x4ke3pz98t28wn4jh79cn7fug931p1lg2zgqfgqfaavk33090hkcgk7jxahrns8ja0kjyos1l3533p48saat5871ku09skth7b93raibuak7"
+  license.information: "656e64757365723a20e4b89ce696b9e9809a0a70726f6a6563743a20524453e4ba91e58e9fe7949fe7bb84e4bbb6e58c85e5bc80e6ba90e9a1b9e79bae0a70726f647563743a20546f6e675244532d434e2056322e3220e4ba91e58e9fe7949fe4bc81e4b89ae789880a63617061636974793a20e68e88e69d83203132386720e58685e5ad98e4bdbfe794a80a6c6963656e7365547970653a20e4ba91e58e9fe7949fe4bc81e4b89ae78988e4b8b4e697b6e8af81e4b9a62031383020e5a4a9e68e88e69d830ae5a597e695b0efbc9a31e5a59720283129"
+  config.server.scalable.movements_times: "4"
+  config.server.platform: "k8s"
+  config.server.platform_service: "rds-center"
+  cluster.WebSession.type: "scalable"
+  cluster.WebSession.replicas: "2"
+  cluster.WebSession.hot_spare: "2"
+  cluster.WebSession.max_slice: "1024"
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tong-rds-node
+data:
+  cfg.Server.Common.Service: "WebSession"
+  cfg.Server.Tables: "1"
+  cfg.Server.TableTemplate.Rows: "0"
+  cfg.Server.TableTemplate.Blocks: "4"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tong-rds-proxy
+data:
+  proxy.Server.Common.Service: "WebSession"
+  proxy.Server.Listen.RedisPassword: "1234"
+  proxy.Server.Listen.RedisPlainPassword: "true"

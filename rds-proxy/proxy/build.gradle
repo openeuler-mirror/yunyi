@@ -1,0 +1,78 @@
+import java.text.SimpleDateFormat
+
+plugins {
+    id "nebula.ospackage" version "8.4.1"
+}
+
+group 'com.tongtech'
+version "${rootProject.version}"
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile group: 'org.dom4j', name: 'dom4j', version: '2.+'
+    compile group: 'io.netty', name: 'netty-all', version: '4.1.+'
+    compile group: 'commons-codec', name: 'commons-codec', version: '1.+'
+    compile group: 'org.apache.bcel', name: 'bcel', version: '6.+'
+}
+
+task precompile {
+    File version = file("src/main/java/com/tongtech/proxy/Version.java");
+    FileOutputStream fos = new FileOutputStream(version);
+    String timestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+    String basename = "${rootProject.description}".substring(0, 4);
+    String messaged = "package com.tongtech.proxy;\n\n" +
+            "public class Version {\n" +
+            "    public static final String Version =\"${rootProject.version}\";\n" +
+            "    public static final String ProductName = \"${rootProject.description} Proxy\";\n" +
+            "    public static final String BuildTime = \"" + timestamp + "\";\n" +
+            "}"
+    fos.write(messaged.getBytes())
+    fos.close();
+}
+compileJava.dependsOn(precompile)
+
+jar {
+    archivesBaseName = "proxy"
+    manifest {
+        attributes("Main-Class": "com.tongtech.proxy.Proxy",
+                "Specification-Vendor": "company.",
+                "Specification-Title": "$rootProject.description Node",
+                "Specification-Version": archiveVersion,
+                "Implementation-Version": new Date().dateTimeString,
+                "Built-Date": new Date().toString(),
+                "Built-With": "gradle-${project.getGradle().getGradleVersion()}, groovy-${GroovySystem.getVersion()}",
+                "Created-By": "Java " + System.getProperty("java.version") + " (" + System.getProperty("java.vendor") + ")"
+        )
+    }
+}
+
+task tar(type: Tar, dependsOn: jar) {
+    archiveBaseName = "$rootProject.description"
+    archiveExtension = 'Proxy.tar.gz'
+    compression = Compression.GZIP
+
+    into('proxy/bin') {
+        from 'bin' include('*.sh')
+        fileMode 0744
+    }
+
+    into('proxy/bin') {
+        from 'bin' exclude('*.sh', '*.bak')
+    }
+
+    into('proxy/etc') {
+        from 'etc'
+    }
+
+    into('proxy/lib') {
+        from configurations.runtime
+        from jar.outputs
+    }
+}
+
+test {
+    useJUnitPlatform()
+}

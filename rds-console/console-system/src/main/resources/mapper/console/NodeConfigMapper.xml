@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tongtech.console.mapper.NodeConfigMapper">
+
+    <resultMap type="NodeConfig" id="NodeConfigResult">
+        <result property="nodeId"    column="node_id"    />
+        <result property="templateId"    column="template_id"    />
+        <result property="tempType"    column="temp_type"    />
+        <result property="confContent"    column="conf_content"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectNodeConfigVo">
+        select node_id, template_id, temp_type, conf_content, update_time from cnsl_node_config
+    </sql>
+
+    <select id="selectNodeConfigList" parameterType="NodeConfig" resultMap="NodeConfigResult">
+        <include refid="selectNodeConfigVo"/>
+        <where>
+            <if test="nodeId != null "> and node_id = #{nodeId}</if>
+            <if test="templateId != null "> and template_id = #{templateId}</if>
+            <if test="tempType != null  and tempType != ''"> and temp_type = #{tempType}</if>
+            <if test="confContent != null  and confContent != ''"> and conf_content = #{confContent}</if>
+        </where>
+    </select>
+
+    <select id="selectNodeConfigByNodeId" parameterType="Long" resultMap="NodeConfigResult">
+        <include refid="selectNodeConfigVo"/>
+        where node_id = #{nodeId}
+    </select>
+
+    <insert id="insertNodeConfig" parameterType="NodeConfig">
+        insert into cnsl_node_config
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="nodeId != null">node_id,</if>
+            <if test="templateId != null">template_id,</if>
+            <if test="tempType != null">temp_type,</if>
+            <if test="confContent != null">conf_content,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="nodeId != null">#{nodeId},</if>
+            <if test="templateId != null">#{templateId},</if>
+            <if test="tempType != null">#{tempType},</if>
+            <if test="confContent != null">#{confContent},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <insert id="insertUpdateNodeConfig" parameterType="NodeConfig">
+        insert into cnsl_node_config
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="nodeId != null">node_id,</if>
+            <if test="templateId != null">template_id,</if>
+            <if test="tempType != null">temp_type,</if>
+            <if test="confContent != null">conf_content,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="nodeId != null">#{nodeId},</if>
+            <if test="templateId != null">#{templateId},</if>
+            <if test="tempType != null">#{tempType},</if>
+            <if test="confContent != null">#{confContent},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+        on duplicate key update
+        <trim suffixOverrides=",">
+            <if test="templateId != null">template_id=values(template_id),</if>
+            <if test="confContent != null">conf_content=values(conf_content),</if>
+            <if test="updateTime != null">update_time=values(update_time),</if>
+        </trim>
+    </insert>
+
+    <update id="updateNodeConfig" parameterType="NodeConfig">
+        update cnsl_node_config
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="templateId != null">template_id = #{templateId},</if>
+            <if test="confContent != null">conf_content = #{confContent},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where node_id = #{nodeId}
+    </update>
+
+    <delete id="deleteNodeConfigByNodeId" parameterType="Long">
+        delete from cnsl_node_config where node_id = #{nodeId}
+    </delete>
+
+    <delete id="deleteNodeConfigByNodeIds" parameterType="String">
+        delete from cnsl_node_config where node_id in
+        <foreach item="nodeId" collection="array" open="(" separator="," close=")">
+            #{nodeId}
+        </foreach>
+    </delete>
+</mapper>
