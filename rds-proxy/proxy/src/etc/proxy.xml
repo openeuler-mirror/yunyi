@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Server>
+    <Common>
+        <!--系统运行时模式，影响统计日志-->
+        <!--统计信息的输出模式，debug模式时统计信息每10秒输出1次-->
+        <!--        <RuntimeModel>debug</RuntimeModel>-->
+
+        <RedirectStdOut>false</RedirectStdOut>
+        <!--  当前节点所属服务组的名称  -->
+        <Service>${Server.Common.Service:WebSession}</Service>
+
+        <!--  禁止返回redis字样的信息，目前可屏蔽掉info命令的redis_version字段  -->
+        <!--        <AntiRedis>false</AntiRedis>-->
+
+        <!--  是否禁止使用指定的命令，多个命令用逗号分隔  -->
+        <!--  为了防止配置遗漏，程序会处理关联配置，如果配置了某命令，该命令的关联配置会被自动配置  -->
+        <!--  例如配置了flushdb程序会自动增加flushall命令，类似关联命令还有set和mset，get和mget  -->
+<!--        <DangerousCommands>flushdb</DangerousCommands>-->
+
+        <!--  指定info命令是显示的redis_version的内容，缺省为“5.2.13”  -->
+<!--        <RedisVersion>6.0.1</RedisVersion>-->
+
+        <!--  指定当前服务被访问的地址，影响sentinel哨兵、proxy代理等功能  -->
+        <!--  缺省时Center采用连接的remote地址作为服务的被访问地址  -->
+        <!--  当该配置有效时，Center采用此配置作为服务的被访问地址  -->
+        <AccessibleAddress>${POD_IP}</AccessibleAddress>
+        <!-- 当前进程名，用于控制台唯一标识进程 -->
+        <Instance>proxy-1</Instance>
+        <!-- 是否将proxy模拟成单分片的集群 -->
+        <PretendCluster>true</PretendCluster>
+        <SlowOperationThreshold>0</SlowOperationThreshold>
+    </Common>
+    <!-- 事件监控配置 -->
+    <Notify>
+        <!--  节点间消息同步缓存队列的数量，缺省为1  -->
+        <SyncListNumber>1</SyncListNumber>
+        <!--  节点间消息同步缓存队列的长度，缺省为1000  -->
+        <SyncListLength>1000</SyncListLength>
+        <!--  需要监听的事件类型，合法配置有: -->
+        <!--  keyspace（对应 __keyspace@<db>__ 开头的事件） -->
+        <!--  keyevent（对应 __keyevent@<db>__ 开头的事件） -->
+        <Event>keyspace, keyevent</Event>
+        <Message>expired, evict, string</Message>
+    </Notify>
+    <LuaObjects>
+        <!-- lua功能模块名为SC，实现类为com.server.objects.Scientific -->
+        <!-- 可以定义多个属性值作为对象的配置使用，如下配置的属性 pi -->
+        <!-- 属性 pi 在Scientific类中通过 System.getProperty("com.server.objects.Scientific-pi") 调用获得 -->
+        <!-- System.getProperty调用的key为：类名 + "-" + 属性名，返回配置的属性值 -->
+        <!-- 类中方法的返回值必须是Object或其子类，lua会根据返回类型转换为lua对象 -->
+        <SC pi="3.14159">
+            com.server.objects.Scientific
+        </SC>
+    </LuaObjects>
+    <Firewall>
+        <AuthFailedTimes>3</AuthFailedTimes>
+    </Firewall>
+    <Log>
+        <!-- nothing, error, warning, info, debug, dump. >
+        <    error is the default                      -->
+        <Level>info</Level>
+        <!-- 日志保存天数，超过时间的日志会被删除，缺省为0（不删除） -->
+        <BackDates>7</BackDates>
+    </Log>
+    <Listen>
+        <!--  业务处理线程池大小，设为“0”则不需要业务处理线程池  -->
+        <!--  缺省是可用CPU数+1  -->
+        <Threads>10</Threads>
+
+        <Backlog>800</Backlog>
+
+        <!-- 该配置在 IoProcessor 为 concurrent 时有效 -->
+        <!-- unified为socket和io公用线程池；nio为标准异步线程池；缺省时自动选择最优nio。 -->
+        <!--        <ThreadPoolType>unified</ThreadPoolType>-->
+
+        <!--  最大并发连接数，缺省未1000，合法的最小值为10   -->
+        <MaxConnections>1000</MaxConnections>
+
+        <Port>8200</Port>
+        <!-- 0: telnet; 1: SSL; 2: password; 3: SSL + password. default is 1 -->
+        <Secure>2</Secure>
+        <!--Password采用国密SM4算法加密-->
+        <!--454d51192b1704c60e19734ce6b38203解密后是123-->
+        <!--576f02d4acbcea09fc393186464d1b7f解密后是个奇怪的长密码-->
+        <Password>454d51192b1704c60e19734ce6b38203</Password>
+
+        <!--  RedisPort端口连接的空闲时间，单位秒，空闲时间达到时会主动关闭连接  -->
+        <IdleTimeout>${Server.Listen.IdleTimeout:0}</IdleTimeout>
+
+        <!-- Redis协议监听端口 -->
+        <RedisPort>8379</RedisPort>
+        <!-- Redis密码采用明文方式保存 -->
+        <RedisPlainPassword>true</RedisPlainPassword>
+        <!-- Redis密码，只有Secure配置为2或3时才有效 -->
+        <!-- 特殊xml定义的特殊字符例如：123&456 需配成：123&amp;456 -->
+        <RedisPassword>${Server.Listen.RedisPassword:123}</RedisPassword>
+    </Listen>
+</Server>

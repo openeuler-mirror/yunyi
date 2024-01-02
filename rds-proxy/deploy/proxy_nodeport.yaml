@@ -1,0 +1,16 @@
+---
+# ------------------- App NodePort ------------------ #
+apiVersion: v1
+kind: Service
+metadata:
+  name: proxy-nodeport
+spec:
+  type: NodePort
+  ports:
+    - port: 6379
+      name: simulation
+      targetPort: 6379
+      nodePort: 30279
+  selector:
+    app: rdsproxy
+

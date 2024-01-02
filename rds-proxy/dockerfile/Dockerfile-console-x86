@@ -1,0 +1,13 @@
+FROM ubuntu
+MAINTAINER TongRDS
+COPY ./jdk1.8.0_301/jre/ /usr/lib/jvm/java-8-openjdk/
+ENV JAVA_HOME=/usr/lib/jvm/java-8-openjdk
+ENV PATH=${JAVA_HOME}/bin:$PATH
+ENV TZ=Asia/Shanghai
+COPY ./console/ /opt/console/
+RUN rm /etc/localtime;ln -s /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+WORKDIR /opt/console/
+VOLUME /opt/console/data/
+EXPOSE 8083
+ENTRYPOINT ["/bin/bash", "bin/console.sh", "run"]
+

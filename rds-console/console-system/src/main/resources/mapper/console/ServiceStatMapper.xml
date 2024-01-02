@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tongtech.console.mapper.ServiceStatMapper">
+
+    <resultMap type="ServiceStat" id="ServiceStatResult">
+        <result property="statId"    column="stat_id"    />
+        <result property="srcId"    column="src_id"    />
+        <result property="serviceId"    column="service_id"    />
+        <result property="deployMode"    column="deploy_mode"    />
+        <result property="name"    column="name"    />
+        <result property="currentConnections"    column="current_connections"    />
+        <result property="totalConnections"    column="total_connections"    />
+        <result property="currentKeys"    column="current_keys"    />
+        <result property="memoryUsed"    column="memory_used"    />
+        <result property="memoryFree"    column="memory_free"    />
+        <result property="memoryTotal"    column="memory_total"    />
+        <result property="memoryAvailable"    column="memory_available"    />
+        <result property="commandResult"    column="command_result"    />
+        <result property="networkInputBytes"    column="network_input_bytes"    />
+        <result property="inputPerSecond"    column="input_per_second"    />
+        <result property="networkOutputBytes"    column="network_output_bytes"    />
+        <result property="outputPerSecond"    column="output_per_second"    />
+        <result property="cpuProcessLoad"    column="cpu_process_load"    />
+        <result property="cpuSystemLoad"    column="cpu_system_load"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createSecond"    column="create_second"    />
+    </resultMap>
+
+    <sql id="selectServiceStatVo">
+        select stat_id, src_id, service_id, deploy_mode, name, current_connections, total_connections, current_keys, memory_used, memory_free, memory_total, memory_available, command_result, network_input_bytes, input_per_second, network_output_bytes, output_per_second, cpu_process_load, cpu_system_load, create_time, create_second from cnsl_service_stat
+    </sql>
+
+    <select id="selectServiceStatList" parameterType="ServiceStat" resultMap="ServiceStatResult">
+        <include refid="selectServiceStatVo"/>
+        <where>
+            <if test="srcId != null "> and src_id = #{srcId}</if>
+            <if test="serviceId != null "> and service_id = #{serviceId}</if>
+            <if test="deployMode != null  and deployMode != ''"> and deploy_mode = #{deployMode}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+        </where>
+    </select>
+
+    <!--
+    <select id="selectMonitorList" parameterType="com.tongtech.console.domain.vo.RdsMonitorQueryVo" resultMap="ServiceStatResult">
+        <include refid="selectServiceStatVo"/>
+        <where>
+            <if test="srcId != null "> and src_id = #{srcId}</if>
+            <if test="serviceId != null "> and service_id = #{serviceId}</if>
+            <if test="beginTime != null "> and create_time >= #{beginTime}</if>
+        </where>
+    </select>
+    -->
+
+    <select id="selectSummaryServiceStat" parameterType="com.tongtech.console.domain.vo.RdsMonitorQueryVo" resultMap="ServiceStatResult">
+        SELECT service_id,
+               round(avg(current_connections)) as current_connections,
+               round(avg(total_connections)) as total_connections,
+               round(avg(current_keys)) as current_keys,
+               round(avg(memory_used)) as memory_used,
+               round(avg(memory_free)) as memory_free,
+               round(avg(memory_total)) as memory_total,
+               round(avg(memory_available)) as memory_available,
+               round(avg(network_input_bytes)) as network_input_bytes,
+               round(avg(input_per_second),1) as input_per_second,
+               round(avg(network_output_bytes)) as network_output_bytes,
+               round(avg(output_per_second),1) as output_per_second,
+               round(avg(cpu_process_load),1) as cpu_process_load,
+               round(avg(cpu_system_load),1) as cpu_system_load,
+               min(create_time) as create_time,
+               round(avg(create_second)) as create_second
+        FROM cnsl_service_stat
+        where service_id=#{serviceId} and create_second >= #{beginCreateSecond}
+        group by service_id
+    </select>
+
+    <select id="selectServiceStatByStatId" parameterType="Long" resultMap="ServiceStatResult">
+        <include refid="selectServiceStatVo"/>
+        where stat_id = #{statId}
+    </select>
+
+    <insert id="insertServiceStat" parameterType="ServiceStat" useGeneratedKeys="true" keyProperty="statId">
+        insert into cnsl_service_stat
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="srcId != null">src_id,</if>
+            <if test="serviceId != null">service_id,</if>
+            <if test="deployMode != null and deployMode != ''">deploy_mode,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="currentConnections != null">current_connections,</if>
+            <if test="totalConnections != null">total_connections,</if>
+            <if test="currentKeys != null">current_keys,</if>
+            <if test="memoryUsed != null">memory_used,</if>
+            <if test="memoryFree != null">memory_free,</if>
+            <if test="memoryTotal != null">memory_total,</if>
+            <if test="memoryAvailable != null">memory_available,</if>
+            <if test="commandResult != null">command_result,</if>
+            <if test="networkInputBytes != null">network_input_bytes,</if>
+            <if test="inputPerSecond != null">input_per_second,</if>
+            <if test="networkOutputBytes != null">network_output_bytes,</if>
+            <if test="outputPerSecond != null">output_per_second,</if>
+            <if test="cpuProcessLoad != null">cpu_process_load,</if>
+            <if test="cpuSystemLoad != null">cpu_system_load,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createSecond != null">create_second,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="srcId != null">#{srcId},</if>
+            <if test="serviceId != null">#{serviceId},</if>
+            <if test="deployMode != null and deployMode != ''">#{deployMode},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="currentConnections != null">#{currentConnections},</if>
+            <if test="totalConnections != null">#{totalConnections},</if>
+            <if test="currentKeys != null">#{currentKeys},</if>
+            <if test="memoryUsed != null">#{memoryUsed},</if>
+            <if test="memoryFree != null">#{memoryFree},</if>
+            <if test="memoryTotal != null">#{memoryTotal},</if>
+            <if test="memoryAvailable != null">#{memoryAvailable},</if>
+            <if test="commandResult != null">#{commandResult},</if>
+            <if test="networkInputBytes != null">#{networkInputBytes},</if>
+            <if test="inputPerSecond != null">#{inputPerSecond},</if>
+            <if test="networkOutputBytes != null">#{networkOutputBytes},</if>
+            <if test="outputPerSecond != null">#{outputPerSecond},</if>
+            <if test="cpuProcessLoad != null">#{cpuProcessLoad},</if>
+            <if test="cpuSystemLoad != null">#{cpuSystemLoad},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createSecond != null">#{createSecond},</if>
+         </trim>
+    </insert>
+
+    <update id="updateServiceStat" parameterType="ServiceStat">
+        update cnsl_service_stat
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="srcId != null">src_id = #{srcId},</if>
+            <if test="serviceId != null">service_id = #{serviceId},</if>
+            <if test="deployMode != null and deployMode != ''">deploy_mode = #{deployMode},</if>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="currentConnections != null">current_connections = #{currentConnections},</if>
+            <if test="totalConnections != null">total_connections = #{totalConnections},</if>
+            <if test="currentKeys != null">current_keys = #{currentKeys},</if>
+            <if test="memoryUsed != null">memory_used = #{memoryUsed},</if>
+            <if test="memoryFree != null">memory_free = #{memoryFree},</if>
+            <if test="memoryTotal != null">memory_total = #{memoryTotal},</if>
+            <if test="memoryAvailable != null">memory_available = #{memoryAvailable},</if>
+            <if test="commandResult != null">command_result = #{commandResult},</if>
+            <if test="networkInputBytes != null">network_input_bytes = #{networkInputBytes},</if>
+            <if test="inputPerSecond != null">input_per_second = #{inputPerSecond},</if>
+            <if test="networkOutputBytes != null">network_output_bytes = #{networkOutputBytes},</if>
+            <if test="outputPerSecond != null">output_per_second = #{outputPerSecond},</if>
+            <if test="cpuProcessLoad != null">cpu_process_load = #{cpuProcessLoad},</if>
+            <if test="cpuSystemLoad != null">cpu_system_load = #{cpuSystemLoad},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="createSecond != null">create_second = #{createSecond},</if>
+        </trim>
+        where stat_id = #{statId}
+    </update>
+
+    <delete id="deleteServiceStatByStatId" parameterType="Long">
+        delete from cnsl_service_stat where stat_id = #{statId}
+    </delete>
+
+    <delete id="deleteServiceStatByServiceId" parameterType="Long">
+        delete from cnsl_service_stat where service_id = #{serviceId}
+    </delete>
+
+    <delete id="deleteServiceStatByStatIds" parameterType="String">
+        delete from cnsl_service_stat where stat_id in
+        <foreach item="statId" collection="array" open="(" separator="," close=")">
+            #{statId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteByCreateTime" parameterType="Date">
+        delete from cnsl_service_stat where create_time &lt;= #{createTime}
+    </delete>
+</mapper>

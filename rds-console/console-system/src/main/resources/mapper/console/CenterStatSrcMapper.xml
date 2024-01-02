@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tongtech.console.mapper.CenterStatSrcMapper">
+
+
+    <resultMap type="CenterStatSrc" id="CenterStatSrcResult">
+        <result property="srcId"    column="src_id"    />
+        <result property="centersSrc"    column="centers_src"    />
+        <result property="servicesSrc"    column="services_src"    />
+        <result property="sentinelsSrc"    column="sentinels_src"    />
+        <result property="licenseSrc"    column="license_src"    />
+        <result property="duration"    column="duration"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectCenterStatSrcVo">
+        select src_id, centers_src, services_src, sentinels_src, license_src, duration, create_time from cnsl_center_stat_src
+    </sql>
+
+    <select id="selectCenterStatSrcBySrcId" parameterType="Long" resultMap="CenterStatSrcResult">
+        <include refid="selectCenterStatSrcVo"/>
+        where src_id = #{srcId}
+    </select>
+
+    <select id="selectLastSrcId"  resultType="Long">
+        SELECT src_id FROM cnsl_center_stat_src ORDER BY src_id DESC LIMIT 1;
+    </select>
+
+    <insert id="insertCenterStatSrc" parameterType="CenterStatSrc" useGeneratedKeys="true" keyProperty="srcId">
+        insert into cnsl_center_stat_src
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="centersSrc != null and centersSrc != ''">centers_src,</if>
+            <if test="servicesSrc != null and servicesSrc != ''">services_src,</if>
+            <if test="sentinelsSrc != null and sentinelsSrc != ''">sentinels_src,</if>
+            <if test="licenseSrc != null and licenseSrc != ''">license_src,</if>
+            <if test="duration != null">duration,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="centersSrc != null and centersSrc != ''">#{centersSrc},</if>
+            <if test="servicesSrc != null and servicesSrc != ''">#{servicesSrc},</if>
+            <if test="sentinelsSrc != null and sentinelsSrc != ''">#{sentinelsSrc},</if>
+            <if test="licenseSrc != null and licenseSrc != ''">#{licenseSrc},</if>
+            <if test="duration != null">#{duration},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+
+    <delete id="deleteCenterStatSrcBySrcId" parameterType="Long">
+        delete from cnsl_center_stat_src where src_id = #{srcId}
+    </delete>
+
+    <delete id="deleteCenterStatSrcBySrcIds" parameterType="String">
+        delete from cnsl_center_stat_src where src_id in
+        <foreach item="srcId" collection="array" open="(" separator="," close=")">
+            #{srcId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteByCreateTime" parameterType="Date">
+        delete from cnsl_center_stat_src where create_time &lt;= #{createTime}
+    </delete>
+
+</mapper>

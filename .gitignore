@@ -1,0 +1,7 @@
+# Default ignored files
+.idea
+.DS_Store
+**/.DS_Store
+.DS_Store?
+**/.flattened-pom.xml
+.gradle/

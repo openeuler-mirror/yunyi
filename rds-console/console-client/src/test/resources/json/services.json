@@ -1,0 +1,949 @@
+[
+  {
+    "name": "WebSession",
+    "type": "SCALABLE",
+    "message": "OK",
+    "alive": [
+      "192.168.0.90:9200",
+      "192.168.0.90:9201",
+      "192.168.0.90:9202",
+      "192.168.0.90:9203",
+      "192.168.0.90:9204",
+      "192.168.0.90:9205"
+    ],
+    "statistics": {
+      "keys": 0,
+      "currentConnections": 7,
+      "totalConnections": 28,
+      "licenseOccupied": 1296000,
+      "memoryUsed": 111146416,
+      "memoryFree": 515902032,
+      "memoryTotal": 627048448,
+      "memoryAvailable": 19089326080,
+      "networkInputBytes": 0,
+      "inputPerSecond(KB/s)": 0.0,
+      "networkOutputBytes": 0,
+      "outputPerSecond(KB/s)": 0.0,
+      "cpuProcessLoad(%)": 0,
+      "cpuSystemLoad(%)": 28
+    },
+    "nodes": [
+      {
+        "instance": "rds-1",
+        "valid": true,
+        "expired": false,
+        "current": false,
+        "remote": "192.168.0.90",
+        "port": 9200,
+        "redisPort": 9379,
+        "secureLevel": 0,
+        "running": 5189,
+        "master": true,
+        "used": [
+          {
+            "name": "table-1",
+            "capacity": 1000,
+            "used": 0,
+            "meanSquare": 0,
+            "usedRate": "0.0%"
+          }
+        ],
+        "throughput": {
+          "current": 1,
+          "average10": 0.9,
+          "average60": 0.9,
+          "lasthour": 3094
+        },
+        "sync": [
+          {
+            "dataFrom": "table-1",
+            "sendTo": [
+              {
+                "address": "192.168.0.90",
+                "port": 9201,
+                "max": 0
+              }
+            ]
+          }
+        ],
+        "runtime": {
+          "running": 5189,
+          "currentConnections": 4,
+          "totalConnections": 15,
+          "memoryUsed": 56478216,
+          "memoryFree": 257046008,
+          "memoryTotal": 313524224,
+          "memoryAvailable": 9544663040,
+          "keys": 0,
+          "commandResult": 24,
+          "networkInputBytes": 0,
+          "inputPerSecond(KB/s)": 0.0,
+          "networkOutputBytes": 0,
+          "outputPerSecond(KB/s)": 0.0,
+          "cpuProcessLoad(%)": 0,
+          "cpuSystemLoad(%)": 14
+        }
+      },
+      {
+        "instance": "rds-2",
+        "valid": true,
+        "expired": false,
+        "current": false,
+        "remote": "192.168.0.90",
+        "port": 9201,
+        "redisPort": 9380,
+        "secureLevel": 0,
+        "running": 5189,
+        "master": false,
+        "used": [
+          {
+            "name": "table-1",
+            "capacity": 1000,
+            "used": 0,
+            "meanSquare": 0,
+            "usedRate": "0.0%"
+          }
+        ],
+        "throughput": {
+          "current": 1,
+          "average10": 0.9,
+          "average60": 0.9,
+          "lasthour": 3083
+        },
+        "sync": [
+          {
+            "dataFrom": "table-1",
+            "sendTo": [
+              {
+                "address": "192.168.0.90",
+                "port": 9200,
+                "max": 0
+              }
+            ]
+          }
+        ],
+        "runtime": {
+          "running": 5189,
+          "currentConnections": 3,
+          "totalConnections": 15,
+          "memoryUsed": 49676016,
+          "memoryFree": 263848208,
+          "memoryTotal": 313524224,
+          "memoryAvailable": 9544663040,
+          "keys": 0,
+          "commandResult": 24,
+          "networkInputBytes": 0,
+          "inputPerSecond(KB/s)": 0.0,
+          "networkOutputBytes": 0,
+          "outputPerSecond(KB/s)": 0.0,
+          "cpuProcessLoad(%)": 0,
+          "cpuSystemLoad(%)": 14
+        }
+      },
+      {
+        "instance": "rds-3",
+        "valid": true,
+        "expired": false,
+        "current": false,
+        "remote": "192.168.0.90",
+        "port": 9202,
+        "redisPort": 9381,
+        "secureLevel": 0,
+        "running": 5189,
+        "master": true,
+        "used": [
+          {
+            "name": "table-1",
+            "capacity": 1000,
+            "used": 0,
+            "meanSquare": 0,
+            "usedRate": "0.0%"
+          }
+        ],
+        "throughput": {
+          "current": 1,
+          "average10": 0.9,
+          "average60": 0.9,
+          "lasthour": 3092
+        },
+        "sync": [
+          {
+            "dataFrom": "table-1",
+            "sendTo": [
+              {
+                "address": "192.168.0.90",
+                "port": 9203,
+                "max": 0
+              }
+            ]
+          }
+        ],
+        "runtime": {
+          "running": 5189,
+          "currentConnections": 3,
+          "totalConnections": 13,
+          "memoryUsed": 54668200,
+          "memoryFree": 258856024,
+          "memoryTotal": 313524224,
+          "memoryAvailable": 9544663040,
+          "keys": 0,
+          "commandResult": 8,
+          "networkInputBytes": 0,
+          "inputPerSecond(KB/s)": 0.0,
+          "networkOutputBytes": 0,
+          "outputPerSecond(KB/s)": 0.0,
+          "cpuProcessLoad(%)": 0,
+          "cpuSystemLoad(%)": 14
+        }
+      },
+      {
+        "instance": "rds-4",
+        "valid": true,
+        "expired": false,
+        "current": true,
+        "remote": "192.168.0.90",
+        "port": 9203,
+        "redisPort": 9382,
+        "secureLevel": 0,
+        "running": 5188,
+        "master": false,
+        "used": [
+          {
+            "name": "table-1",
+            "capacity": 1000,
+            "used": 0,
+            "meanSquare": 0,
+            "usedRate": "0.0%"
+          }
+        ],
+        "throughput": {
+          "current": 1,
+          "average10": 0.9,
+          "average60": 0.9,
+          "lasthour": 3083
+        },
+        "sync": [
+          {
+            "dataFrom": "table-1",
+            "sendTo": [
+              {
+                "address": "192.168.0.90",
+                "port": 9202,
+                "max": 0
+              }
+            ]
+          }
+        ],
+        "runtime": {
+          "running": 5188,
+          "currentConnections": 3,
+          "totalConnections": 13,
+          "memoryUsed": 48884040,
+          "memoryFree": 264640184,
+          "memoryTotal": 313524224,
+          "memoryAvailable": 9544663040,
+          "keys": 0,
+          "commandResult": 8,
+          "networkInputBytes": 0,
+          "inputPerSecond(KB/s)": 0.0,
+          "networkOutputBytes": 0,
+          "outputPerSecond(KB/s)": 0.0,
+          "cpuProcessLoad(%)": 0,
+          "cpuSystemLoad(%)": 14
+        }
+      },
+      {
+        "instance": "rds-5",
+        "valid": true,
+        "expired": false,
+        "current": false,
+        "remote": "192.168.0.90",
+        "port": 9204,
+        "redisPort": 9383,
+        "secureLevel": 0,
+        "running": 5188,
+        "master": true,
+        "used": [
+          {
+            "name": "table-1",
+            "capacity": 1000,
+            "used": 0,
+            "meanSquare": 0,
+            "usedRate": "0.0%"
+          }
+        ],
+        "throughput": {
+          "current": 1,
+          "average10": 0.8,
+          "average60": 0.8,
+          "lasthour": 3075
+        },
+        "sync": [
+          {
+            "dataFrom": "table-1",
+            "sendTo": [
+              {
+                "address": "192.168.0.90",
+                "port": 9205,
+                "max": 0
+              }
+            ]
+          }
+        ],
+        "runtime": {
+          "running": 5188,
+          "currentConnections": 3,
+          "totalConnections": 6,
+          "memoryUsed": 46625192,
+          "memoryFree": 266899032,
+          "memoryTotal": 313524224,
+          "memoryAvailable": 9544663040,
+          "keys": 0,
+          "commandResult": 26,
+          "networkInputBytes": 0,
+          "inputPerSecond(KB/s)": 0.0,
+          "networkOutputBytes": 0,
+          "outputPerSecond(KB/s)": 0.0,
+          "cpuProcessLoad(%)": 0,
+          "cpuSystemLoad(%)": 14
+        }
+      },
+      {
+        "instance": "rds-6",
+        "valid": true,
+        "expired": false,
+        "current": true,
+        "remote": "192.168.0.90",
+        "port": 9205,
+        "redisPort": 9384,
+        "secureLevel": 0,
+        "running": 5194,
+        "master": false,
+        "used": [
+          {
+            "name": "table-1",
+            "capacity": 1000,
+            "used": 0,
+            "meanSquare": 0,
+            "usedRate": "0.0%"
+          }
+        ],
+        "throughput": {
+          "current": 1,
+          "average10": 0.8,
+          "average60": 0.9,
+          "lasthour": 3074
+        },
+        "sync": [
+          {
+            "dataFrom": "table-1",
+            "sendTo": [
+              {
+                "address": "192.168.0.90",
+                "port": 9204,
+                "max": 0
+              }
+            ]
+          }
+        ],
+        "runtime": {
+          "running": 5194,
+          "currentConnections": 3,
+          "totalConnections": 6,
+          "memoryUsed": 39583920,
+          "memoryFree": 273940304,
+          "memoryTotal": 313524224,
+          "memoryAvailable": 9544663040,
+          "keys": 0,
+          "commandResult": 26,
+          "networkInputBytes": 0,
+          "inputPerSecond(KB/s)": 0.0,
+          "networkOutputBytes": 0,
+          "outputPerSecond(KB/s)": 0.0,
+          "cpuProcessLoad(%)": 0,
+          "cpuSystemLoad(%)": 14
+        }
+      }
+    ],
+    "replicas": 2,
+    "hotspares": 2,
+    "status": "RUNNING",
+    "hotspare": [
+      "192.168.0.90:9204",
+      "192.168.0.90:9205"
+    ],
+    "maxShards": 10,
+    "shard": [
+      {
+        "endpoints": [
+          "192.168.0.90:9200",
+          "192.168.0.90:9201"
+        ],
+        "slots": [
+          "0-614"
+        ]
+      },
+      {
+        "endpoints": [
+          "192.168.0.90:9202",
+          "192.168.0.90:9203"
+        ],
+        "slots": [
+          "614-1024"
+        ]
+      }
+    ],
+    "proxies": [
+      {
+        "instance": "proxy-1",
+        "valid": true,
+        "expired": false,
+        "remote": "192.168.0.90",
+        "port": 6200,
+        "redisPort": 6379,
+        "secureLevel": 2,
+        "running": 5757,
+        "throughput": {
+          "current": 2,
+          "average10": 1.8,
+          "average60": 1.9,
+          "lasthour": 6593
+        },
+        "runtime": {
+          "running": 5757,
+          "currentConnections": 8,
+          "totalConnections": 24,
+          "memoryUsed": 61038656,
+          "memoryFree": 266117056,
+          "memoryTotal": 327155712,
+          "memoryAvailable": 10737418240,
+          "cpuProcessLoad(%)": 6,
+          "cpuSystemLoad(%)": 14
+        }
+      },
+      {
+        "instance": "proxy",
+        "valid": true,
+        "expired": false,
+        "remote": "192.168.0.90",
+        "port": 6201,
+        "redisPort": 6380,
+        "secureLevel": 2,
+        "running": 5757,
+        "throughput": {
+          "current": 2,
+          "average10": 1.8,
+          "average60": 1.9,
+          "lasthour": 6586
+        },
+        "runtime": {
+          "running": 5757,
+          "currentConnections": 8,
+          "totalConnections": 18,
+          "memoryUsed": 48713184,
+          "memoryFree": 278442528,
+          "memoryTotal": 327155712,
+          "memoryAvailable": 10737418240,
+          "cpuProcessLoad(%)": 6,
+          "cpuSystemLoad(%)": 14
+        }
+      }
+    ]
+  },
+  {
+    "name": "Sentinel",
+    "type": "SENTINEL",
+    "message": "OK",
+    "alive": [
+      "192.168.0.90:7200",
+      "192.168.0.90:7201",
+      "192.168.0.90:7202"
+    ],
+    "statistics": {
+      "keys": 0,
+      "currentConnections": 8,
+      "totalConnections": 15,
+      "licenseOccupied": 648000,
+      "memoryUsed": 119965096,
+      "memoryFree": 207190616,
+      "memoryTotal": 327155712,
+      "memoryAvailable": 10737418240,
+      "networkInputBytes": 0,
+      "inputPerSecond(KB/s)": 0.0,
+      "networkOutputBytes": 0,
+      "outputPerSecond(KB/s)": 0.0,
+      "cpuProcessLoad(%)": 0,
+      "cpuSystemLoad(%)": 14
+    },
+    "nodes": [
+      {
+        "instance": "mastslave-1",
+        "valid": true,
+        "expired": false,
+        "current": true,
+        "remote": "192.168.0.90",
+        "port": 7200,
+        "redisPort": 7379,
+        "secureLevel": 2,
+        "running": 5122,
+        "master": true,
+        "used": [
+          {
+            "name": "table-1",
+            "capacity": 1000,
+            "used": 0,
+            "meanSquare": 0,
+            "usedRate": "0.0%"
+          }
+        ],
+        "throughput": {
+          "current": 2,
+          "average10": 1.7,
+          "average60": 1.7,
+          "lasthour": 6155
+        },
+        "sync": [
+          {
+            "dataFrom": "table-1",
+            "sendTo": [
+              {
+                "address": "127.0.0.1",
+                "port": 7201,
+                "max": 0
+              },
+              {
+                "address": "127.0.0.1",
+                "port": 7202,
+                "max": 0
+              }
+            ]
+          }
+        ],
+        "runtime": {
+          "running": 5122,
+          "currentConnections": 8,
+          "totalConnections": 15,
+          "memoryUsed": 119965096,
+          "memoryFree": 207190616,
+          "memoryTotal": 327155712,
+          "memoryAvailable": 10737418240,
+          "keys": 0,
+          "commandResult": 26,
+          "networkInputBytes": 0,
+          "inputPerSecond(KB/s)": 0.0,
+          "networkOutputBytes": 0,
+          "outputPerSecond(KB/s)": 0.0,
+          "cpuProcessLoad(%)": 0,
+          "cpuSystemLoad(%)": 14
+        }
+      },
+      {
+        "instance": "mastslave-2",
+        "valid": true,
+        "expired": false,
+        "current": true,
+        "remote": "192.168.0.90",
+        "port": 7201,
+        "redisPort": 7380,
+        "secureLevel": 2,
+        "running": 5121,
+        "master": false,
+        "used": [
+          {
+            "name": "table-1",
+            "capacity": 1000,
+            "used": 0,
+            "meanSquare": 0,
+            "usedRate": "0.0%"
+          }
+        ],
+        "throughput": {
+          "current": 2,
+          "average10": 1.7,
+          "average60": 1.7,
+          "lasthour": 6155
+        },
+        "sync": [
+          {
+            "dataFrom": "table-1",
+            "sendTo": [
+              {
+                "address": "127.0.0.1",
+                "port": 7200,
+                "max": 0
+              },
+              {
+                "address": "127.0.0.1",
+                "port": 7202,
+                "max": 0
+              }
+            ]
+          }
+        ],
+        "runtime": {
+          "running": 5121,
+          "currentConnections": 8,
+          "totalConnections": 16,
+          "memoryUsed": 72626064,
+          "memoryFree": 240898160,
+          "memoryTotal": 313524224,
+          "memoryAvailable": 9544663040,
+          "keys": 0,
+          "commandResult": 26,
+          "networkInputBytes": 0,
+          "inputPerSecond(KB/s)": 0.0,
+          "networkOutputBytes": 0,
+          "outputPerSecond(KB/s)": 0.0,
+          "cpuProcessLoad(%)": 0,
+          "cpuSystemLoad(%)": 14
+        }
+      },
+      {
+        "instance": "mastslave-3",
+        "valid": true,
+        "expired": false,
+        "current": true,
+        "remote": "192.168.0.90",
+        "port": 7202,
+        "redisPort": 7381,
+        "secureLevel": 2,
+        "running": 5122,
+        "master": false,
+        "used": [
+          {
+            "name": "table-1",
+            "capacity": 1000,
+            "used": 0,
+            "meanSquare": 0,
+            "usedRate": "0.0%"
+          }
+        ],
+        "throughput": {
+          "current": 2,
+          "average10": 1.7,
+          "average60": 1.7,
+          "lasthour": 6154
+        },
+        "sync": [
+          {
+            "dataFrom": "table-1",
+            "sendTo": [
+              {
+                "address": "127.0.0.1",
+                "port": 7200,
+                "max": 0
+              },
+              {
+                "address": "127.0.0.1",
+                "port": 7201,
+                "max": 0
+              }
+            ]
+          }
+        ],
+        "runtime": {
+          "running": 5122,
+          "currentConnections": 8,
+          "totalConnections": 15,
+          "memoryUsed": 89133360,
+          "memoryFree": 238022352,
+          "memoryTotal": 327155712,
+          "memoryAvailable": 10737418240,
+          "keys": 0,
+          "commandResult": 26,
+          "networkInputBytes": 0,
+          "inputPerSecond(KB/s)": 0.0,
+          "networkOutputBytes": 0,
+          "outputPerSecond(KB/s)": 0.0,
+          "cpuProcessLoad(%)": 0,
+          "cpuSystemLoad(%)": 14
+        }
+      }
+    ],
+    "master": "192.168.0.90:7200",
+    "syncList": [
+      "localhost:7200",
+      "localhost:7201",
+      "localhost:7202"
+    ]
+  },
+  {
+    "name": "Cluster",
+    "type": "CLUSTER",
+    "message": "OK",
+    "alive": [
+      "192.168.0.90:8200",
+      "192.168.0.90:8201",
+      "192.168.0.90:8202",
+      "192.168.0.90:8203"
+    ],
+    "statistics": {
+      "keys": 0,
+      "currentConnections": 43,
+      "totalConnections": 1790,
+      "licenseOccupied": 144000,
+      "memoryUsed": 82134984,
+      "memoryFree": 544913464,
+      "memoryTotal": 627048448,
+      "memoryAvailable": 19089326080,
+      "networkInputBytes": 0,
+      "inputPerSecond(KB/s)": 0.0,
+      "networkOutputBytes": 0,
+      "outputPerSecond(KB/s)": 0.0,
+      "cpuProcessLoad(%)": 0,
+      "cpuSystemLoad(%)": 28
+    },
+    "nodes": [
+      {
+        "instance": "cluster-0-0",
+        "valid": true,
+        "expired": false,
+        "current": false,
+        "remote": "192.168.0.90",
+        "port": 8200,
+        "redisPort": 8379,
+        "secureLevel": 0,
+        "running": 5213,
+        "master": true,
+        "shardId": 0,
+        "used": [
+          {
+            "name": "table-1",
+            "capacity": 1000,
+            "used": 0,
+            "meanSquare": 0,
+            "usedRate": "0.0%"
+          }
+        ],
+        "throughput": {
+          "current": 11,
+          "average10": 9.9,
+          "average60": 9.8,
+          "lasthour": 35077
+        },
+        "sync": [
+          {
+            "dataFrom": "table-1",
+            "sendTo": [
+              {
+                "address": "127.0.0.1",
+                "port": 8201,
+                "max": 0
+              }
+            ]
+          }
+        ],
+        "runtime": {
+          "running": 5213,
+          "currentConnections": 21,
+          "totalConnections": 896,
+          "memoryUsed": 32710792,
+          "memoryFree": 280813432,
+          "memoryTotal": 313524224,
+          "memoryAvailable": 9544663040,
+          "keys": 0,
+          "commandResult": 30,
+          "networkInputBytes": 0,
+          "inputPerSecond(KB/s)": 0.0,
+          "networkOutputBytes": 0,
+          "outputPerSecond(KB/s)": 0.0,
+          "cpuProcessLoad(%)": 0,
+          "cpuSystemLoad(%)": 14
+        }
+      },
+      {
+        "instance": "cluster-0-1",
+        "valid": true,
+        "expired": false,
+        "current": false,
+        "remote": "192.168.0.90",
+        "port": 8201,
+        "redisPort": 8380,
+        "secureLevel": 0,
+        "running": 5213,
+        "master": false,
+        "shardId": 0,
+        "used": [
+          {
+            "name": "table-1",
+            "capacity": 1000,
+            "used": 0,
+            "meanSquare": 0,
+            "usedRate": "0.0%"
+          }
+        ],
+        "throughput": {
+          "current": 11,
+          "average10": 9.9,
+          "average60": 9.8,
+          "lasthour": 35076
+        },
+        "sync": [
+          {
+            "dataFrom": "table-1",
+            "sendTo": [
+              {
+                "address": "127.0.0.1",
+                "port": 8200,
+                "max": 0
+              }
+            ]
+          }
+        ],
+        "runtime": {
+          "running": 5213,
+          "currentConnections": 21,
+          "totalConnections": 895,
+          "memoryUsed": 37232576,
+          "memoryFree": 276291648,
+          "memoryTotal": 313524224,
+          "memoryAvailable": 9544663040,
+          "keys": 0,
+          "commandResult": 30,
+          "networkInputBytes": 0,
+          "inputPerSecond(KB/s)": 0.0,
+          "networkOutputBytes": 0,
+          "outputPerSecond(KB/s)": 0.0,
+          "cpuProcessLoad(%)": 0,
+          "cpuSystemLoad(%)": 14
+        }
+      },
+      {
+        "instance": "cluster-1-0",
+        "valid": true,
+        "expired": false,
+        "current": false,
+        "remote": "192.168.0.90",
+        "port": 8202,
+        "redisPort": 8381,
+        "secureLevel": 0,
+        "running": 5213,
+        "master": true,
+        "shardId": 1,
+        "used": [
+          {
+            "name": "table-1",
+            "capacity": 1000,
+            "used": 0,
+            "meanSquare": 0,
+            "usedRate": "0.0%"
+          }
+        ],
+        "throughput": {
+          "current": 10,
+          "average10": 9.8,
+          "average60": 9.8,
+          "lasthour": 35085
+        },
+        "sync": [
+          {
+            "dataFrom": "table-1",
+            "sendTo": [
+              {
+                "address": "127.0.0.1",
+                "port": 8203,
+                "max": 0
+              }
+            ]
+          }
+        ],
+        "runtime": {
+          "running": 5213,
+          "currentConnections": 22,
+          "totalConnections": 894,
+          "memoryUsed": 49424192,
+          "memoryFree": 264100032,
+          "memoryTotal": 313524224,
+          "memoryAvailable": 9544663040,
+          "keys": 0,
+          "commandResult": 30,
+          "networkInputBytes": 0,
+          "inputPerSecond(KB/s)": 0.0,
+          "networkOutputBytes": 0,
+          "outputPerSecond(KB/s)": 0.0,
+          "cpuProcessLoad(%)": 0,
+          "cpuSystemLoad(%)": 14
+        }
+      },
+      {
+        "instance": "cluster-1-1",
+        "valid": true,
+        "expired": false,
+        "current": false,
+        "remote": "192.168.0.90",
+        "port": 8203,
+        "redisPort": 8382,
+        "secureLevel": 0,
+        "running": 5212,
+        "master": false,
+        "shardId": 1,
+        "used": [
+          {
+            "name": "table-1",
+            "capacity": 1000,
+            "used": 0,
+            "meanSquare": 0,
+            "usedRate": "0.0%"
+          }
+        ],
+        "throughput": {
+          "current": 10,
+          "average10": 9.8,
+          "average60": 9.8,
+          "lasthour": 35085
+        },
+        "sync": [
+          {
+            "dataFrom": "table-1",
+            "sendTo": [
+              {
+                "address": "127.0.0.1",
+                "port": 8202,
+                "max": 0
+              }
+            ]
+          }
+        ],
+        "runtime": {
+          "running": 5212,
+          "currentConnections": 21,
+          "totalConnections": 894,
+          "memoryUsed": 37761384,
+          "memoryFree": 275762840,
+          "memoryTotal": 313524224,
+          "memoryAvailable": 9544663040,
+          "keys": 0,
+          "commandResult": 30,
+          "networkInputBytes": 0,
+          "inputPerSecond(KB/s)": 0.0,
+          "networkOutputBytes": 0,
+          "outputPerSecond(KB/s)": 0.0,
+          "cpuProcessLoad(%)": 0,
+          "cpuSystemLoad(%)": 14
+        }
+      }
+    ],
+    "shard": [
+      {
+        "master": "192.168.0.90:8200",
+        "endpoints": [
+          "localhost:8200",
+          "localhost:8201"
+        ],
+        "slots": [
+          "0-8499"
+        ]
+      },
+      {
+        "master": "192.168.0.90:8202",
+        "endpoints": [
+          "localhost:8202",
+          "localhost:8203"
+        ],
+        "slots": [
+          "8500-16383"
+        ]
+      }
+    ]
+  }
+]

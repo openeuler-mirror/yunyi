@@ -1,0 +1,78 @@
+[
+  {
+    "instance": "sentinel-1",
+    "group": "62C2AB3B4C19236B7686",
+    "expired": false,
+    "remote": "192.168.0.90",
+    "port": 27379,
+    "myself": false,
+    "runtime": {
+      "running": 5129,
+      "currentConnections": 1,
+      "totalConnections": 3,
+      "memoryUsed": 37874512,
+      "memoryFree": 289281200,
+      "memoryTotal": 327155712,
+      "memoryAvailable": 10737418240,
+      "cpuProcessLoad(%)": 0,
+      "cpuSystemLoad(%)": 14
+    },
+    "services": {
+      "WebSession": [
+        {
+          "endPoint": "192.168.0.90:7379",
+          "alive": true,
+          "master": true
+        },
+        {
+          "endPoint": "192.168.0.90:7380",
+          "alive": true,
+          "master": false
+        },
+        {
+          "endPoint": "192.168.0.90:7381",
+          "alive": true,
+          "master": false
+        }
+      ]
+    }
+  },
+  {
+    "instance": "sentinel-2",
+    "group": "62C2AB3B4C19236B7686",
+    "expired": false,
+    "remote": "192.168.0.90",
+    "port": 27380,
+    "myself": false,
+    "runtime": {
+      "running": 5130,
+      "currentConnections": 1,
+      "totalConnections": 3,
+      "memoryUsed": 34091344,
+      "memoryFree": 293064368,
+      "memoryTotal": 327155712,
+      "memoryAvailable": 10737418240,
+      "cpuProcessLoad(%)": 0,
+      "cpuSystemLoad(%)": 14
+    },
+    "services": {
+      "WebSession": [
+        {
+          "endPoint": "192.168.0.90:7379",
+          "alive": true,
+          "master": true
+        },
+        {
+          "endPoint": "192.168.0.90:7380",
+          "alive": true,
+          "master": false
+        },
+        {
+          "endPoint": "192.168.0.90:7381",
+          "alive": true,
+          "master": false
+        }
+      ]
+    }
+  }
+]

@@ -1,0 +1,29 @@
+# docker build -f Dockerfile-center -t tongrds-center:2.2.C.1 .
+# docker images
+# docker image rm image-id
+# docker run -p 6300:6300 -p 8086:8086 -p 26379:26379 tongrds-center:2.2.C.1
+# docker ps -a | head
+# docker exec -it container-id /bin/bash
+# docker kill <CONTAINER ID>
+# docker rm <CONTAINER ID>
+# docker rmi <IMAGE ID>
+#
+# docker save -o TongRDS-2.2.C.1.MC.docker_x86.tar tongrds-center:2.2.C.1
+# docker load -i TongRDS-2.2.C.1.MC.docker_x86.tar
+#
+# docker tag tongrds-center:2.2.C.1 192.168.0.89:80/library/tongrds-center:2.2.C.1
+# docker push 192.168.0.89:80/library/tongrds-center:2.2.C.1
+#
+#
+#
+FROM ubuntu
+MAINTAINER TongRDS
+COPY ./java-se-8u/jre/ /usr/lib/jvm/java-8-openjdk/
+ENV JAVA_HOME=/usr/lib/jvm/java-8-openjdk
+ENV PATH=${JAVA_HOME}/bin:$PATH
+ENV TZ=Asia/Shanghai
+COPY ./pcenter/ /opt/pcenter/
+WORKDIR /opt/pcenter/bin
+EXPOSE 6300 8086 26379
+ENTRYPOINT "./StartCenter.sh"
+

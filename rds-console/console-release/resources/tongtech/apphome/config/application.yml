@@ -1,0 +1,21 @@
+# 项目相关配置
+console:
+  # 验证码类型 rds-math 数组计算 rds-char 字符验证 easy-char 简单字符验证
+  captchaType: easy-char
+  #SSH 连接时的超时时间, 单位毫秒
+  sshConnectTimeout: 10000
+  #SSH 命令执行通道超时时间, 单位毫秒
+  sshChannelTimeout: 20000
+
+# 开发环境配置
+server:
+  # 服务器的HTTP端口，默认为8083
+  port: 8083
+
+# 用户配置
+user:
+  password:
+    # 密码最大错误次数
+    maxRetryCount: 5
+    # 密码锁定时间（默认10分钟）
+    lockTime: 10

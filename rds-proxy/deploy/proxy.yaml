@@ -1,0 +1,103 @@
+# 
+# kubectl -n rds apply -f proxy.yaml
+# kubectl -n rds scale StatefulSet rdsproxy --replicas 2
+#
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: rdsproxy
+spec:
+  serviceName: rds-proxy
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: rdsproxy
+      annotations:
+        pod.alpha.kubernetes.io/initialized: "true"
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 1
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: "app"
+                      operator: In
+                      values:
+                      - rdsproxy
+                topologyKey: "kubernetes.io/hostname"
+      containers:
+        - name: k8srdsproxy
+          lifecycle:
+            preStop:
+              exec:
+                command: ["./StopProxy.sh"]
+          imagePullPolicy: Always
+          image: 192.168.0.89:80/library/tongrds-proxy:2.2.1.4
+          ports:
+            - containerPort: 6200
+              name: rds
+            - containerPort: 6379
+              name: simulation
+          readinessProbe:
+            tcpSocket:
+              port: 6379
+            initialDelaySeconds: 5
+            periodSeconds: 3
+            successThreshold: 1
+            timeoutSeconds: 1
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: status.podIP
+            - name: CENTER_SERVICE
+              valueFrom:
+                configMapKeyRef:
+                  name: tong-rds-center
+                  key: center.k8s.service
+            - name: CONFIG_VOLUME_PATH
+              value: "/projected-volume"
+          volumeMounts:
+            - name: config
+              mountPath: /projected-volume
+      volumes:
+        - name: config
+          configMap:
+            name: tong-rds-proxy
+
+      imagePullSecrets:
+        - name: registry-pull-secret
+
+  selector:
+    matchLabels:
+      app: rdsproxy
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rds-proxy
+  labels:
+    app: proxyservice
+spec:
+  type: ClusterIP
+  ports:
+  - port: 6379
+    name: redis
+    targetPort: 6379
+  selector:
+    app: rdsproxy
+
+

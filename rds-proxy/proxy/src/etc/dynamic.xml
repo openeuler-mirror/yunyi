@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Server>
+  <Center>
+    <Password>454d51192b1704c60e19734ce6b38203</Password>
+    <EndPoint>
+      <Host>192.168.0.90</Host>
+      <Port>10300</Port>
+    </EndPoint>
+  </Center>
+  <Synchronize>
+    <EndPoint>
+      <Host>192.168.0.213</Host>
+      <Port>8200</Port>
+    </EndPoint>
+    <EndPoint>
+      <Host>192.168.0.90</Host>
+      <Port>6200</Port>
+    </EndPoint>
+    <EndPoint>
+      <Host>192.168.0.90</Host>
+      <Port>6201</Port>
+    </EndPoint>
+  </Synchronize>
+</Server>

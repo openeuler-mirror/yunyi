@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tongtech.console.mapper.RdsNodeMapper">
+
+    <resultMap type="RdsNode" id="RdsNodeResult">
+        <result property="nodeId"    column="node_id"    />
+        <result property="managerId"    column="manager_id"    />
+        <result property="managerName"    column="manager_name"    />
+        <result property="serviceId"    column="service_id"    />
+        <result property="nodeName"    column="node_name"    />
+        <result property="instance"    column="instance"    />
+        <result property="nodeType"    column="node_type"    />
+        <result property="hostAddress"    column="host_address"    />
+        <result property="servicePort"    column="service_port"    />
+        <result property="redisPort"    column="redis_port"    />
+        <result property="adminPort"    column="admin_port"    />
+        <result property="masterNode"    column="master_node"    />
+        <result property="hotSpares"    column="hot_spares"    />
+        <result property="slot"    column="slot"    />
+        <result property="shard"    column="shard"    />
+        <result property="nodeStatus"    column="node_status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectRdsNodeVo">
+        select n.node_id, n.manager_id, n.service_id, n.node_name, n.instance, n.node_type, n.host_address, n.service_port, n.redis_port, n.admin_port, n.master_node, n.hot_spares, n.slot, n.shard, n.node_status, n.create_by, n.create_time, n.update_by, n.update_time, n.remark
+        from cnsl_rds_node n
+    </sql>
+
+
+    <sql id="selectRdsNode">
+        select n.node_id, n.manager_id, n.service_id, n.node_name, n.instance, n.node_type, n.host_address, n.service_port, n.redis_port, n.admin_port, n.master_node, n.hot_spares, n.slot, n.shard, n.node_status, n.create_by, n.create_time, n.update_by, n.update_time, n.remark
+        from cnsl_rds_node n
+    </sql>
+
+    <select id="selectNodeList" parameterType="RdsNode" resultMap="RdsNodeResult">
+        <include refid="selectRdsNodeVo"/>
+        <where>
+            <if test="serviceId != null"> and n.service_id = #{serviceId}</if>
+            <if test="nodeName != null  and nodeName != ''"> and n.node_name like concat('%', #{nodeName}, '%')</if>
+            <if test="nodeType != null  and nodeType != ''"> and n.node_type = #{nodeType}</if>
+            <if test="nodeStatus != null  and nodeStatus != ''"> and n.node_status = #{nodeStatus}</if>
+            <if test="managerId != null"> and n.manager_id = #{managerId}</if>
+            <if test="servicePort != null"> and n.service_port = #{servicePort}</if>
+            <if test="redisPort != null"> and n.redis_port = #{redisPort}</if>
+            <if test="adminPort != null"> and n.admin_port = #{adminPort}</if>
+            <if test="hostAddress != null  and hostAddress != ''"> and n.host_address = #{hostAddress}</if>
+        </where>
+    </select>
+
+    <select id="selectNodeIdList" parameterType="com.tongtech.console.domain.RdsService" resultType="Long">
+        select n.node_id from cnsl_rds_node n, cnsl_rds_service s
+        where n.service_id = s.service_id
+        and n.update_time &lt;= #{updateTime} and s.manual_admin = #{manualAdmin}
+        <if test="serviceId != null"> and s.service_id = #{serviceId}</if>
+    </select>
+
+    <update id="updateNoneStopNodes" parameterType="Date">
+        update cnsl_rds_node
+        set node_status = 'stop', update_time = CURRENT_TIMESTAMP()
+        where  update_time &lt;= #{updateTime} and (node_status != 'stop' and node_status != 'none')
+    </update>
+
+    <select id="selectSameNameNodeList" parameterType="RdsNode" resultMap="RdsNodeResult">
+        <include refid="selectRdsNode"/>
+        where  manager_id=#{managerId} and n.node_name=#{nodeName}
+    </select>
+
+    <select id="selectSamePortNodeList" parameterType="RdsNode" resultMap="RdsNodeResult">
+        <include refid="selectRdsNode"/>
+        where n.host_address =  #{hostAddress}
+        <if test="serviceId != null"> and n.service_id != #{serviceId}</if>
+        and (n.service_port = #{servicePort} or n.redis_port = #{servicePort} or n.admin_port = #{servicePort})
+    </select>
+
+    <select id="selectNodesByServiceId" parameterType="Long" resultMap="RdsNodeResult">
+        <include refid="selectRdsNodeVo"/>
+        where n.service_id = #{serviceId}
+    </select>
+
+    <select id="selectNodeByNodeId" parameterType="Long" resultMap="RdsNodeResult">
+        <include refid="selectRdsNodeVo"/>
+        where n.node_id = #{nodeId}
+    </select>
+
+    <select id="selectNodeByInstance" parameterType="String" resultMap="RdsNodeResult">
+        <include refid="selectRdsNodeVo"/>
+        where n.instance = #{instance}
+    </select>
+
+    <select id="selectNodeByManagerIdAndNodeName" parameterType="RdsNode" resultMap="RdsNodeResult">
+        <include refid="selectRdsNodeVo"/>
+        where n.manager_id = #{managerId} and n.node_name = #{nodeName}
+    </select>
+
+    <insert id="insertNode" parameterType="RdsNode" useGeneratedKeys="true" keyProperty="nodeId">
+        insert into cnsl_rds_node
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="managerId != null">manager_id,</if>
+            <if test="serviceId != null">service_id,</if>
+            <if test="nodeName != null and nodeName != ''">node_name,</if>
+            <if test="instance != null and instance != ''">instance,</if>
+            <if test="nodeType != null and nodeType != ''">node_type,</if>
+            <if test="hostAddress != null and hostAddress != ''">host_address,</if>
+            <if test="servicePort != null">service_port,</if>
+            <if test="redisPort != null">redis_port,</if>
+            <if test="adminPort != null">admin_port,</if>
+            <if test="masterNode != null">master_node,</if>
+            <if test="hotSpares != null">hot_spares,</if>
+            <if test="slot != null">slot,</if>
+            <if test="shard != null">shard,</if>
+            <if test="nodeStatus != null and nodeStatus != ''">node_status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="managerId != null">#{managerId},</if>
+            <if test="serviceId != null">#{serviceId},</if>
+            <if test="nodeName != null and nodeName != ''">#{nodeName},</if>
+            <if test="instance != null and instance != ''">#{instance},</if>
+            <if test="nodeType != null and nodeType != ''">#{nodeType},</if>
+            <if test="hostAddress != null and hostAddress != ''">#{hostAddress},</if>
+            <if test="servicePort != null">#{servicePort},</if>
+            <if test="redisPort != null">#{redisPort},</if>
+            <if test="adminPort != null">#{adminPort},</if>
+            <if test="masterNode != null">#{masterNode},</if>
+            <if test="hotSpares != null">#{hotSpares},</if>
+            <if test="slot != null">#{slot},</if>
+            <if test="shard != null">#{shard},</if>
+            <if test="nodeStatus != null and nodeStatus != ''">#{nodeStatus},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNode" parameterType="RdsNode">
+        update cnsl_rds_node
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="managerId != null">manager_id = #{managerId},</if>
+            <if test="hostAddress != null and hostAddress != ''">host_address = #{hostAddress},</if>
+            <if test="servicePort != null">service_port = #{servicePort},</if>
+            <if test="redisPort != null">redis_port = #{redisPort},</if>
+            <if test="adminPort != null">admin_port = #{adminPort},</if>
+            <if test="masterNode != null">master_node = #{masterNode},</if>
+            <if test="hotSpares != null">hot_spares = #{hotSpares},</if>
+            <if test="slot != null">slot = #{slot},</if>
+            <if test="shard != null">shard = #{shard},</if>
+            <if test="nodeStatus != null and nodeStatus != ''">node_status = #{nodeStatus},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where node_id = #{nodeId}
+    </update>
+
+    <update id="updateNodeStatus" parameterType="RdsNode">
+        update cnsl_rds_node
+        set node_status = #{nodeStatus}, update_time = #{updateTime}
+        where node_id = #{nodeId}
+    </update>
+
+
+    <delete id="deleteNodeByNodeId" parameterType="Long">
+        delete from cnsl_rds_node where node_id = #{nodeId}
+    </delete>
+
+    <delete id="deleteNodesByServiceId" parameterType="Long">
+        delete from cnsl_rds_node where service_id = #{serviceId}
+    </delete>
+
+    <delete id="deleteNodeByNodeIds" parameterType="String">
+        delete from cnsl_rds_node where node_id in
+        <foreach item="nodeId" collection="array" open="(" separator="," close=")">
+            #{nodeId}
+        </foreach>
+    </delete>
+
+    <delete id="updateExpiredNodeStatus" parameterType="String">
+        update cnsl_rds_node set node_status='stop', update_time = CURRENT_TIMESTAMP()
+        where node_status != 'none' and node_status != 'stop' and instance not in
+        <foreach item="instance" collection="array" open="(" separator="," close=")">
+            #{instance}
+        </foreach>
+    </delete>
+
+</mapper>

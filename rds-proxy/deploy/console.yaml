@@ -1,0 +1,84 @@
+# 
+# kubectl -n rds apply -f console.yaml
+#
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: rdsconsole
+spec:
+  serviceName: rds-console
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: rdsconsole
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 1
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: "app"
+                      operator: In
+                      values:
+                      - rdsconsole
+                topologyKey: "kubernetes.io/hostname"
+      containers:
+        - name: k8srdsconsole
+          imagePullPolicy: Always
+          image: 192.168.0.89:80/library/tongrds-console:2.2.1.4
+          ports:
+            - containerPort: 8083
+              name: server
+          volumeMounts:
+            - name: data
+              mountPath: /opt/console/data
+      volumes:
+        - name: data
+          nfs:
+            path: /home/nfs/disk1/console
+            server: 192.168.0.90
+      imagePullSecrets:
+        - name: registry-pull-secret
+
+  selector:
+    matchLabels:
+      app: rdsconsole
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rds-console
+  labels:
+    app: consoleservice
+spec:
+  type: ClusterIP
+  sessionAffinity: ClientIP
+  ports:
+  - port: 8083
+    name: server
+    targetPort: 8083
+  selector:
+    app: rdsconsole
+
+
+---
+# ------------------- App NodePort ------------------ #
+apiVersion: v1
+kind: Service
+metadata:
+  name: console-nodeport
+spec:
+  type: NodePort
+  sessionAffinity: ClientIP
+  ports:
+    - port: 8083
+      name: server
+      targetPort: 8083
+      nodePort: 30083
+  selector:
+    app: rdsconsole
+

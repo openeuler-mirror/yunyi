@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tongtech.console.mapper.ServiceConfigMapper">
+
+    <resultMap type="ServiceConfig" id="ServiceConfigResult">
+        <result property="serviceId"    column="service_id"    />
+        <result property="confType"    column="conf_type"    />
+        <result property="templateId"    column="template_id"    />
+        <result property="confContent"    column="conf_content"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectServiceConfigVo">
+        select service_id, conf_type, template_id, conf_content, update_time from cnsl_service_config
+    </sql>
+
+    <select id="selectServiceConfigList" parameterType="ServiceConfig" resultMap="ServiceConfigResult">
+        <include refid="selectServiceConfigVo"/>
+        <where>
+            <if test="templateId != null "> and template_id = #{templateId}</if>
+            <if test="confContent != null  and confContent != ''"> and conf_content = #{confContent}</if>
+        </where>
+    </select>
+
+    <select id="selectServiceConfig" parameterType="ServiceConfig" resultMap="ServiceConfigResult">
+        <include refid="selectServiceConfigVo"/>
+        where service_id = #{serviceId} and conf_type = #{confType}
+    </select>
+
+    <insert id="insertServiceConfig" parameterType="ServiceConfig">
+        insert into cnsl_service_config
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="serviceId != null">service_id,</if>
+            <if test="confType != null">conf_type,</if>
+            <if test="templateId != null">template_id,</if>
+            <if test="confContent != null">conf_content,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="serviceId != null">#{serviceId},</if>
+            <if test="confType != null">#{confType},</if>
+            <if test="templateId != null">#{templateId},</if>
+            <if test="confContent != null">#{confContent},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <insert id="insertUpdateServiceConfig" parameterType="ServiceConfig">
+        insert into cnsl_service_config
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="serviceId != null">service_id,</if>
+            <if test="confType != null">conf_type,</if>
+            <if test="templateId != null">template_id,</if>
+            <if test="confContent != null">conf_content,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="serviceId != null">#{serviceId},</if>
+            <if test="confType != null">#{confType},</if>
+            <if test="templateId != null">#{templateId},</if>
+            <if test="confContent != null">#{confContent},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+        on duplicate key update
+        <trim suffixOverrides=",">
+            <if test="templateId != null">template_id=values(template_id),</if>
+            <if test="confContent != null">conf_content=values(conf_content),</if>
+            <if test="updateTime != null">update_time=values(update_time),</if>
+        </trim>
+    </insert>
+
+
+
+    <update id="updateServiceConfig" parameterType="ServiceConfig">
+        update cnsl_service_config
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="confType != null">conf_type = #{confType},</if>
+            <if test="templateId != null">template_id = #{templateId},</if>
+            <if test="confContent != null">conf_content = #{confContent},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where service_id = #{serviceId}
+    </update>
+
+    <delete id="deleteServiceConfigByServiceId" parameterType="Long">
+        delete from cnsl_service_config where service_id = #{serviceId}
+    </delete>
+
+    <delete id="deleteServiceConfigByServiceIds" parameterType="String">
+        delete from cnsl_service_config where service_id in
+        <foreach item="serviceId" collection="array" open="(" separator="," close=")">
+            #{serviceId}
+        </foreach>
+    </delete>
+</mapper>

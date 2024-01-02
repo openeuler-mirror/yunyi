@@ -1,23 +1,31 @@
 # yunyi
 
 #### 介绍
-Quickly cloud serve traditional data caching middleware and add unified proxy capabilities and service monitoring and management capabilities
+云翼数据缓存中间件云原生管理平台通过将数据缓存中间件服务纳入管理，增加数据缓存产品的云服务能力，适应云平台需要具备的动态扩展、自动部署、故障自动恢复、统一接口服务能力，对原数据缓存节点进行云化管理，包括对缓存服务节点的监控、数据操作等功能。
 
 #### 软件架构
-软件架构说明
+包含以下目录：
+
+1. rds-console
+
+   管理控制台应用，基于springboot架构的java web应用，对数据缓存进行监控、数据管理。详见[README.md](rds-console/README.md)
+
+2. rds-proxy
+
+   通过统一的代理服务解决云环境下的节点漂移问题，提供统一的数据访问接口。同时包含自制容器镜像相关dockerfile，k8s相关资源参考定义。详见[README.md](rds-proxy/README.md)
+
+3. images
+
+   TongRDS企业版容器镜像，为本项目依赖项。
 
 
 #### 安装教程
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+详见子目录下的README.md文件
 
 #### 使用说明
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+详见子目录下的README.md文件
 
 #### 参与贡献
 

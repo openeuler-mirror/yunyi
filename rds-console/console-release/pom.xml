@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.tongtech</groupId>
+    <artifactId>console-release</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <properties>
+        <apphome.srcdir>${project.basedir}/resources/tongtech/apphome</apphome.srcdir>
+        <apphome.distdir>${project.basedir}/../apphome</apphome.distdir>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+    </properties>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.36</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>2.17.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>2.17.2</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <id>id.clean</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <echo>Delete apphome.distdir: ${apphome.distdir}</echo>
+                                <delete dir="${apphome.distdir}/" />
+                                <mkdir dir="${apphome.distdir}"/>
+                                <mkdir dir="${apphome.distdir}/logs"/>
+                                <mkdir dir="${apphome.distdir}/lib"/>
+                            </target>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>id.compile</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <!-- 拷贝apphome下所需的各配置文件 -->
+                                <echo>[==== Copy apphome resources  ====] </echo>
+                                <copy overwrite="true" todir="${apphome.distdir}"><fileset dir="${apphome.srcdir}" /></copy>
+                                <!-- 所有的.sh文件加上可执行权限 -->
+                                <chmod dir="${apphome.distdir}" perm="u+x" includes="**/*.sh"/>
+
+                                <!-- 拷贝apphome下所需的配置文件，拷贝到 console-admin 中 -->
+                                <copy overwrite="true" todir="${project.basedir}/../console-admin"><fileset dir="${project.basedir}/resources/tongtech/console-admin" /></copy>
+                            </target>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>id.prepare-package</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <echo>[==== console-admin.jar to apphome  ====] </echo>
+                                <copy overwrite="true" file="${project.basedir}/../console-admin/target/console-admin.jar" todir="${apphome.distdir}/lib"></copy>
+                            </target>
+                        </configuration>
+                    </execution>
+
+                </executions>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>dist</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <finalName>console</finalName>
+                            <descriptors>
+                                <descriptor>${project.basedir}/src/main/assembly/binary.xml</descriptor>
+                            </descriptors>
+                        </configuration>
+                    </execution>
+                </executions>
+                <configuration>
+                    <attach>true</attach>
+                    <runOnlyAtExecutionRoot>false</runOnlyAtExecutionRoot>
+                    <appendAssemblyId>false</appendAssemblyId>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+
+</project>
