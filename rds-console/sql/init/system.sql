@@ -232,7 +232,7 @@ insert into sys_config values(7, '密码过期时长(天)-过期后建议更换'
 insert into sys_config values(8, '系统是否完成初始化',           'sys.initialized',      'false',         'Y', 'admin', CURRENT_TIMESTAMP(), '', null, '系统是否完成初始化(true完成，false未完成)');
 insert into sys_config values(9, '系统是否开启开发模式',           'sys.development.mode',      'false',         'Y', 'admin', CURRENT_TIMESTAMP(), '', null, '系统是否开启开发模式，如开启会开放开发工具和系统配置等相关菜单（true开启，false关闭）');
 
---insert into sys_config values(6, '登陆失败禁用次数',            'sys.loginfailedlocking.frequency',          '5',         'Y', 'admin', CURRENT_TIMESTAMP(), '', null, '用户登录失败多少次后锁定账号1天');
+--insert into sys_config values(6, '登录失败禁用次数',            'sys.loginfailedlocking.frequency',          '5',         'Y', 'admin', CURRENT_TIMESTAMP(), '', null, '用户登录失败多少次后锁定账号1天');
 --insert into sys_config values(7, '建议更换密码间隔',            'sys.password.suggested.changes.time', '30',       'Y', 'admin', CURRENT_TIMESTAMP(), '', null, '建议用户更换密码时间间隔(单位天)');
 
 

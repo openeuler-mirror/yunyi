@@ -20,7 +20,7 @@ insert into sys_dict_data values(56, 2,  'SSH联机',     'ssh',       'cnsl_nod
 insert into sys_dict_data values(57, 3,  '控制台内嵌',     'inner',     'cnsl_node_manager_mode',   '',   '',  'N', '0', 'admin', CURRENT_TIMESTAMP(), '', null, '控制台内嵌');
 insert into sys_dict_data values(58, 4,  'K8S容器云',     'k8s',     'cnsl_node_manager_mode',   '',   '',  'N', '0', 'admin', CURRENT_TIMESTAMP(), '', null, 'Kubernetes');
 
-insert into sys_dict_type values(15, '远程登陆方式', 'cnsl_ssh_login_mode',   '0', 'admin', CURRENT_TIMESTAMP(), '', null, '远程登陆方式');
+insert into sys_dict_type values(15, '远程登录方式', 'cnsl_ssh_login_mode',   '0', 'admin', CURRENT_TIMESTAMP(), '', null, '远程登录方式');
 insert into sys_dict_data values(60, 1,  '用户名/密码',     'passwd',       'cnsl_ssh_login_mode',   '',   '', 'N', '0', 'admin', CURRENT_TIMESTAMP(), '', null, '用户名/密码');
 insert into sys_dict_data values(61, 2,  '秘钥模式',     'key',       'cnsl_ssh_login_mode',   '',   '',  'N', '0', 'admin', CURRENT_TIMESTAMP(), '', null, '秘钥模式');
 
