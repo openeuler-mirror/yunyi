@@ -14,12 +14,6 @@ insert into sys_dict_data values(51, 2,  '哨兵主从模式',     'sentinel_wor
 insert into sys_dict_data values(52, 3,  '集群模式',     'cluster',       'cnsl_deploy_mode',   '',   '',  'N', '0', 'admin', CURRENT_TIMESTAMP(), '', null, '集群模式');
 insert into sys_dict_data values(53, 4,  '可伸缩集群模式',     'scalable',       'cnsl_deploy_mode',   '',   '',  'N', '0', 'admin', CURRENT_TIMESTAMP(), '', null, '可伸缩集群模式');
 
-insert into sys_dict_type values(14, '节点管理模式', 'cnsl_node_manager_mode',   '0', 'admin', CURRENT_TIMESTAMP(), '', null, '节点管理模式');
-insert into sys_dict_data values(55, 1,  '手动联机',     'probe',       'cnsl_node_manager_mode',   '',   '', 'N', '0', 'admin', CURRENT_TIMESTAMP(), '', null, '手动联机');
-insert into sys_dict_data values(56, 2,  'SSH联机',     'ssh',       'cnsl_node_manager_mode',   '',   '',  'N', '0', 'admin', CURRENT_TIMESTAMP(), '', null, 'SSH联机');
-insert into sys_dict_data values(57, 3,  '控制台内嵌',     'inner',     'cnsl_node_manager_mode',   '',   '',  'N', '0', 'admin', CURRENT_TIMESTAMP(), '', null, '控制台内嵌');
-insert into sys_dict_data values(58, 4,  'K8S容器云',     'k8s',     'cnsl_node_manager_mode',   '',   '',  'N', '0', 'admin', CURRENT_TIMESTAMP(), '', null, 'Kubernetes');
-
 insert into sys_dict_type values(15, '远程登录方式', 'cnsl_ssh_login_mode',   '0', 'admin', CURRENT_TIMESTAMP(), '', null, '远程登录方式');
 insert into sys_dict_data values(60, 1,  '用户名/密码',     'passwd',       'cnsl_ssh_login_mode',   '',   '', 'N', '0', 'admin', CURRENT_TIMESTAMP(), '', null, '用户名/密码');
 insert into sys_dict_data values(61, 2,  '秘钥模式',     'key',       'cnsl_ssh_login_mode',   '',   '',  'N', '0', 'admin', CURRENT_TIMESTAMP(), '', null, '秘钥模式');
@@ -29,11 +23,6 @@ insert into sys_dict_data values(65, 1,  '不校验',     '0',       'cnsl_rds_s
 insert into sys_dict_data values(66, 2,  'ssh',       '1',       'cnsl_rds_secure_mode',   '',   '',  'N', '0', 'admin', CURRENT_TIMESTAMP(), '', null, 'ssh');
 insert into sys_dict_data values(67, 3,  '密码',       '2',       'cnsl_rds_secure_mode',   '',   '', 'N', '0', 'admin', CURRENT_TIMESTAMP(), '', null, '密码');
 insert into sys_dict_data values(68, 4,  'ssl+密码',   '3',       'cnsl_rds_secure_mode',   '',   '',  'N', '0', 'admin', CURRENT_TIMESTAMP(), '', null, 'ssl+密码');
-
-insert into sys_dict_type values(17, '节点管理器状态',  'cnsl_node_manager_status',   '0', 'admin', CURRENT_TIMESTAMP(), '', null, '部署代理状态');
-insert into sys_dict_data values(70, 1,  '未安装',     'none',       'cnsl_node_manager_status',   '',   '', 'N', '0', 'admin', CURRENT_TIMESTAMP(), '', null, '未安装');
-insert into sys_dict_data values(71, 2,  '运行中',       'running',   'cnsl_node_manager_status',   '',   '',  'N', '0', 'admin', CURRENT_TIMESTAMP(), '', null, '启动');
-insert into sys_dict_data values(72, 3,  '未运行',       'stopped',   'cnsl_node_manager_status',   '',   '', 'N', '0', 'admin', CURRENT_TIMESTAMP(), '', null, '未知');
 
 insert into sys_dict_type values(18, 'RDS节点状态',    'cnsl_node_status',   '0', 'admin', CURRENT_TIMESTAMP(), '', null, 'RDS节点状态');
 insert into sys_dict_data values(80, 1,  '未安装',     'none',       'cnsl_node_status',   '',   'default', 'N', '0', 'admin', CURRENT_TIMESTAMP(), '', null, '未安装');
