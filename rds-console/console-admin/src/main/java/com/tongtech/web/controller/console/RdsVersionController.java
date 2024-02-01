@@ -2,7 +2,6 @@ package com.tongtech.web.controller.console;
 
 import java.util.List;
 
-import com.tongtech.console.domain.vo.RdsVersionVo;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -68,9 +67,7 @@ public class RdsVersionController extends BaseController
     public AjaxResult getInfo(@PathVariable("versionId") Long versionId)
     {
         RdsVersion version = rdsVersionService.selectRdsVersionByVersionId(versionId);
-        RdsVersionVo vo = new RdsVersionVo(version, null);
-
-        return AjaxResult.success(vo);
+        return AjaxResult.success(version);
     }
 
     /**

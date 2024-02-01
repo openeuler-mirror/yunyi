@@ -6,7 +6,6 @@ import com.tongtech.common.exception.ServiceException;
 import com.tongtech.common.utils.DateUtils;
 import javax.annotation.Resource;
 
-import com.tongtech.console.mapper.TemplateGroupVersionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.tongtech.console.mapper.RdsVersionMapper;
@@ -25,9 +24,6 @@ public class RdsVersionServiceImpl implements RdsVersionService
 {
     @Resource
     private RdsVersionMapper rdsVersionMapper;
-
-    @Autowired
-    private TemplateGroupVersionMapper groupVersionMapper;
 
     /**
      * 查询版本信息
@@ -135,7 +131,6 @@ public class RdsVersionServiceImpl implements RdsVersionService
     @Override
     public int deleteRdsVersionByVersionId(Long versionId)
     {
-        groupVersionMapper.deleteByVersionId(versionId);
         return rdsVersionMapper.deleteRdsVersionByVersionId(versionId);
     }
 
