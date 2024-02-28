@@ -5,3 +5,4 @@
 .DS_Store?
 **/.flattened-pom.xml
 .gradle/
+/lic/
