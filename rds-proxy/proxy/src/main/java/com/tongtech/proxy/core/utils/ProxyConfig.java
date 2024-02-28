@@ -1,10 +1,10 @@
 package com.tongtech.proxy.core.utils;
 
+import com.tongtech.proxy.core.utils.config.PropertyPlaceholderHelper;
+import com.tongtech.proxy.fw.AddressRestrictions;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
-import com.tongtech.proxy.core.utils.config.PropertyPlaceholderHelper;
-import com.tongtech.proxy.fw.AddressRestrictions;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
@@ -43,7 +43,7 @@ public class ProxyConfig {
 
     // 服务器开放端口的安全级别
     // 0: telnet; 1: SSL; 2: password; 3: SSL + password. 缺省为1
-    private final static int SocketSecureLevel;
+    private volatile static int SocketSecureLevel;
 
     private volatile static String AuthenString;
 
@@ -447,23 +447,58 @@ public class ProxyConfig {
             Logger.warnLog("ProxyConfig::reload() Set log level to {}", loglevel);
         }
 
-        // 判断密码配置是否有效
-        if ((SocketSecureLevel & 2) > 0) {
-            // Password
-            String passwd = getProperty(root, "Server.Listen.Password");
-            if (passwd != null && !passwd.equals(AuthenString)) {
-                AuthenString = passwd;
-                Logger.infoLog("ProxyConfig::reload() Reload new Password ok.");
-            }
-            // RedisPwd
-            String redis_pwd = getProperty(root, "Server.Listen.RedisPassword");
-            if (redis_pwd == null) {
-                // SocketSecureLevel不允许reload，因此如果满足(SocketSecureLevel & 2) > 0，AuthenString就不可能为null
-                redis_pwd = AuthenString;
-            }
-            if (redis_pwd != null && !redis_pwd.equals(RedisPwd)) {
-                // 因此此处redis_pwd不可能为空
-                RedisPwd = redis_pwd;
+//        // 判断密码配置是否有效
+//        // Password
+//        String passwd = getProperty(root, "Server.Listen.Password");
+//        if ((passwd == null && AuthenString != null) || (passwd != null && !passwd.equals(AuthenString))) {
+//            AuthenString = passwd;
+//            Logger.infoLog("ProxyConfig::reload() Reload new Password ok.");
+//        }
+//        // RedisPwd
+//        String redis_pwd = getProperty(root, "Server.Listen.RedisPassword");
+//        if (redis_pwd == null) {
+//            // SocketSecureLevel不允许reload，因此如果满足(SocketSecureLevel & 2) > 0，AuthenString就不可能为null
+//            redis_pwd = AuthenString;
+//        }
+//        if (redis_pwd != null && !redis_pwd.equals(RedisPwd)) {
+//            // 因此此处redis_pwd不可能为空
+//            RedisPwd = redis_pwd;
+//        }
+
+        // 重读secure配置，只修改是否认证的标志位
+        int secure_level;
+        try {
+            secure_level = Integer.parseInt(getProperty(root, "Server.Listen.Secure"));
+            Logger.infoLog("ProxyConfig::() Configuration 'Server.Listen.Secure' is " + secure_level);
+        } catch (Exception e) {
+            secure_level = 1;
+        }
+        if ((secure_level & 2) != (SocketSecureLevel & 2)) {
+            if ((secure_level & 2) > 0) {
+                // 1、更新 Password
+                String passwd = getProperty(root, "Server.Listen.Password");
+                if ((passwd == null && AuthenString != null) || (passwd != null && !passwd.equals(AuthenString))) {
+                    AuthenString = passwd;
+                    Logger.infoLog("ProxyConfig::reload() Reload new Password ok.");
+                }
+                // 2、更新 RedisPwd
+                String redis_pwd = getProperty(root, "Server.Listen.RedisPassword");
+                if (redis_pwd == null) {
+                    // SocketSecureLevel不允许reload，因此如果满足(SocketSecureLevel & 2) > 0，AuthenString就不可能为null
+                    redis_pwd = AuthenString;
+                }
+                if ((redis_pwd == null && RedisPwd != null) || (redis_pwd != null && !redis_pwd.equals(RedisPwd))) {
+                    // 因此此处redis_pwd不可能为空
+                    RedisPwd = redis_pwd;
+                }
+                // 3、判断是否可以更新 SocketSecureLevel
+                if (passwd != null) {
+                    SocketSecureLevel |= 2;
+                } else {
+                    Logger.warnLog("ProxyConfig::() Due to 'Server.Listen.RedisPassword' being empty, 'Server.Listen.Secure' cannot be set to require authentication.");
+                }
+            } else {
+                SocketSecureLevel &= 1;
             }
         }
 
