@@ -1,5 +1,6 @@
 package com.tongtech.proxy.core.protocol.redis.callbacks;
 
+import com.tongtech.proxy.core.StaticContent;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
 import com.tongtech.proxy.core.acl.AclAuthen;
@@ -87,6 +88,7 @@ public class DefaultDataResultImp implements DataResult {
     @Override
     public synchronized void setOk() throws IOException {
         Writer.writeAndFlush("+OK");
+        process();
     }
 
     @Override
@@ -94,6 +96,7 @@ public class DefaultDataResultImp implements DataResult {
         // TODO Auto-generated method stub
 
         Writer.writeAndFlush(new Long(l));
+        process();
     }
 
     @Override
@@ -102,18 +105,22 @@ public class DefaultDataResultImp implements DataResult {
         // TODO Auto-generated method stub
 
         Writer.writeAndFlush("-" + msg);
+        process();
     }
 
     @Override
     public synchronized ChannelFuture send(String msg) throws IOException {
         // TODO Auto-generated method stub
-        return Writer.writeAndFlush(msg);
+        ChannelFuture channelFuture = Writer.writeAndFlush(msg);
+        process();
+        return channelFuture;
     }
 
     @Override
     public synchronized void sendObject(Object o) {
         // TODO Auto-generated method stub
         Writer.writeAndFlush(o);
+        process();
     }
 
     @Override
@@ -134,5 +141,11 @@ public class DefaultDataResultImp implements DataResult {
     @Override
     public String toString() {
         return "Redis Compatible connection to " + Writer.channel().remoteAddress();
+    }
+
+    private void process(){
+        SessionAttribute attribute = CachedSessionAttributes.get(Writer);
+        attribute.getCmdQueue().poll();
+        attribute.startProcess(Writer);
     }
 }

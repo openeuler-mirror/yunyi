@@ -23,6 +23,7 @@ import com.tongtech.proxy.core.StaticContent;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
+import java.util.Queue;
 import java.util.Vector;
 
 /**
@@ -160,24 +161,15 @@ public class RedisAdapter extends ChannelInboundHandlerAdapter {
             }
             return;
         }
+//---- 处理
 
-        if (messageProcesser != null && result != null) {
-            try {
-                if (!messageProcesser.process(data, result)) {
-                    ctx.close();
-                }
+        attribute.pushCmd(data);
 
-                // 此处影响输出统计日志
-                ProcessCounter.increase();
-            } catch (Throwable t) {
-                ctx.writeAndFlush("-ERR " + t.getMessage());
-                logger.warnLog("RedisAdapter::channelRead() A fatal error occur: {}", t);
-            }
-        } else {
-            logger.warnLog("RedisAdapter::channelRead() Unporcessed message");
-            ctx.writeAndFlush("-ERR Server internal error");
-            ctx.close();
+        Queue<Object> cmdQueue = attribute.getCmdQueue();
+        if (cmdQueue.size() == 1) {
+            attribute.startProcess(ctx);
         }
+
     }
 
     /**
@@ -190,6 +182,8 @@ public class RedisAdapter extends ChannelInboundHandlerAdapter {
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         SessionAttribute attribute = new SessionAttribute();
         StaticContent.CachedSessionAttributes.put(ctx, attribute);
+
+        attribute.setProcess(messageProcesser);
 
         InetSocketAddress address = (InetSocketAddress) ctx.channel().remoteAddress();
         if (address != null) {
