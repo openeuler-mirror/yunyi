@@ -236,7 +236,7 @@ public class AddressRestrictions {
             if (counter.timestamp + DELAYTIME < System.currentTimeMillis()) {
                 dynamic.remove(addr);
             } else {
-                throw new IOException(addr.getHostName() + " authen failed too many times.");
+                throw new IOException(addr.getHostName() + " authentication failed too many times.");
             }
         }
 

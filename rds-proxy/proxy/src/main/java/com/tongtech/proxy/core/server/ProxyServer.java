@@ -35,7 +35,6 @@ import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
 import static com.tongtech.proxy.core.StaticContent.SCHEDULED_THREAD_POOL_EXECUTOR;
-import static com.tongtech.proxy.core.StaticContent.VENDER_ID;
 
 public class ProxyServer {
     private static volatile ServerBootstrap bootstrap = null;
@@ -150,11 +149,7 @@ public class ProxyServer {
                 throw new IOException("Listening port " + ProxyConfig.getListeningPort() + " failed: " + e.getMessage());
             }
 
-            if (VENDER_ID < 3) {
                 System.out.println("Begin to listen " + ProxyConfig.getListeningPort());
-            } else {
-                System.out.println("Start listening to port " + ProxyConfig.getListeningPort());
-            }
 
             logger.coreLog("Server::main() Port "
                     + ProxyConfig.getListeningPort() + " is listened");
@@ -213,20 +208,14 @@ public class ProxyServer {
                 logger.coreLog("Server::main() Redis-Protocol is listened at {}.", redis_port);
             }
 
-            if (VENDER_ID < 3) {
-                System.out.println("Begin to listen " + redis_port);
-            } else {
-                System.out.println("Start listening to port " + redis_port);
-            }
+            System.out.println("Begin to listen " + redis_port);
 
             final PrintStream finalOut = System.out;
             Runtime.getRuntime().addShutdownHook(new Thread() {
                 @Override
                 public void run() {
-                    if (VENDER_ID < 3) {
-                        logger.infoLog("Proxy is shutting down...");
-                        finalOut.println("\nProxy is shutting down...");
-                    }
+                    logger.infoLog("Proxy is shutting down...");
+                    finalOut.println("\nProxy is shutting down...");
                     channel_for_rds.close();
                     try {
                         channel_for_redis.close();
@@ -245,11 +234,9 @@ public class ProxyServer {
                     long inteval = ProxyConfig.getLongProperty("Server.Common.DataDump");
 
                     if (inteval > 0) {
-                        if (VENDER_ID < 3) {
-                            logger.infoLog("Saving data...");
+                             logger.infoLog("Saving data...");
                             finalOut.println("Try to save data automatically");
-                        }
-                    }
+                     }
 
                     logger.coreLog("SERVER_STOP Proxy stop（in hook）.");
                     logger.close();
