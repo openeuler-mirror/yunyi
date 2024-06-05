@@ -96,14 +96,14 @@ public class RedisAdapter extends ChannelInboundHandlerAdapter {
                 if ("Auth".equalsIgnoreCase(data.get(0).toString())) {
                     if (data.size() == 1) {
                         ctx.writeAndFlush("-WRONGPASS invalid username-password pair");
-                        logger.warnLog("RedisAdapter::channelRead() Client '{}' null authen."
+                        logger.warnLog("RedisAdapter::channelRead() Client '{}' null Authentication."
                                 , ctx.channel().remoteAddress());
                     } else if (data.size() == 2) {
                         String passwd = new String((byte[]) data.get(1), StandardCharsets.UTF_8);
                         if (ProxyConfig.getRedisPwd().equals(passwd)) {
                             AddressRestrictions.authSuccessed(((InetSocketAddress) ctx.channel().remoteAddress()).getAddress());
                             attribute.setAuthed(true);
-                            logger.infoLog("RedisAdapter::channelRead() Client '{}' authen ok"
+                            logger.infoLog("RedisAdapter::channelRead() Client '{}' Authentication ok"
                                     , ctx.channel().remoteAddress());
                             ctx.writeAndFlush("OK");
                         } else {
@@ -111,7 +111,7 @@ public class RedisAdapter extends ChannelInboundHandlerAdapter {
                             logger.warnLog("RedisAdapter::channelRead() Client '{}' password {} authen failed."
                                     , ctx.channel().remoteAddress(), data.get(1));
                             if (AddressRestrictions.authFailed(((InetSocketAddress) ctx.channel().remoteAddress()).getAddress())) {
-                                logger.warnLog("RedisAdapter::channelRead() Authen failed too many times.");
+                                logger.warnLog("RedisAdapter::channelRead() Authentication failed too many times.");
                                 ctx.close();
                             }
                         }

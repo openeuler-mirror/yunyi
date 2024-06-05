@@ -340,9 +340,6 @@ public class StaticContent {
     }
 
 
-    // 当前程序授权的厂家ID
-    public static volatile int VENDER_ID = 99;
-
     // 创建的客户端 Socket 编号
     public static final AtomicLong ClientId = new AtomicLong(0);
 
