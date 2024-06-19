@@ -158,11 +158,7 @@ export default {
         this.uploadList.push({ name: res.fileName, url: res.fileName });
         this.uploadedSuccessfully();
       } else {
-        this.number--;
-        this.$modal.closeLoading();
-        this.$modal.msgError(res.msg);
-        this.$refs.imageUpload.handleRemove(file);
-        this.uploadedSuccessfully();
+        this.handleUploadError(file,res.msg)
       }
     },
     // 删除图片
@@ -174,9 +170,12 @@ export default {
       }
     },
     // 上传失败
-    handleUploadError() {
-      this.$modal.msgError("上传图片失败，请重试");
+    handleUploadError(file,msg) {
+      this.number--;
       this.$modal.closeLoading();
+      this.$modal.msgError(msg);
+      this.$refs.imageUpload.handleRemove(file);
+      this.uploadedSuccessfully();
     },
     // 上传结束处理
     uploadedSuccessfully() {
