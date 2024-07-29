@@ -99,7 +99,7 @@
       <div class="line"></div>
       <div class="bot_content">
         <div class="con_le">
-          <img src="../assets/logo/u78.jpg" alt="" style="margin-top：0 !important;">
+          <img src="../assets/logo/u78.jpg" alt="" style="margin-top:0 !important;">
           <div class="con_tit_con">
             <div class="le_tit">部署灵活</div>
             <div class="le_tit_con">
