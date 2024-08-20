@@ -79,7 +79,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                min(create_time) as create_time,
                round(avg(create_second)) as create_second
         FROM cnsl_node_stat
-        where node_id=#{nodeId} and create_second>=#{beginCreateSecond} and expired=0 group by create_second-create_second%(#{groupSeconds});
+        where node_id=#{nodeId}
+          and create_second>=#{beginCreateSecond}
+        <if test="endCreateSecond != null">
+            AND create_second &lt;= #{endCreateSecond}
+        </if>
+          and expired=0 group by create_second-create_second%(#{groupSeconds});
     </select>
 
 

@@ -72,6 +72,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                round(avg(create_second)) as create_second
         FROM cnsl_service_stat
         where service_id=#{serviceId} and create_second >= #{beginCreateSecond}
+        <if test="endCreateSecond != null">
+            AND create_second &lt;= #{endCreateSecond}
+        </if>
         group by service_id
     </select>
 

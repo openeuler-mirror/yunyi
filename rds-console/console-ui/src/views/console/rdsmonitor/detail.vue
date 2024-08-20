@@ -7,10 +7,13 @@
 
       <div>
         <b>监控时间范围：</b>
-        <el-radio-group v-model="data.params.datetime" size="mini" @change="eventDatetimeChange">
+        <!-- <el-radio-group v-model="data.params.datetime" size="mini" @change="eventDatetimeChange">
           <el-radio-button v-for="(item, index) in datetimes" :label="item.value" :key="item.value" :index="index">{{
             item.label }}</el-radio-button>
-        </el-radio-group>
+        </el-radio-group> -->
+        <el-date-picker v-model="createSecondDateTimes" type="datetimerange" range-separator="至"
+          start-placeholder="开始时间" end-placeholder="结束时间" @change="eventDatetimeChange">
+        </el-date-picker>
       </div>
     </div>
     <el-divider></el-divider>
@@ -53,7 +56,8 @@
       </div>
       <div class="centerbox">
         <div v-for="(item, index) in echarts" :key="item.id">
-          <node-monitor-dashboard :ref="item.elementId" :echart="item" :chartWidth="chartWidth"></node-monitor-dashboard>
+          <node-monitor-dashboard :ref="item.elementId" :echart="item"
+            :chartWidth="chartWidth"></node-monitor-dashboard>
         </div>
       </div>
     </el-card>
@@ -64,7 +68,8 @@
       </div>
       <div class="centerbox" v-loading="loading">
         <div v-for="(item, index) in item.echarts" :key="item.id">
-          <node-monitor-dashboard :ref="item.elementId" :echart="item" :chartWidth="chartWidth"></node-monitor-dashboard>
+          <node-monitor-dashboard :ref="item.elementId" :echart="item"
+            :chartWidth="chartWidth"></node-monitor-dashboard>
         </div>
       </div>
     </el-card>
@@ -73,7 +78,7 @@
 
 <script>
 import nodeMonitorDashboard from './components/nodeMonitorDashboard'
-import {getServiceNodes} from '@/api/console/rdsmonitor'
+import { getServiceNodes } from '@/api/console/rdsmonitor'
 export default {
   components: {
     nodeMonitorDashboard
@@ -85,32 +90,7 @@ export default {
       serviceId: this.$route.params.rdssupervisorycontrolId,
       chartWidth: 250,
       isshow: true,
-      echarts: [
-        {
-          elementId: 1,
-          title: '内存使用（MB）-最大内存',
-          data: [],
-          categorys: []
-        },
-        {
-          elementId: 2,
-          title: '客户端连接数-最大可用',
-          data: [],
-          categorys: []
-        },
-        {
-          elementId: 3,
-          title: '请求数/秒',
-          data: [],
-          categorys: []
-        },
-        {
-          elementId: 4,
-          title: '当前key',
-          data: [],
-          categorys: []
-        }
-      ],
+      echarts: [],
       echartsclusterData: [],
       data: {
         server: {
@@ -143,14 +123,23 @@ export default {
         },
 
       ],
+      echartsTitles: ['连接数', '内存使用量(M)', '内存总量(M)', 'key总数', '实际占用内存总量(M)', '最大可用内存量(M)', '网络IO每秒入流量', '网络IO每秒出流量', '当前程序CPU使用率', '当前系统CPU使用率'],
+      createSecondDateTimes: [new Date(new Date().getTime() - 10 * 60 * 1000), new Date()]
     }
   },
   mounted() {
+    for (let i = 0; i < this.echartsTitles.length; i++) {
+      this.echarts.push({
+        elementId: i+1,
+        title: this.echartsTitles[i],
+        data: [],
+        categorys: []
+      })
+    }
     this.getNodeList()
     this.actionInitChartWidth()
   },
   beforeDestroy() {
-    console.log('清空定时器 beforeDestroy')
     this.timer && clearInterval(this.timer)
   },
   methods: {
@@ -160,9 +149,14 @@ export default {
     async getNodeList() {
       this.timer && clearInterval(this.timer) // 首先进入清除定时器
       this.loading = true
+      let beginCreateSecond = Math.floor(this.createSecondDateTimes[0].getTime() / 1000)
+      let endCreateSecond = Math.floor(this.createSecondDateTimes[1].getTime() / 1000)
       let data = await getServiceNodes({
         serviceId: this.serviceId,
-        pastSecond: this.data.params.datetime
+        //pastSecond: this.data.params.datetime
+        beginCreateSecond: beginCreateSecond,
+        endCreateSecond: endCreateSecond,
+        pastSecond: endCreateSecond - beginCreateSecond
       })
       this.loading = false
       if (data.code === 200) {
@@ -171,7 +165,6 @@ export default {
         this.data.server.statusName = data.data.status
         this.setVal()
         this.formateDataEcharts(data.data)
-
       }
     },
     formateDataEcharts(data) {
@@ -182,57 +175,53 @@ export default {
     centerEcharts(data) {
       data.nodes.forEach((item, index) => {
         let time = []
-        let echartsdata = []
-        let memoryAvailableData = []
-        let throughputAverage60Data = []
-        let currentkeyData = []
+        let data = [[], [], [], [], [], [], [], [], [], []];
         item.stats.forEach((k, v) => {
           time.push(this.actionFormatTimestamp(k.createSecond))
-          echartsdata.push(k.memoryTotal / 1024 / 1024)
-          memoryAvailableData.push(k.memoryAvailable)
-          throughputAverage60Data.push(k.throughputAverage60)
-          currentkeyData.push(k.currentKeys)
-          this.echarts[0].elementId = 1
-          this.echarts[0].data = echartsdata
-          this.echarts[0].categorys = time
-          this.echarts[1].elementId = 2
-          this.echarts[1].data = memoryAvailableData
-          this.echarts[1].categorys = time
-          this.echarts[2].elementId = 3
-          this.echarts[2].data = throughputAverage60Data
-          this.echarts[2].categorys = time
-          this.echarts[3].elementId = 4
-          this.echarts[3].data = currentkeyData
-          this.echarts[3].categorys = time
+          data[0].push(k.currentConnections)
+          data[1].push(k.memoryUsed / 1024 / 1024)
+          data[2].push((k.memoryUsed + k.memoryFree) / 1024 / 1024)
+          data[3].push(k.currentKeys)
+          data[4].push(k.memoryTotal / 1024 / 1024)
+          data[5].push(k.memoryAvailable / 1024 / 1024)
+          data[6].push(k.inputPerSecond)
+          data[7].push(k.outputPerSecond)
+          data[8].push(k.cpuProcessLoad)
+          data[9].push(k.cpuSystemLoad)
         })
+        for (let i = 0; i < this.echartsTitles.length; i++) {
+          this.echarts[i].data = data[i];
+          this.echarts[i].categorys = time;
+        }
       })
     },
     clusterEcharts(data) {
-
       this.echartsclusterData = []
       this.isshow = false
       this.data.server.workNodeNum = data.nodes.length
       data.nodes.forEach((item, index) => {
         let time = []
-        let memoryData = []
-        let connectionData = []
-        let processSecondData = []
-        let currentKeyData = []
+        let data = [[], [], [], [], [], [], [], [], [], []];
         item.stats.forEach((k, v) => {
           time.push(this.actionFormatTimestamp(k.createSecond))
-          memoryData.push(k.memoryTotal / 1024 / 1024)
-          connectionData.push(k.currentConnections)
-          processSecondData.push(k.throughputAverage60)
-          currentKeyData.push(k.currentKeys)
+          data[0].push(k.currentConnections)
+          data[1].push(k.memoryUsed / 1024 / 1024)
+          data[2].push((k.memoryUsed + k.memoryFree) / 1024 / 1024)
+          data[3].push(k.currentKeys)
+          data[4].push(k.memoryTotal / 1024 / 1024)
+          data[5].push(k.memoryAvailable / 1024 / 1024)
+          data[6].push(k.inputPerSecond)
+          data[7].push(k.outputPerSecond)
+          data[8].push(k.cpuProcessLoad)
+          data[9].push(k.cpuSystemLoad)
         })
+        let thisEcharts = [];
+        for (let i = 0; i < this.echartsTitles.length; i++) {
+          thisEcharts.push({ elementId: this.uuid(), title: this.echartsTitles[i], categorys: time, data: data[i] })
+        }
         this.echartsclusterData.push({
           name: item.instance,
-          echarts: [
-            { elementId: this.uuid(), title: '内存使用（MB）-最大内存', categorys: time, data: memoryData },
-            { elementId: this.uuid(), title: '客户端连接数-最大可用', categorys: time, data: connectionData },
-            { elementId: this.uuid(), title: '请求数/秒', categorys: time, data: processSecondData },
-            { elementId: this.uuid(), title: '当前key', categorys: time, data: currentKeyData }
-          ]
+          echarts: thisEcharts
         })
 
       })
@@ -267,7 +256,6 @@ export default {
       this.$nextTick(() => {
         this.getNodeList()
       })
-
     }
   }
 }
@@ -277,10 +265,12 @@ export default {
 .rdssupervisorycontrolDeatil {
   .centerbox {
     display: flex;
+    flex-wrap: wrap;
     width: 100%;
 
     >div {
       width: 25%;
+      margin-top: 10px;
       padding: 0px 5px;
     }
   }
