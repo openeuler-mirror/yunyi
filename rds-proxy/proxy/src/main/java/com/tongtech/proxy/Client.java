@@ -240,6 +240,36 @@ public class Client {
         System.exit(0);
     }
 
+    /**
+     * Parses command line arguments into a Map.
+     * Supports options like -h, --host, etc.
+     *
+     * @param args The command line arguments.
+     * @return A Map containing the parsed options and their values.
+     */
+    public static Map<String, String> parseArgv(String[] args) {
+        Map<String, String> params = new LinkedHashMap<>();
+        String optionName;
+
+        optionName = null;
+        for (String arg : args) {
+            // Check if the argument is an option (starts with '-' or '--')
+            if (arg.startsWith("--")) {
+                // Short option
+                optionName = arg.substring(2);
+            } else if (arg.startsWith("-")) {
+                // Long option
+                optionName = arg.substring(1);
+            } else if (optionName != null) {
+                // Argument value
+                params.put(optionName, arg);
+                optionName = null;
+            }
+        }
+
+        return params;
+    }
+
     private static final Vector<String> splitString(String src) {
 
         Vector<String> spliter = new Vector<>();
