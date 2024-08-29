@@ -270,6 +270,50 @@ public class Client {
         return params;
     }
 
+    private static final Vector<String> splitString1(String src) {
+        Vector<String> res = new Vector<>(100);
+        //定义一个flag用来定义单双引号的开始和结束（0-1）
+        boolean flag1;
+        boolean flag2;
+        //定义一个字符用来取字符串的每一个字符
+        char c1;
+        //定义一个字符串用来保存连续的字符
+        String str = new String();
+        char sep = ' ';
+
+        flag1 = false;
+        flag2 = false;
+        for(int i = 0;i<src.length();i++){
+            c1 = src.charAt(i);
+            //判断双引号
+            if (c1=='"'){
+                flag1=!flag1;
+            }
+            //判断单引号
+            else if (c1=='\''){
+                flag2=!flag2;
+            }
+            //判断能不能把str存到res内并清空str
+            if (c1==' '){
+                //判断双引号
+                if (flag1==true || flag2==true){
+                    str += Character.toString(c1);
+                } else {
+                    res.add(str);
+                    str = "";
+                }
+            }else{
+                str += Character.toString(c1);
+            }
+        }
+
+        if (str != ""){
+            res.add(str);
+        }
+
+        return res;
+    }
+
     private static final Vector<String> splitString(String src) {
 
         Vector<String> spliter = new Vector<>();
