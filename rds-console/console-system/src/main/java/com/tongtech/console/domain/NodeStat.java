@@ -81,6 +81,10 @@ public class NodeStat extends BaseEntity
 
     }
 
+    public NodeStat(Long srcId) {
+        this.srcId = srcId;
+    }
+
     public NodeStat(Long srcId, Long serviceId) {
         this.srcId = srcId;
         this.serviceId = serviceId;

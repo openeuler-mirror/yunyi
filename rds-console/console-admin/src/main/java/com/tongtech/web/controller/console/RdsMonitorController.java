@@ -10,10 +10,13 @@ import com.tongtech.console.service.NodeStatService;
 import com.tongtech.console.service.ServiceStatService;
 import com.tongtech.console.domain.vo.RdsMonitorQueryVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 
 /**
@@ -50,11 +53,17 @@ public class RdsMonitorController extends BaseController
         List<ServiceStat> serviceStats = servStatService.selectServiceStatList(param);
         List<ServiceStatVo> result = new ArrayList<>(serviceStats.size());
 
+        List<NodeStat> nodeStatsList = nodeStatService.selectNodeStatList(new NodeStat(srcId));
+        Map<Long, List<NodeStat>> nodeStatsMap = nodeStatsList.stream()
+                .collect(Collectors.groupingBy(e -> e.getServiceId()));
+
         for(ServiceStat servStat : serviceStats) {
-            List<NodeStat> nodes = nodeStatService.selectNodeStatList(new NodeStat(srcId, servStat.getServiceId()));
+            List<NodeStat> nodes = nodeStatsMap.get(servStat.getServiceId());
             //System.out.println("~~~~nodes:" + nodes);
             ServiceStatVo vo = new ServiceStatVo(servStat);
-            vo.setChildren(nodes);
+            if(!CollectionUtils.isEmpty(nodes)){
+                vo.setChildren(nodes);
+            }
             // 进行状态条件的筛选
             if( param.getStatus() != null ) {
                 if(param.getStatus().equals(vo.getStatus()) ) {
