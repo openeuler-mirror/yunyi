@@ -123,4 +123,6 @@ public interface RdsNodeService
 
 
     public int updateExpiredNodeStatus(Set<String> runningNodes);
+
+    List<RdsNode> selectRdsNodes();
 }

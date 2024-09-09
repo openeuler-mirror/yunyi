@@ -139,4 +139,5 @@ public interface RdsNodeMapper
     public int updateExpiredNodeStatus(String[] runningInstances);
 
 
+    List<RdsNode> selectRdsNodes();
 }

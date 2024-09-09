@@ -59,8 +59,8 @@ public class ServiceStatServiceImpl implements ServiceStatService
 
     @Override
     public ServiceStatVo selectSummaryServiceStat(RdsMonitorQueryVo queryVo) {
-
-        RdsService serv = servMapper.selectRdsServiceByServiceId(queryVo.getServiceId());
+        Long serviceId = queryVo.getServiceId();
+        RdsService serv = servMapper.selectRdsServiceByServiceId(serviceId);
         ServiceStat servStat = serviceStatMapper.selectSummaryServiceStat(queryVo);
         ServiceStatVo servStatVo;
         if(servStat != null) {
@@ -71,10 +71,9 @@ public class ServiceStatServiceImpl implements ServiceStatService
         else {
             servStatVo = new ServiceStatVo(serv);
         }
-
         //获得node列表
         List<RdsNodeStatsVo> nodes = new ArrayList<>();
-                List<RdsNode> rdsNodes = nodeMapper.selectNodesByServiceId(serv.getServiceId());
+                List<RdsNode> rdsNodes = nodeMapper.selectNodesByServiceId(serviceId);
         for(RdsNode rn : rdsNodes) {
             RdsNodeStatsVo nodeVo = new RdsNodeStatsVo(rn);
 
@@ -91,11 +90,7 @@ public class ServiceStatServiceImpl implements ServiceStatService
 
             nodes.add(nodeVo);// 插入node
         }
-
-
-
         servStatVo.setNodes(nodes);
-
         return servStatVo;
     }
 
