@@ -31,7 +31,7 @@ public interface RdsNodeMapper
     public RdsNode selectNodeByInstance(String instance);
 
     /**
-     * 查询服务serivce下的RDS节点信息列表
+     * 查询服务service下的RDS节点信息列表
      * @return
      */
     public List<RdsNode> selectNodesByServiceId(Long serviceId);
