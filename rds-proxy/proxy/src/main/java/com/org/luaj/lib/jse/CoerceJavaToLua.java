@@ -107,7 +107,7 @@ public class CoerceJavaToLua {
     }
 
     /**
-     * Coerse a Java object to a corresponding lua value.
+     * Coerce a Java object to a corresponding lua value.
      * <p>
      * Integral types {@code boolean}, {@code byte},  {@code char}, and {@code int}
      * will become {@link LuaLong};
