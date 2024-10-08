@@ -8,7 +8,7 @@ $RUN_DIR/StopProxy.sh >> /dev/null 2>&1
 
 sleep 5
 
-echo "Server stoped at `date`"
+echo "Server stopped at `date`"
 
 sleep 1
 
