@@ -33,7 +33,7 @@ cd %SERVER_HOME%
 
 "%JAVA%" %SERVEROPT% -classpath "%CLASSPATH%" com.tongtech.proxy.Proxy stop
 
-echo Server stoped.
+echo Server stopped.
 
 :end
 endlocal
