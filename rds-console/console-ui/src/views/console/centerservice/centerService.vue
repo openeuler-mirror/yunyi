@@ -170,7 +170,7 @@ export default {
       });
     },
     getOptions() {
-      //get all avalible version options
+      //get all available version options
       listVersionByStatus('1').then(response => {
           this.versionOptions = response.data;
           let defaultVersion = this.versionOptions.find(v => v.defaultVersion);
