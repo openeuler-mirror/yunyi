@@ -315,7 +315,7 @@ public class SetSplit2MultiModule implements PluginModule {
             response.add(resq);
             ret = response;
         } else {
-            ret = new IllegalAccessException("Err unsupport command '" + cmd + "' in plugin SetSplit2MultiModule");
+            ret = new IllegalAccessException("Err unsupported command '" + cmd + "' in plugin SetSplit2MultiModule");
         }
         interaction.log(LOGLEVEL.DEBUG, "request: " + cmd + ", response: " + ret);
         return ret;
