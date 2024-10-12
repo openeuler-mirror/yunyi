@@ -302,7 +302,7 @@ public class ByteArrayOutputStream extends OutputStream {
     }
 
     /**
-     * Gets the curent contents of this byte stream as a byte array.
+     * Gets the current contents of this byte stream as a byte array.
      * The result is independent of this stream.
      *
      * @return the current contents of this output stream, as a byte array
