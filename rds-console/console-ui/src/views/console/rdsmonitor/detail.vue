@@ -12,7 +12,7 @@
             item.label }}</el-radio-button>
         </el-radio-group> -->
         <el-date-picker v-model="createSecondDateTimes" type="datetimerange" range-separator="至"
-          start-placeholder="开始时间" end-placeholder="结束时间" @change="eventDatetimeChange">
+          start-placeholder="开始时间" end-placeholder="结束时间" @change="eventDatetimeChange" :picker-options="pickerOptions">
         </el-date-picker>
       </div>
     </div>
@@ -79,6 +79,7 @@
 <script>
 import nodeMonitorDashboard from './components/nodeMonitorDashboard'
 import { getServiceNodes } from '@/api/console/rdsmonitor'
+import { getConfigKey } from '@/api/system/config'
 export default {
   components: {
     nodeMonitorDashboard
@@ -124,13 +125,38 @@ export default {
 
       ],
       echartsTitles: ['连接数', '内存使用量(M)', '内存总量(M)', 'key总数', '实际占用内存总量(M)', '最大可用内存量(M)', '网络IO每秒入流量', '网络IO每秒出流量', '当前程序CPU使用率', '当前系统CPU使用率'],
-      createSecondDateTimes: [new Date(new Date().getTime() - 10 * 60 * 1000), new Date()]
+      createSecondDateTimes: [new Date(new Date().getTime() - 10 * 60 * 1000), new Date()],
+      selectDate: '',
+      pickerOptions: {
+        onPick: ({ maxDate, minDate }) => {
+          this.selectDate = minDate.getTime()
+          if (maxDate) {
+            this.selectDate = ''
+          }
+        },
+        disabledDate: (time) => {
+          const limitDay = 1000 * 60 * 60 * 24 * 30
+          if (this.selectDate) {
+            return (
+              time.getTime() < this.selectDate - limitDay ||
+              time.getTime() > this.selectDate + limitDay ||
+              time.getTime() > Date.now()
+            )
+          } else {
+            return time.getTime() > Date.now()
+          }
+        }
+      },
+      refreshIntervalSeconds: 60
     }
+  },
+  created() { 
+    this.getMonitorRefreshSeconds()
   },
   mounted() {
     for (let i = 0; i < this.echartsTitles.length; i++) {
       this.echarts.push({
-        elementId: i+1,
+        elementId: i + 1,
         title: this.echartsTitles[i],
         data: [],
         categorys: []
@@ -143,6 +169,13 @@ export default {
     this.timer && clearInterval(this.timer)
   },
   methods: {
+    getMonitorRefreshSeconds() {//系统配置的自动刷新时间
+      getConfigKey('monitorChartAutoRefreshSeconds').then((data) => {
+        if (data.code === 200 && data.data) {
+          this.refreshIntervalSeconds = parseInt(data.data)
+        }
+      })
+    },
     actionInitChartWidth: function () {
       this.chartWidth = parseInt((window.innerWidth - 232 - 120) / 4)
     },
@@ -229,7 +262,7 @@ export default {
       // this.echartsclusterData = data.nodes
     },
     setVal() {
-      this.timer = setInterval(() => this.getNodeList(), 30000)
+      this.timer = setInterval(() => this.getNodeList(), this.refreshIntervalSeconds * 1000)
     },
     uuid() {
       var s = [];
