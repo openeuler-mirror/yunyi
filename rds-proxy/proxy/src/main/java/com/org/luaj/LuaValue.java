@@ -3833,7 +3833,7 @@ public class LuaValue extends Varargs {
 
     /**
      * Reverse-concatenation: concatenate this value onto another value
-     * whose type is unknwon
+     * whose type is unknown
      * and return the result using rules of lua string concatenation including
      * metatag processing.
      * <p>
