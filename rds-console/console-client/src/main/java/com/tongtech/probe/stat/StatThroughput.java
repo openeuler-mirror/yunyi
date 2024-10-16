@@ -3,9 +3,9 @@ package com.tongtech.probe.stat;
 public class StatThroughput {
     /* 当前秒的命令执行数 */
     private Integer current;
-    /* 前10秒平局每秒的命令执行数量 */
+    /* 前10秒平均每秒的命令执行数量 */
     private Double average10;
-    /* 前60秒平局每秒的命令执行数量 */
+    /* 前60秒平均每秒的命令执行数量 */
     private Double average60;
     /* 上一个小时（整点）的命令执行总数 */
     private Double lasthour;
