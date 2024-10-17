@@ -48,13 +48,13 @@
               <el-input v-model="lookObj.id" disabled/>
             </el-form-item>
             <el-form-item label="Value">
-              <el-select v-model="currnt" >
+              <el-select v-model="current" >
                 <el-option label="Json" value="Json"></el-option>
                 <el-option label="Text" value="Text"></el-option>
               </el-select>
               <p></p>
-              <CodeViewer class="params-viewer" :code="lookObj.fields" v-if="currnt === 'Json'"/>
-              <el-input  disabled v-model="lookObj.fields" type="textarea"  v-if="currnt === 'Text'"></el-input>
+              <CodeViewer class="params-viewer" :code="lookObj.fields" v-if="current === 'Json'"/>
+              <el-input  disabled v-model="lookObj.fields" type="textarea"  v-if="current === 'Text'"></el-input>
             </el-form-item>
         </el-form>
 
@@ -86,7 +86,7 @@ export default {
   data() {
     return {
       lookObj:{},
-      currnt:'Json',
+      current:'Json',
       lookDialog:false
     }
   },
