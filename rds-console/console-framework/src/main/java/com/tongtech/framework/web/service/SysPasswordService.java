@@ -82,7 +82,7 @@ public class SysPasswordService {
 
 
     /**
-     * 清楚登录锁定
+     * 清除登录锁定
      * @param userId
      */
     public void clearLoginLocked(Long userId) {
