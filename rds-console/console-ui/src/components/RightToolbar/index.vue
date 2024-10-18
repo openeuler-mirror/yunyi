@@ -7,7 +7,7 @@
       <el-tooltip class="item" effect="dark" content="刷新" placement="top">
         <el-button size="mini" circle icon="el-icon-refresh" @click="refresh()" />
       </el-tooltip>
-      <el-tooltip class="item" effect="dark" content="显隐列" placement="top" v-if="columns">
+      <el-tooltip class="item" effect="dark" content="显隐列" placement="top" v-if="localColumns">
         <el-button size="mini" circle icon="el-icon-menu" @click="showColumn()" />
       </el-tooltip>
     </el-row>
@@ -15,7 +15,7 @@
       <el-transfer
         :titles="['显示', '隐藏']"
         v-model="value"
-        :data="columns"
+        :data="localColumns"
         @change="dataChange"
       ></el-transfer>
     </el-dialog>
@@ -32,6 +32,7 @@ export default {
       title: "显示/隐藏",
       // 是否显示弹出层
       open: false,
+      localColumns: this.columns
     };
   },
   props: {
@@ -79,9 +80,9 @@ export default {
     },
     // 右侧列表元素变化
     dataChange(data) {
-      for (let item in this.columns) {
-        const key = this.columns[item].key;
-        this.columns[item].visible = !data.includes(key);
+      for (let item in this.localColumns) {
+        const key = this.localColumns[item].key;
+        this.localColumns[item].visible = !data.includes(key);
       }
     },
     // 打开显隐列dialog
