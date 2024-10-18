@@ -65,11 +65,7 @@ export default {
         if (valid) {
           updateUserPwd(this.user.oldPassword, this.user.newPassword).then(
             response => {
-              if(response.code === 200){
-                this.$message.success("修改成功");
-              }else{
-                this.$message.error(response.msg);
-              }
+              this.$message.success("修改成功");
               if (this.passwordDialog) {
                 this.$emit('close')
               }
