@@ -62,7 +62,7 @@ function run()
         echo "$AppName is running..."
     else
       if [ ! -d "data/db" ]; then
-          echo "data/ do not contained data files! try to initial it!"
+          echo "data/ does not contain data files! Try to initialize it!"
           if [ ! -d "data" ]; then
               mkdir data
           fi
