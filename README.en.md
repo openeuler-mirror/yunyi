@@ -35,7 +35,7 @@ For details, see the README.md files in the subdirectory
 3. Submit the code 
 4. Create a new pull request 
 
-#### stunt
+#### Features
 
 1. Use Readme_XXX.md to support different languages, such as Readme_en.md, Readme_zh.md 
 2. Gitee Official Blog blog.gitee.com 
