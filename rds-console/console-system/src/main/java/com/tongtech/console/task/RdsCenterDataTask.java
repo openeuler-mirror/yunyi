@@ -290,7 +290,7 @@ public class RdsCenterDataTask {
             //3. 更新其他使用这个sentinel service的服务中的 sentinelServiceId
             for(String workerServiceName : statSentinel.getServices().keySet()) {
                 RdsService workerServ = serviceMap.get(workerServiceName);
-                if(workerServ != null && workerServ.getSentinelServiceId() != serv.getServiceId()) {
+                if(workerServ != null && !workerServ.getSentinelServiceId().equals(serv.getServiceId())) {
                     workerServ.setSentinelServiceId(serv.getServiceId());
                     serviceUpdates.put(workerServ.getServiceId(), workerServ);
                 }
@@ -353,7 +353,7 @@ public class RdsCenterDataTask {
         boolean changed = false;
 
         DeployModeEnum deployMode = serv.getDeployModeEnum();
-        if(newSecureLevel != null && newSecureLevel != serv.getSecureMode())  {
+        if(newSecureLevel != null && !newSecureLevel.equals(serv.getSecureMode()))  {
             if(deployMode == DeployModeEnum.SINGLE
                     || deployMode == DeployModeEnum.SENTINEL_WORKER
                     ||deployMode == DeployModeEnum.CLUSTER) {
