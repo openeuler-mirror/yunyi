@@ -44,7 +44,7 @@ public class RedisUtils {
         try(Jedis jedis = new Jedis(url, port)) {
             jedis.auth(password);//密码
             String ping = jedis.ping();
-            if (ping.equalsIgnoreCase("PONG") == false) {
+            if ("PONG".equalsIgnoreCase(ping) == false) {
                 String result = "Response: '" + ping + "'. Error, It should be 'PONG' !";
                 throw new ServiceException(result);
             }
