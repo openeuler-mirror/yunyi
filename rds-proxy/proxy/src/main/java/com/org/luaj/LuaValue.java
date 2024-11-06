@@ -1834,7 +1834,7 @@ public class LuaValue extends Varargs {
 
     /**
      * Load a library instance by setting its environment to {@code this}
-     * and calling it, which should iniitalize the library instance and
+     * and calling it, which should initialize the library instance and
      * install itself into this instance.
      *
      * @param library The callable {@link LuaValue} to load into {@code this}
@@ -3833,7 +3833,7 @@ public class LuaValue extends Varargs {
 
     /**
      * Reverse-concatenation: concatenate this value onto another value
-     * whose type is unknwon
+     * whose type is unknown
      * and return the result using rules of lua string concatenation including
      * metatag processing.
      * <p>

@@ -367,7 +367,7 @@ public class OutputStreamLog extends OutputStream implements Runnable {
                 ie.printStackTrace();
                 break;
             } catch (Exception e) {
-                // System.err.println("Log's backgroud thread exception at '"
+                // System.err.println("Log's background thread exception at '"
                 // + this.toString() + "' " + e.getMessage());
                 // e.printStackTrace(System.out);
             }

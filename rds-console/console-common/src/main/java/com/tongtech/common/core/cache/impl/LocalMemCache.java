@@ -74,7 +74,7 @@ public class LocalMemCache implements ObjectCache {
     /**
      * 获取匹配的缓存keys列表。
      *
-     * @param pattern  4种模式：1.后缀模式 "*suffix", 2.前缀模式 preffix*， 3.包含模式"contains" ， 4 如果是""或null 返回所有key
+     * @param pattern  4种模式：1.后缀模式 "*suffix", 2.前缀模式 prefix*， 3.包含模式"contains" ， 4 如果是""或null 返回所有key
      * @return 对象列表
      * @throws IOException
      */

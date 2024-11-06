@@ -139,4 +139,15 @@ public class Constants
      */
     public static final String[] JOB_ERROR_STR = { "java.net.URL", "javax.naming.InitialContext", "org.yaml.snakeyaml",
             "org.springframework", "org.apache", "com.tongtech.common.utils.file" };
+
+
+    /**
+     * application.yml中定义
+     */
+    public static final String CONSOLE_NAME = "console.name";
+    public static final String CONSOLE_VERSION = "console.version";
+    public static final String CONSOLE_COPYRIGHTYEAR = "console.copyrightYear";
+    public static final String CONSOLE_DEPLOYENV = "console.deployEnv";
+    public static final String CONSOLE_EMBEDDING = "console.embedding";
+
 }

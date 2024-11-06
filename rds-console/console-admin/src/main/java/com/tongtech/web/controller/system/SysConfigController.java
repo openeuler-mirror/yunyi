@@ -25,6 +25,8 @@ import com.tongtech.common.utils.poi.ExcelUtil;
 import com.tongtech.system.domain.SysConfig;
 import com.tongtech.system.service.ISysConfigService;
 
+import static com.tongtech.common.constant.Constants.*;
+
 /**
  * 参数配置 信息操作处理
  *
@@ -87,19 +89,19 @@ public class SysConfigController extends BaseController
     @GetMapping(value = "/appConfigKey/{key}")
     public AjaxResult getAppConfigKey(@PathVariable String key)
     {
-        if("console.name".equals(key)) {
+        if(CONSOLE_NAME.equals(key)) {
             return AjaxResult.success("", UhConsoleConfig.getName());
         }
-        else if("console.version".equals(key)) {
+        else if(CONSOLE_VERSION.equals(key)) {
             return AjaxResult.success("", UhConsoleConfig.getVersion());
         }
-        else if("console.copyrightYear".equals(key)) {
+        else if(CONSOLE_COPYRIGHTYEAR.equals(key)) {
             return AjaxResult.success("", UhConsoleConfig.getCopyrightYear());
         }
-        else if("console.deployEnv".equals(key)) {
+        else if(CONSOLE_DEPLOYENV.equals(key)) {
             return AjaxResult.success("", UhConsoleConfig.getDeployEnv());
         }
-        else if("console.embedding".equals(key)) {
+        else if(CONSOLE_EMBEDDING.equals(key)) {
             return AjaxResult.success("", UhConsoleConfig.isEmbedding());
         }
         else {

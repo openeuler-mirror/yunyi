@@ -62,7 +62,9 @@ public class RdsMonitorController extends BaseController {
             List<NodeStat> nodes = nodeStatService.selectNodeStatList(new NodeStat(srcId, servStat.getServiceId()));
             //System.out.println("~~~~nodes:" + nodes);
             ServiceStatVo vo = new ServiceStatVo(servStat);
-            vo.setChildren(nodes);
+            if(!CollectionUtils.isEmpty(nodes)){
+                vo.setChildren(nodes);
+            }
             // 进行状态条件的筛选
             if (param.getStatus() != null) {
                 if (param.getStatus().equals(vo.getStatus())) {

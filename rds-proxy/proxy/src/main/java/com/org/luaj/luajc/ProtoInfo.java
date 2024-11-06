@@ -55,7 +55,7 @@ public class ProtoInfo {
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
 		
-		// prototpye name
+		// prototype name
 		sb.append( "proto '"+name+"'\n" );
 		
 		// upvalues from outer scopes

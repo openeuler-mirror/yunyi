@@ -99,6 +99,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where n.manager_id = #{managerId} and n.node_name = #{nodeName}
     </select>
 
+    <select id="selectRdsNodes" resultMap="RdsNodeResult">
+        <include refid="selectRdsNodeVo"/>
+    </select>
+
     <insert id="insertNode" parameterType="RdsNode" useGeneratedKeys="true" keyProperty="nodeId">
         insert into cnsl_rds_node
         <trim prefix="(" suffix=")" suffixOverrides=",">

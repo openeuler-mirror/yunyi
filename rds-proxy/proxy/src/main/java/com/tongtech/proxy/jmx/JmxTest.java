@@ -102,7 +102,7 @@ public class JmxTest {
         System.out.println("jvmMax = " + jvmMax);
         System.out.println("TotalPhysicalMemory = " + totalPhysicalMemory);
         System.out.println("clientCurrentConnections = " + clientCurrentConnections);
-        System.out.println("maxConnection = " + maxConnections);
+        System.out.println("maxConnections = " + maxConnections);
         System.out.println("connectedRatio = " + connectedRatio);
         System.out.println("clientTotalConnections = " + clientTotalConnections);
         System.out.println("connectionsRatio = " + connectionsRatio);

@@ -1,11 +1,14 @@
 package com.tongtech.web.controller.console;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.tongtech.common.utils.AESUtils;
 import javax.servlet.http.HttpServletResponse;
 
 import com.tongtech.common.utils.StringUtils;
+import com.tongtech.console.domain.NodeStat;
 import com.tongtech.console.domain.RdsNode;
 import com.tongtech.console.domain.vo.RdsServiceNodesVo;
 import com.tongtech.console.domain.vo.RdsServiceQueryVo;
@@ -74,10 +77,13 @@ public class RdsServiceController extends BaseController
         }
 
         List<RdsServiceQueryVo> list = serviceService.selectListInDeployModes(queryVo);
+        List<RdsNode> rdsNodesList = nodeService.selectRdsNodes();
+        Map<Long, List<RdsNode>> rdsNodesMap = rdsNodesList.stream()
+                .collect(Collectors.groupingBy(e -> e.getServiceId()));
 
         //查询并附加节点列表
         for(RdsServiceQueryVo serv : list) {
-            serv.setNodes(nodeService.selectRdsNodesByServiceId(serv.getServiceId()));
+            serv.setNodes(rdsNodesMap.get(serv.getServiceId()));
             if(serv.getDeployModeEnum() == DeployModeEnum.SENTINEL) {
                 RdsServiceQueryVo countParam = new RdsServiceQueryVo();
                 countParam.setSentinelServiceId(serv.getServiceId());
