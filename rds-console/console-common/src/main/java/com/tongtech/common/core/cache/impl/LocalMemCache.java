@@ -47,6 +47,7 @@ public class LocalMemCache implements ObjectCache {
         return (T)data.get(key);
     }
 
+    @Override
     public boolean deleteObject(final String key) {
         removeExpired();
 
@@ -78,6 +79,7 @@ public class LocalMemCache implements ObjectCache {
      * @return 对象列表
      * @throws IOException
      */
+    @Override
     public Collection<String> keys(final String pattern) {
         Set<String> allKeys = data.keySet();
         if(pattern == null || "".equals(pattern)) {

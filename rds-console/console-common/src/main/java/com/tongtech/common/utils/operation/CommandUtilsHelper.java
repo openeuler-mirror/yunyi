@@ -134,6 +134,7 @@ public class CommandUtilsHelper {
 			this.start();
 		}
 
+		@Override
 		public void run() {
 			try {
 				String outString = IOUtils.toString(input, getCharset());

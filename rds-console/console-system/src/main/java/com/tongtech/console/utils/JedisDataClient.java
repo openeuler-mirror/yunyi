@@ -797,6 +797,7 @@ public class JedisDataClient implements AutoCloseable {
 
 
 
+    @Override
     public void close() {
         if (deployMode != CLUSTER) {
             jedis.close();

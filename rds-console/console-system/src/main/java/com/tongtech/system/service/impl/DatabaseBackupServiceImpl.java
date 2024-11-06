@@ -37,6 +37,7 @@ public class DatabaseBackupServiceImpl implements IDatabaseBackupService {
     @Autowired
     private DataSource dataSource;
 
+    @Override
     public File backupDatabase() {
         File backDir = AppHomeConfig.getAbsoluteFile(AppHomeConfig.DATABASE_BACKUP_PATH);
         if(backDir.exists() == false) { backDir.mkdirs(); }
@@ -62,6 +63,7 @@ public class DatabaseBackupServiceImpl implements IDatabaseBackupService {
         return backFile;
     }
 
+    @Override
     public List<File> cleanExpiredBackup(int maxHistory) {
         File backDir = AppHomeConfig.getAbsoluteFile(AppHomeConfig.DATABASE_BACKUP_PATH);
         File[] hisBackFiles = backDir.listFiles();
