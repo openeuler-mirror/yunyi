@@ -1,25 +1,25 @@
 package com.tongtech.console.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
 import com.tongtech.common.utils.DateUtils;
-import javax.annotation.Resource;
-
 import com.tongtech.console.domain.NodeStat;
 import com.tongtech.console.domain.RdsNode;
 import com.tongtech.console.domain.RdsService;
-import com.tongtech.console.domain.vo.NodeStatQueryVo;
-import com.tongtech.console.domain.vo.RdsMonitorQueryVo;
-import com.tongtech.console.domain.vo.RdsNodeStatsVo;
-import com.tongtech.console.domain.vo.ServiceStatVo;
+import com.tongtech.console.domain.ServiceStat;
+import com.tongtech.console.domain.vo.*;
 import com.tongtech.console.mapper.NodeStatMapper;
 import com.tongtech.console.mapper.RdsNodeMapper;
 import com.tongtech.console.mapper.RdsServiceMapper;
+import com.tongtech.console.mapper.ServiceStatMapper;
+import com.tongtech.console.service.ServiceStatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.tongtech.console.mapper.ServiceStatMapper;
-import com.tongtech.console.domain.ServiceStat;
-import com.tongtech.console.service.ServiceStatService;
+
+import javax.annotation.Resource;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
 import static com.tongtech.common.constant.ConsoleConstants.STATISTIC_GROUPS;
 import static com.tongtech.common.constant.ConsoleConstants.STATISTIC_GROUP_MIN_SECOND;
@@ -31,8 +31,7 @@ import static com.tongtech.common.constant.ConsoleConstants.STATISTIC_GROUP_MIN_
  * @date 2023-03-18
  */
 @Service
-public class ServiceStatServiceImpl implements ServiceStatService
-{
+public class ServiceStatServiceImpl implements ServiceStatService {
     @Resource
     private ServiceStatMapper serviceStatMapper;
 
@@ -44,6 +43,7 @@ public class ServiceStatServiceImpl implements ServiceStatService
 
     @Autowired
     private RdsNodeMapper nodeMapper;
+
     /**
      * 查询服务监控信息
      *
@@ -51,8 +51,7 @@ public class ServiceStatServiceImpl implements ServiceStatService
      * @return 服务监控信息
      */
     @Override
-    public ServiceStat selectServiceStatByStatId(Long statId)
-    {
+    public ServiceStat selectServiceStatByStatId(Long statId) {
         return serviceStatMapper.selectServiceStatByStatId(statId);
     }
 
@@ -63,35 +62,32 @@ public class ServiceStatServiceImpl implements ServiceStatService
         RdsService serv = servMapper.selectRdsServiceByServiceId(queryVo.getServiceId());
         ServiceStat servStat = serviceStatMapper.selectSummaryServiceStat(queryVo);
         ServiceStatVo servStatVo;
-        if(servStat != null) {
+        if (servStat != null) {
             servStat.setDeployMode(serv.getDeployMode());
             servStat.setName(serv.getServiceName());
             servStatVo = new ServiceStatVo(servStat);
-        }
-        else {
+        } else {
             servStatVo = new ServiceStatVo(serv);
         }
 
         //获得node列表
         List<RdsNodeStatsVo> nodes = new ArrayList<>();
-                List<RdsNode> rdsNodes = nodeMapper.selectNodesByServiceId(serv.getServiceId());
-        for(RdsNode rn : rdsNodes) {
+        List<RdsNode> rdsNodes = nodeMapper.selectNodesByServiceId(serv.getServiceId());
+        for (RdsNode rn : rdsNodes) {
             RdsNodeStatsVo nodeVo = new RdsNodeStatsVo(rn);
 
             //或者node的统计数据
-            NodeStatQueryVo nodeQuery = new NodeStatQueryVo(rn.getNodeId(), queryVo.getBeginCreateSecond(), (int)(queryVo.getPastSecond() / STATISTIC_GROUPS) );
+            NodeStatQueryVo nodeQuery = new NodeStatQueryVo(rn.getNodeId(), queryVo.getBeginCreateSecond(), (int) (queryVo.getPastSecond() / STATISTIC_GROUPS));
             List<NodeStat> stats;
-            if(queryVo.getPastSecond() <= STATISTIC_GROUP_MIN_SECOND){
+            if (queryVo.getPastSecond() <= STATISTIC_GROUP_MIN_SECOND) {
                 stats = nodeStatMapper.selectMonitorList(nodeQuery);
-            }
-            else {
+            } else {
                 stats = nodeStatMapper.selectMonitorGroupList(nodeQuery);
             }
             nodeVo.setStats(stats);
 
             nodes.add(nodeVo);// 插入node
         }
-
 
 
         servStatVo.setNodes(nodes);
@@ -106,8 +102,7 @@ public class ServiceStatServiceImpl implements ServiceStatService
      * @return 服务监控信息
      */
     @Override
-    public List<ServiceStat> selectServiceStatList(ServiceStat serviceStat)
-    {
+    public List<ServiceStat> selectServiceStatList(ServiceStat serviceStat) {
         return serviceStatMapper.selectServiceStatList(serviceStat);
     }
 
@@ -118,8 +113,7 @@ public class ServiceStatServiceImpl implements ServiceStatService
      * @return 结果
      */
     @Override
-    public int insertServiceStat(ServiceStat serviceStat)
-    {
+    public int insertServiceStat(ServiceStat serviceStat) {
         serviceStat.setCreateTime(DateUtils.getNowDate());
         return serviceStatMapper.insertServiceStat(serviceStat);
     }
@@ -131,8 +125,7 @@ public class ServiceStatServiceImpl implements ServiceStatService
      * @return 结果
      */
     @Override
-    public int updateServiceStat(ServiceStat serviceStat)
-    {
+    public int updateServiceStat(ServiceStat serviceStat) {
         return serviceStatMapper.updateServiceStat(serviceStat);
     }
 
@@ -143,8 +136,7 @@ public class ServiceStatServiceImpl implements ServiceStatService
      * @return 结果
      */
     @Override
-    public int deleteServiceStatByStatIds(Long[] statIds)
-    {
+    public int deleteServiceStatByStatIds(Long[] statIds) {
         return serviceStatMapper.deleteServiceStatByStatIds(statIds);
     }
 
@@ -155,8 +147,19 @@ public class ServiceStatServiceImpl implements ServiceStatService
      * @return 结果
      */
     @Override
-    public int deleteServiceStatByStatId(Long statId)
-    {
+    public int deleteServiceStatByStatId(Long statId) {
         return serviceStatMapper.deleteServiceStatByStatId(statId);
+    }
+
+    @Override
+    public ServiceNodeStatVo selectServiceNodeStatGroup(RdsNodeStatQueryVo queryVo) {
+        RdsService serv = servMapper.selectRdsServiceByServiceId(queryVo.getServiceId());
+        if (Objects.nonNull(serv)) {
+            List<RdsNode> rdsNodes = nodeMapper.selectNodesByServiceId(serv.getServiceId());
+            List<NodeStat> nodeStats = rdsNodes.isEmpty() ? Collections.emptyList() : nodeStatMapper.selectNodeStatGroup(queryVo.initParams());
+            DateTimeFormatter dtf = nodeStats.isEmpty() ? null : DateTimeFormatter.ofPattern(queryVo.getInterval().getConsoleTimePattern());
+            return new ServiceNodeStatVo(serv, rdsNodes, nodeStats, dtf);
+        }
+        return null;
     }
 }

@@ -7,10 +7,9 @@
 
       <div>
         <b>监控时间范围：</b>
-        <el-radio-group v-model="data.params.datetime" size="mini" @change="eventDatetimeChange">
-          <el-radio-button v-for="(item, index) in datetimes" :label="item.value" :key="item.value" :index="index">{{
-            item.label }}</el-radio-button>
-        </el-radio-group>
+        <el-date-picker v-model="createSecondDateTimes" type="datetimerange" range-separator="至" format="yyyy-MM-dd HH:mm"
+          start-placeholder="开始时间" end-placeholder="结束时间" @change="eventDatetimeChange" :picker-options="pickerOptions">
+        </el-date-picker>
       </div>
     </div>
     <el-divider></el-divider>
@@ -37,23 +36,15 @@
             <el-col :span="4">
               <span v-if="data.server.statusName === 'stop'">停止</span>
               <span v-if="data.server.statusName === 'start'">运行</span>
+              <span v-if="data.server.statusName === 'start-part'">部分启动</span>
             </el-col>
             <el-col :span="4" class="uhry-layout-algin-r"><span class="uhry-font-blue">节点数量</span></el-col>
             <el-col :span="8">
-              <span v-if="data.server.workNodeNum > 0">节点{{ data.server.workNodeNum }}个；</span>
-              <span v-if="data.server.sentinelNodeNum > 0">哨兵节点{{ data.server.sentinelNodeNum }}个</span>
+              <span v-if="data.server.workNodeNum > 0">节点{{ data.server.workNodeNum }}个</span>
+              <span v-if="data.server.sentinelNodeNum > 0">{{ data.server.workNodeNum !== 0 ? ';':'' }}哨兵节点{{ data.server.sentinelNodeNum }}个</span>
+              <span v-if="data.server.workNodeNum === 0 && data.server.sentinelNodeNum === 0">0个</span>
             </el-col>
           </el-row>
-        </div>
-      </div>
-    </el-card>
-    <el-card class="uhry-card-wrapper" shadow="never" v-if="isshow">
-      <div slot="header">
-        <span class="uhry-card-title">服务监控</span>
-      </div>
-      <div class="centerbox">
-        <div v-for="(item, index) in echarts" :key="item.id">
-          <node-monitor-dashboard :ref="item.elementId" :echart="item" :chartWidth="chartWidth"></node-monitor-dashboard>
         </div>
       </div>
     </el-card>
@@ -63,9 +54,7 @@
         <span class="uhry-card-title">{{ item.name }}</span>
       </div>
       <div class="centerbox" v-loading="loading">
-        <div v-for="(item, index) in item.echarts" :key="item.id">
-          <node-monitor-dashboard :ref="item.elementId" :echart="item" :chartWidth="chartWidth"></node-monitor-dashboard>
-        </div>
+          <node-monitor-dashboard :ref="item2.elementId" v-for="item2 in item.echarts" :key="item2.id" :echart="item2" :chartWidth="chartWidth"></node-monitor-dashboard>
       </div>
     </el-card>
   </div>
@@ -73,7 +62,8 @@
 
 <script>
 import nodeMonitorDashboard from './components/nodeMonitorDashboard'
-import {getServiceNodes} from '@/api/console/rdsmonitor'
+import { listServiceNodeStat } from '@/api/console/rdsmonitor'
+import { getConfigKey } from '@/api/system/config'
 export default {
   components: {
     nodeMonitorDashboard
@@ -84,163 +74,119 @@ export default {
       loading: false,
       serviceId: this.$route.params.rdssupervisorycontrolId,
       chartWidth: 250,
-      isshow: true,
-      echarts: [
-        {
-          elementId: 1,
-          title: '内存使用（MB）-最大内存',
-          data: [],
-          categorys: []
-        },
-        {
-          elementId: 2,
-          title: '客户端连接数-最大可用',
-          data: [],
-          categorys: []
-        },
-        {
-          elementId: 3,
-          title: '请求数/秒',
-          data: [],
-          categorys: []
-        },
-        {
-          elementId: 4,
-          title: '当前key',
-          data: [],
-          categorys: []
-        }
-      ],
       echartsclusterData: [],
       data: {
         server: {
           name: "",
           modeName: "",
-          statusName: "",
+          statusName: "stop",
           workNodeNum: 1,
           sentinelNodeNum: 0
-        },
-        params: {
-          datetime: 600
         }
       },
-      datetimes: [
-        {
-          label: '10分钟',
-          value: 600
-        },
-        {
-          label: '30分钟',
-          value: 1800
-        },
-        {
-          label: '1小时',
-          value: 3600
-        },
-        {
-          label: '2小时',
-          value: 7200
-        },
-
+      echartsTitles: [
+        { label: '连接数', keys: 'currentConnections' },
+        { label: '内存使用量(M)', keys: 'memoryUsed', format: 'M' },
+        { label: '内存总量(M)', keys: ['memoryUsed', 'memoryFree'], format: 'M' },
+        { label: 'key总数', keys: 'currentKeys' },
+        { label: '实际占用内存总量(M)', keys: 'memoryTotal', format: 'M' },
+        { label: '最大可用内存量(M)', keys: 'memoryAvailable', format: 'M' },
+        { label: '网络IO每秒入流量', keys: 'inputPerSecond' },
+        { label: '网络IO每秒出流量', keys: 'outputPerSecond' },
+        { label: '当前程序CPU使用率', keys: 'cpuProcessLoad' },
+        { label: '当前系统CPU使用率', keys: 'cpuSystemLoad' },
       ],
+      createSecondDateTimes: [new Date(new Date().getTime() - 10 * 60 * 1000), new Date()],
+      maxIntervalDay: 30,//最大时间跨度：30天
+      selectDate: '',
+      pickerOptions: {
+        onPick: ({ maxDate, minDate }) => {
+          this.selectDate = minDate.getTime()
+          if (maxDate) {
+            this.selectDate = ''
+          }
+        },
+        disabledDate: (time) => {
+          const limitDay = 1000 * 60 * 60 * 24 * this.maxIntervalDay
+          if (this.selectDate) {
+            return (
+              time.getTime() < this.selectDate - limitDay ||
+              time.getTime() > this.selectDate + limitDay ||
+              time.getTime() > Date.now()
+            )
+          } else {
+            return time.getTime() > Date.now()
+          }
+        }
+      },
+      refreshIntervalSeconds: 60
     }
   },
+  created() {
+    this.getMonitorRefreshSeconds()
+  },
   mounted() {
-    this.getNodeList()
     this.actionInitChartWidth()
+    this.getNodeList()
   },
   beforeDestroy() {
-    console.log('清空定时器 beforeDestroy')
     this.timer && clearInterval(this.timer)
   },
   methods: {
+    getMonitorRefreshSeconds() {//系统配置的自动刷新时间
+      getConfigKey('monitorChartAutoRefreshSeconds').then((data) => {
+        if (data.code === 200 && data.data) {
+          this.refreshIntervalSeconds = parseInt(data.data)
+        }
+      })
+    },
     actionInitChartWidth: function () {
-      this.chartWidth = parseInt((window.innerWidth - 232 - 120) / 4)
+      this.chartWidth = parseInt((window.innerWidth - 232 - 120) / 3)
     },
     async getNodeList() {
       this.timer && clearInterval(this.timer) // 首先进入清除定时器
       this.loading = true
-      let data = await getServiceNodes({
+      let beginCreateSecond = Math.floor(this.createSecondDateTimes[0].getTime() / 1000)
+      let endCreateSecond = Math.floor(this.createSecondDateTimes[1].getTime() / 1000)
+      let data = await listServiceNodeStat({
         serviceId: this.serviceId,
-        pastSecond: this.data.params.datetime
+        beginCreateSecond: beginCreateSecond,
+        endCreateSecond: endCreateSecond
       })
       this.loading = false
       if (data.code === 200) {
         this.data.server.name = data.data.name
         this.data.server.modeName = data.data.deployMode
+        this.data.server.workNodeNum = data.data.nodes.length
         this.data.server.statusName = data.data.status
         this.setVal()
         this.formateDataEcharts(data.data)
-
       }
     },
     formateDataEcharts(data) {
-
       this.clusterEcharts(data)
-
-    },
-    centerEcharts(data) {
-      data.nodes.forEach((item, index) => {
-        let time = []
-        let echartsdata = []
-        let memoryAvailableData = []
-        let throughputAverage60Data = []
-        let currentkeyData = []
-        item.stats.forEach((k, v) => {
-          time.push(this.actionFormatTimestamp(k.createSecond))
-          echartsdata.push(k.memoryTotal / 1024 / 1024)
-          memoryAvailableData.push(k.memoryAvailable)
-          throughputAverage60Data.push(k.throughputAverage60)
-          currentkeyData.push(k.currentKeys)
-          this.echarts[0].elementId = 1
-          this.echarts[0].data = echartsdata
-          this.echarts[0].categorys = time
-          this.echarts[1].elementId = 2
-          this.echarts[1].data = memoryAvailableData
-          this.echarts[1].categorys = time
-          this.echarts[2].elementId = 3
-          this.echarts[2].data = throughputAverage60Data
-          this.echarts[2].categorys = time
-          this.echarts[3].elementId = 4
-          this.echarts[3].data = currentkeyData
-          this.echarts[3].categorys = time
-        })
-      })
     },
     clusterEcharts(data) {
-
       this.echartsclusterData = []
-      this.isshow = false
-      this.data.server.workNodeNum = data.nodes.length
-      data.nodes.forEach((item, index) => {
+      data.nodes.forEach(item => {
         let time = []
-        let memoryData = []
-        let connectionData = []
-        let processSecondData = []
-        let currentKeyData = []
-        item.stats.forEach((k, v) => {
-          time.push(this.actionFormatTimestamp(k.createSecond))
-          memoryData.push(k.memoryTotal / 1024 / 1024)
-          connectionData.push(k.currentConnections)
-          processSecondData.push(k.throughputAverage60)
-          currentKeyData.push(k.currentKeys)
+        let localEchartData = this.echartsTitles.map(x => [])
+        item.stats.forEach(k => {
+          time.push(k.time)
+          this.echartsTitles.forEach((obj, index) => localEchartData[index].push(this.calValue(k, obj.keys, obj.format)))
         })
+        let thisEcharts = [];
+        for (let i = 0; i < this.echartsTitles.length; i++) {
+          thisEcharts.push({ elementId: this.uuid(), title: this.echartsTitles[i].label, categorys: time, data: localEchartData[i] })
+        }
         this.echartsclusterData.push({
           name: item.instance,
-          echarts: [
-            { elementId: this.uuid(), title: '内存使用（MB）-最大内存', categorys: time, data: memoryData },
-            { elementId: this.uuid(), title: '客户端连接数-最大可用', categorys: time, data: connectionData },
-            { elementId: this.uuid(), title: '请求数/秒', categorys: time, data: processSecondData },
-            { elementId: this.uuid(), title: '当前key', categorys: time, data: currentKeyData }
-          ]
+          echarts: thisEcharts
         })
-
       })
-
-      // this.echartsclusterData = data.nodes
     },
     setVal() {
-      this.timer = setInterval(() => this.getNodeList(), 30000)
+      this.timer = setInterval(() => this.getNodeList(), this.refreshIntervalSeconds * 1000)
     },
     uuid() {
       var s = [];
@@ -255,19 +201,23 @@ export default {
       var uuid = s.join("");
       return uuid;
     },
-    actionFormatTimestamp(timestamp) {
-      let date = new Date(timestamp * 1000)
-      return date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds()
-    },
     goBack() {
       this.$router.go(-1)
-
     },
     eventDatetimeChange() {
       this.$nextTick(() => {
         this.getNodeList()
       })
-
+    },
+    calValue(data, keys, format) {
+      let v = 0
+      if (keys instanceof Array) {
+        keys.forEach(item => v += data[item])
+        console.info(keys)
+      } else {
+        v = data[keys]
+      }
+      return format ? (v / 1024 / 1024) : v
     }
   }
 }
@@ -277,10 +227,12 @@ export default {
 .rdssupervisorycontrolDeatil {
   .centerbox {
     display: flex;
+    flex-wrap: wrap;
     width: 100%;
 
     >div {
-      width: 25%;
+      width: 33%;
+      margin-top: 10px;
       padding: 0px 5px;
     }
   }
