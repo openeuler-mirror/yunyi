@@ -611,7 +611,7 @@ public class Client {
             }
             String str = resp.toString();
 
-            // 每一个回车后面加上提示付
+            // 每一个回车后面加上提示符
             str = str.replace("\n", "\n" + PROMPT);
 
             System.out.println(str);
