@@ -126,7 +126,7 @@ abstract public class LibFunction extends LuaFunction {
 	
 	/** User-defined opcode to differentiate between instances of the library function class. 
 	 * <p>
-	 * Subclass will typicall switch on this value to provide the specific behavior for each function. 
+	 * Subclass will typically switch on this value to provide the specific behavior for each function. 
 	 */
 	protected int opcode;
 	
