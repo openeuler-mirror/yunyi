@@ -11,7 +11,7 @@ import ParentView from '@/components/ParentView'
 /**
  * Note: 路由配置项
  *
- * hidden: true                   // 当设置 true 的时候该路由不会再侧边栏出现 如401，login等页面，或者如一些编辑页面/edit/1
+ * hidden: true                   // 当设置 true 的时候该路由不会在侧边栏出现 如401，login等页面，或者如一些编辑页面/edit/1
  * alwaysShow: true               // 当你一个路由下面的 children 声明的路由大于1个时，自动会变成嵌套的模式--如组件页面
  *                                // 只有一个时，会将那个子路由当做根路由显示在侧边栏--如引导页面
  *                                // 若你想不管路由下面的 children 声明的个数都显示你的根路由

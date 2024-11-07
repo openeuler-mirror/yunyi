@@ -22,7 +22,7 @@ public class RouterVo
     private String path;
 
     /**
-     * 是否隐藏路由，当设置 true 的时候该路由不会再侧边栏出现
+     * 是否隐藏路由，当设置 true 的时候该路由不会在侧边栏出现
      */
     private boolean hidden;
 
