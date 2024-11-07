@@ -114,7 +114,7 @@ public class BaseLib extends OneArgFunction implements ResourceFinder {
 	};
 	
 	/**
-	 * Construct a base libarary instance.
+	 * Construct a base library instance.
 	 */
 	public BaseLib() {
 		instance = this;
