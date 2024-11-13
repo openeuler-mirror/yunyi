@@ -46,7 +46,7 @@ wait4pid() {
     newpid=`ps -ef | awk '{print $2}' | grep $pid`
     if [ "$pid" != "$newpid" ]
     then
-      echo "process $pid stoped"
+      echo "process $pid stopped"
       exit 0
     fi
   done
@@ -122,7 +122,7 @@ else
         echo "stop the process force"
         kill -9 $pid
     fi
-    echo "Server stoped."
+    echo "Server stopped."
 fi
 
 JAVA=`which java`

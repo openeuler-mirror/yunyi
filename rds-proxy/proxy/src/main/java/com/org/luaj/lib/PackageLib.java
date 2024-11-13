@@ -44,7 +44,7 @@ import java.io.PrintStream;
  * System.out.println( _G.get("require").call(LuaValue.valueOf("hyperbolic")) );
  * } </pre>
  * In practice, the first 4 lines of the above are minimal requirements to get 
- * and initialize a globals table capable of basic reqire, print, and other functions, 
+ * and initialize a globals table capable of basic require, print, and other functions, 
  * so it is much more convenient to use the {@link JsePlatform} and {@link JmePlatform} 
  * utility classes instead.  
  * <p>

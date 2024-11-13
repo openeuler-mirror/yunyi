@@ -104,21 +104,26 @@ public class SysConfigServiceImpl implements ISysConfigService
      * @return 参数键值
      */
     @Override
-    public String selectConfigByKey(String configKey)
-    {
-        String configValue = Convert.toStr(redisCache.getCacheObject(getCacheKey(configKey)));
-        if (StringUtils.isNotEmpty(configValue))
-        {
+    public String selectConfigByKey(String configKey) {
+        // 首先尝试从缓存中获取配置值
+        String cacheKey = getCacheKey(configKey);
+        String configValue = Convert.toStr(redisCache.getCacheObject(cacheKey));
+        if (StringUtils.isNotBlank(configValue)) {
+            // 如果缓存中有值且不为空，则直接返回
             return configValue;
         }
+
+        // 缓存中没有值，尝试从数据库中获取
         SysConfig config = new SysConfig();
         config.setConfigKey(configKey);
         SysConfig retConfig = configMapper.selectConfig(config);
         if (StringUtils.isNotNull(retConfig))
         {
-            redisCache.setCacheObject(getCacheKey(configKey), retConfig.getConfigValue());
+            redisCache.setCacheObject(cacheKey, retConfig.getConfigValue());
             return retConfig.getConfigValue();
         }
+
+        // 如果数据库中也没有，则返回空字符串
         return StringUtils.EMPTY;
     }
 

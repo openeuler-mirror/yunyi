@@ -89,9 +89,9 @@ public class CenterServiceController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('console:centerservice:edit')")
     @PostMapping("/testAdminConnectionNew")
-    public AjaxResult testAdminConnectionNew(@RequestBody RdsService serivce) {
+    public AjaxResult testAdminConnectionNew(@RequestBody RdsService service) {
 
-        RestCenterClient client = serviceService.getCenterClient(serivce);
+        RestCenterClient client = serviceService.getCenterClient(service);
         if(client != null) {
             try {
                 RestCenterResult<StatCenterNode> res = client.getCenters();
@@ -150,16 +150,16 @@ public class CenterServiceController extends BaseController
     @PreAuthorize("@ss.hasPermi('console:centerservice:edit')")
     @Log(title = "RDS服务", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult update(@RequestBody RdsService serivce)
+    public AjaxResult update(@RequestBody RdsService service)
     {
-        if(serivce.getServiceId() == ConsoleConstants.CENTER_SERVICE_ID) {
+        if(service.getServiceId() == ConsoleConstants.CENTER_SERVICE_ID) {
             if(UhConsoleConfig.getDeployEnvEnum() == K8S) {
-                serivce.setManualAdmin(false); //中心服务的K8S模式下是自动维护的
+                service.setManualAdmin(false); //中心服务的K8S模式下是自动维护的
             }
             else {
-                serivce.setManualAdmin(true);
+                service.setManualAdmin(true);
             }
-            int res = serviceService.updateRdsService(serivce);
+            int res = serviceService.updateRdsService(service);
 
             //对center data进行处理分析(获取center节点，RDS服务列表）
             if(UhConsoleConfig.getDeployEnvEnum() == K8S) {
@@ -170,7 +170,7 @@ public class CenterServiceController extends BaseController
         }
         else {
             return AjaxResult.error("CenterServiceController.update() 函数仅支持中心服务的更新，不能更新非中心服务！！serviceId="
-                    + serivce.getServiceId() );
+                    + service.getServiceId() );
         }
     }
 

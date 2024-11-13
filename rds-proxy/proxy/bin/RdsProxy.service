@@ -2,7 +2,7 @@
 # and change 'ExecStart' and 'ExecStop' to correct
 
 [Unit]
-Descrition=RDS Proxy Service
+Description=RDS Proxy Service
 
 [Service]
 Type=simple

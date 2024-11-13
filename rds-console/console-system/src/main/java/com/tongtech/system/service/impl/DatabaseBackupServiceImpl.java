@@ -74,7 +74,7 @@ public class DatabaseBackupServiceImpl implements IDatabaseBackupService {
                 try {
                     Date exportDate = DateUtils.parseDate(dateTimeStr, DateUtils.YYYYMMDDHHMMSS);
                     long range = System.currentTimeMillis() - exportDate.getTime();
-                    long maxHistoryRange = maxHistory * 24 * 3600 * 1000;
+                    long maxHistoryRange = maxHistory * 24L * 3600L * 1000L;
                     if(range > maxHistoryRange) {
                         hisBackFile.delete();
                         deletedFiles.add(hisBackFile);

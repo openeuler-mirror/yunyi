@@ -226,4 +226,9 @@ public class RdsNodeServiceImpl implements RdsNodeService
         return rdsNodeMapper.updateExpiredNodeStatus(instances);
     }
 
+    @Override
+    public List<RdsNode> selectRdsNodes() {
+        return rdsNodeMapper.selectRdsNodes();
+    }
+
 }

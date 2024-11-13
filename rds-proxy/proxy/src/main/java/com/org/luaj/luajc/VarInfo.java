@@ -51,7 +51,7 @@ public class VarInfo {
 
 	/** Return replacement variable if there is exactly one value possible, 
 	 * otherwise compute entire collection of variables and return null. 
-	 * Computes the list of aall variable values, and saves it for the future. 
+	 * Computes the list of all variable values, and saves it for the future. 
 	 * 
 	 * @return new Variable to replace with if there is only one value, or null to leave alone. 
 	 */

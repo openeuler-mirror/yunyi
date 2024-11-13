@@ -53,7 +53,7 @@ public interface RdsVersionPkgService
     public int deleteRdsVersionPkgByPackageIds(Long[] packageIds);
 
     /**
-     * 删除安装包信息信息
+     * 删除安装包信息
      *
      * @param packageId 安装包信息主键
      * @return 结果
