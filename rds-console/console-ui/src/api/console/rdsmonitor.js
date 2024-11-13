@@ -17,3 +17,12 @@ export function getServiceNodes(query) {
     params: query
   })
 }
+
+// 查询服务节点统计数据
+export function listServiceNodeStat(query) {
+  return request({
+    url: '/console/rdsmonitor/listServiceNodeStat',
+    method: 'get',
+    params: query
+  })
+}

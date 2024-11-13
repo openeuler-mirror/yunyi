@@ -6,3 +6,4 @@
 **/.flattened-pom.xml
 .gradle/
 /lic/
+/logs

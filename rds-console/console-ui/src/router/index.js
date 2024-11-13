@@ -105,6 +105,12 @@ export const constantRoutes = [
         component: () => import('@/views/console/rdsmonitor/detail'),
         name: 'rdssupervisorycontrolDetail',
         meta: { title: 'RDS服务监控详情', activeMenu: '/monitor/rdsmonitor' }
+      },
+      {
+        path: 'rdssupervisorycontrolnew/:rdssupervisorycontrolId(\\d+)',
+        component: () => import('@/views/console/rdsmonitor/detail_new'),
+        name: 'rdssupervisorycontrolDetailNew',
+        meta: { title: 'RDS服务监控详情-新', activeMenu: '/monitor/rdsmonitor' }
       }
     ]
   },

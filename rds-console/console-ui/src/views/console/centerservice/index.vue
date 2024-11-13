@@ -116,7 +116,7 @@
 <script>
 import { clearCenterConfig, testAdminConnection, resendCenterConfig, getService } from "@/api/console/centerservice";
 import { delNode, listNode, addNode, updateNode,  startNode, stopNode, restartNode } from "@/api/console/rdsnode";
-import { getAppConfigKey } from '@/api/system/config'
+import { getAppConfigKey,getConfigKey } from '@/api/system/config'
 import {getDiffProps} from '@/utils/validate';
 import centerService from "./centerService";
 import nodeView from "../rdsservice/view/nodeView";
@@ -148,15 +148,21 @@ export default {
       //部署模式（从后台取得配置）
       deployEnv: null,
 
-      timer:null
+      timer: null,
+      refreshIntervalSeconds: 60
     };
   },
   created() {
-    this.getServiceInfo();
-
     getAppConfigKey('console.deployEnv').then((res) => {
       this.deployEnv = res.data;
     });
+    //获取配置监控数据刷新时间
+    getConfigKey('k8sCenterNodeAutoRefreshSeconds').then((data) => {
+      if (data.code === 200 && data.data) {
+        this.refreshIntervalSeconds = parseInt(data.data)
+      }
+    })
+    this.getServiceInfo();
   },
   beforeDestroy() {
     console.log('清空定时器 beforeDestroy')
@@ -237,8 +243,8 @@ export default {
           node.index = idx;
         });
         this.nextIndex = this.centerNodeList.length;
-        if( this.deployEnv == 'k8s'){  //如果部署环境是k8s启用每半分钟刷新一次
-          this.timer = setInterval(() => this.getList(), 30000)
+        if( this.deployEnv == 'k8s'){  //如果部署环境是k8s启用,按配置自动刷新
+          this.timer = setInterval(() => this.getList(), this.refreshIntervalSeconds * 1000)
         }
         this.loading = false;
       });
