@@ -63,6 +63,7 @@ public class RdsServiceServiceImpl implements RdsServiceService
         return  rdsServiceMapper.selectByServiceName(serviceName);
     }
 
+    @Override
     public boolean existsServiceName(String serviceName) {
         return (rdsServiceMapper.selectByServiceName(serviceName) != null);
     }

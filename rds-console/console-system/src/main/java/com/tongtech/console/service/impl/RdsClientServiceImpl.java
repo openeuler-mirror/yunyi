@@ -55,6 +55,7 @@ public class RdsClientServiceImpl implements RdsClientService {
 
     private Map<Long, JedisCluster> jedisClusterMap = new HashMap<Long, JedisCluster>();
 
+    @Override
     public int deleteConnections() {
         int ret = 0;
         Set<Long> serviceIds = jedisPoolMap.keySet();
@@ -89,6 +90,7 @@ public class RdsClientServiceImpl implements RdsClientService {
     }
 
 
+    @Override
     public JedisDataClient getConnectionClient(Long serviceId) {
         RdsService serv = servService.selectRdsServiceByServiceId(serviceId);
         JedisDataClient client = null;
@@ -173,6 +175,7 @@ public class RdsClientServiceImpl implements RdsClientService {
         client.del(checkKey);
     }
 
+    @Override
     public int deleteConnection(Long serviceId) {
         int ret = 0;
         Pool p = jedisPoolMap.get(serviceId);

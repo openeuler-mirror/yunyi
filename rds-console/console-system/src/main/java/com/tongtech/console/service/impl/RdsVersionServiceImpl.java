@@ -42,6 +42,7 @@ public class RdsVersionServiceImpl implements RdsVersionService
         return rdsVersionMapper.selectListByStatus(status);
     }
 
+    @Override
     public RdsVersion selectDefaultVersion() {
         return rdsVersionMapper.selectDefaultVersion();
     }
