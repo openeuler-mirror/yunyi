@@ -50,8 +50,8 @@ import java.util.Map;
  * <li>{@link LuaValue#tableOf(LuaValue[])}</li>
  * <li>{@link LuaValue#tableOf(LuaValue[], LuaValue[], Varargs)}</li>
  * </ul>
- * The method {@link CoerceJavaToLua#coerce(Object)} looks as the type and dimesioning
- * of the argument and tries to guess the best fit for corrsponding lua scalar,
+ * The method {@link CoerceJavaToLua#coerce(Object)} looks as the type and dimensioning
+ * of the argument and tries to guess the best fit for corresponding lua scalar,
  * table, or table of tables.
  *
  * @see CoerceJavaToLua#coerce(Object)
@@ -107,7 +107,7 @@ public class CoerceJavaToLua {
     }
 
     /**
-     * Coerse a Java object to a corresponding lua value.
+     * Coerce a Java object to a corresponding lua value.
      * <p>
      * Integral types {@code boolean}, {@code byte},  {@code char}, and {@code int}
      * will become {@link LuaLong};

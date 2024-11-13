@@ -240,6 +240,76 @@ public class Client {
         System.exit(0);
     }
 
+    /**
+     * Parses command line arguments into a Map.
+     * Supports options like -h, --host, etc.
+     *
+     * @param args The command line arguments.
+     * @return A Map containing the parsed options and their values.
+     */
+    public static Map<String, String> parseArgv(String[] args) {
+        Map<String, String> params = new LinkedHashMap<>();
+        String optionName;
+
+        optionName = null;
+        for (String arg : args) {
+            // Check if the argument is an option (starts with '-' or '--')
+            if (arg.startsWith("--")) {
+                // Short option
+                optionName = arg.substring(2);
+            } else if (arg.startsWith("-")) {
+                // Long option
+                optionName = arg.substring(1);
+            } else if (optionName != null) {
+                // Argument value
+                params.put(optionName, arg);
+                optionName = null;
+            }
+        }
+
+        return params;
+    }
+
+    private static final Vector<String> splitString1(String src) {
+        Vector<String> res = new Vector<>(1);
+        if (src == null || src == ""){
+            return res;
+        }
+        //用来存取到的字符
+        char c1;
+        //定义一个变量来储存分隔符
+        char sep = ' ';
+        //用来临时存储取到的字符
+        String str = new String();
+        //判断是否有单双引号
+        boolean flagdan = false;
+        boolean flagshuang = false;
+        for (int i = 0;i<src.length();i++){
+            c1 = src.charAt(i);
+            if (c1 == '\'' && flagshuang == false){
+                flagdan = !flagdan;
+            } else if (c1 == '"' && flagdan == false) {
+                flagshuang = !flagshuang;
+            }
+
+            if (c1 == sep){
+                //判断这个空格是否在单双引号内
+                if (flagdan == true || flagshuang == true){
+                    str += Character.toString(c1);
+                }else {
+                    res.add(str);
+                    str = "";
+                }
+            }else {
+                str += Character.toString(c1);
+            }
+        }
+        res.add(str);
+//        System.out.println(res);
+
+        return res;
+    }
+
     private static final Vector<String> splitString(String src) {
 
         Vector<String> spliter = new Vector<>();
@@ -541,7 +611,7 @@ public class Client {
             }
             String str = resp.toString();
 
-            // 每一个回车后面加上提示付
+            // 每一个回车后面加上提示符
             str = str.replace("\n", "\n" + PROMPT);
 
             System.out.println(str);

@@ -1476,8 +1476,8 @@ public class ProcessorRedisImpCore implements Processer {
 
                 logger.infoLog("ProcessorRedisImpCore::process_cluster() CLUSTER: cluster info.");
             } else {
-                result.setErr(-9, "ERR unsupport cluster msg: " + key);
-                logger.warnLog("ProcessorRedisImpCore::process_cluster() Unsupport cluster msg {}.", key);
+                result.setErr(-9, "ERR unsupported cluster msg: " + key);
+                logger.warnLog("ProcessorRedisImpCore::process_cluster() Unsupported cluster msg {}.", key);
             }
         } else {
             result.setErr(-1, "ERR  This instance has cluster support disabled");

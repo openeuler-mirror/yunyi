@@ -98,7 +98,7 @@ public class RdsServiceNodesCfg implements Serializable  {
             }
         }
         else {
-            throw new ServiceException("Unsupport service deployMode '" + mode + "' in RdsServiceNodesCfg");
+            throw new ServiceException("Unsupported service deployMode '" + mode + "' in RdsServiceNodesCfg");
         }
         //TODO 未实现 SCALABLE 模式
     }
