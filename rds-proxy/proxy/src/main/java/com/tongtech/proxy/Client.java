@@ -272,7 +272,7 @@ public class Client {
 
     private static final Vector<String> splitString1(String src) {
         Vector<String> res = new Vector<>(1);
-        if (src == null || src == ""){
+        if (src.equals(null) || src.equals("")){
             return res;
         }
         //用来存取到的字符
@@ -312,7 +312,7 @@ public class Client {
 
     private static final Vector<String> splitString(String src) {
         Vector<String> res = new Vector<>(1);
-        if (src == null || src == ""){
+        if (src.equals(null) || src.equals("")){
             return res;
         }
         //用来存取到的字符
