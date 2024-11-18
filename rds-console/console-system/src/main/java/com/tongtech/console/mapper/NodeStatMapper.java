@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.tongtech.console.domain.vo.NodeStatQueryVo;
 import com.tongtech.console.domain.NodeStat;
+import com.tongtech.console.domain.vo.RdsNodeStatQueryVo;
 
 /**
  * 节点监控信息Mapper接口
@@ -97,4 +98,7 @@ public interface NodeStatMapper
      * @return
      */
     public int deleteByCreateTime(Date createTime);
+
+
+    List<NodeStat> selectNodeStatGroup(RdsNodeStatQueryVo queryVo);
 }

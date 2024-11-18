@@ -101,7 +101,8 @@ export default {
     },
     gotoDeatil(row){
       const detailId = row.serviceId;
-      this.$router.push("/monitor/rdssupervisorycontrol/detail/rdssupervisorycontrol/" + detailId);
+      //this.$router.push("/monitor/rdssupervisorycontrol/detail/rdssupervisorycontrol/" + detailId);
+      this.$router.push("/monitor/rdssupervisorycontrol/detail/rdssupervisorycontrolnew/" + detailId);//优化版
     }
 
   }

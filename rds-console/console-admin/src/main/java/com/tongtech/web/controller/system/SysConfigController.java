@@ -77,7 +77,9 @@ public class SysConfigController extends BaseController
     @GetMapping(value = "/configKey/{configKey}")
     public AjaxResult getConfigKey(@PathVariable String configKey)
     {
-        return AjaxResult.success(configService.selectConfigByKey(configKey));
+        //return AjaxResult.success(configService.selectConfigByKey(configKey));
+        String configValue = configService.selectConfigByKey(configKey);
+        return AjaxResult.success("操作成功",configValue);
     }
 
 

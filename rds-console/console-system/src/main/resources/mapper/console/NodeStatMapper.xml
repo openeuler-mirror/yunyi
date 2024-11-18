@@ -199,4 +199,26 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <delete id="deleteByCreateTime" parameterType="Date">
         delete from cnsl_node_stat where create_time &lt;= #{createTime}
     </delete>
+
+    <select id="selectNodeStatGroup" parameterType="com.tongtech.console.domain.vo.RdsNodeStatQueryVo" resultMap="NodeStatResult">
+        SELECT node_id,
+        round(avg(current_connections)) AS current_connections,
+        round(avg(current_keys)) AS current_keys,
+        round(avg(memory_used)) AS memory_used,
+        round(avg(memory_free)) AS memory_free,
+        round(avg(memory_total)) AS memory_total,
+        round(avg(memory_available)) AS memory_available,
+        round(avg(input_per_second),1) AS input_per_second,
+        round(avg(output_per_second),1) AS output_per_second,
+        round(avg(cpu_process_load),1) AS cpu_process_load,
+        round(avg(cpu_system_load),1) AS cpu_system_load,
+        min(create_second) AS create_second
+        FROM cnsl_node_stat
+        WHERE service_id = #{serviceId}
+        AND create_second &gt; #{beginCreateSecond}
+        <if test="endCreateSecond != null">
+            AND create_second &lt;= #{endCreateSecond}
+        </if>
+        AND expired=0 GROUP BY node_id,DATE_FORMAT(FROM_UNIXTIME(create_second),#{interval.groupTimeFormater})
+    </select>
 </mapper>

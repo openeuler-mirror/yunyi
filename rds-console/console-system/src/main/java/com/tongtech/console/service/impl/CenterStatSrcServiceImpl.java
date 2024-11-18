@@ -49,6 +49,7 @@ public class CenterStatSrcServiceImpl implements CenterStatSrcService
      * 获取最后一次插入的srcId;
      * @return
      */
+    @Override
     public Long selectLastSrcId() {
         return centerStatSrcMapper.selectLastSrcId();
     }

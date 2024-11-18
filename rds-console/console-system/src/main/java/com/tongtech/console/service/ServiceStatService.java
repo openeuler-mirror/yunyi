@@ -3,6 +3,8 @@ package com.tongtech.console.service;
 import java.util.List;
 
 import com.tongtech.console.domain.vo.RdsMonitorQueryVo;
+import com.tongtech.console.domain.vo.RdsNodeStatQueryVo;
+import com.tongtech.console.domain.vo.ServiceNodeStatVo;
 import com.tongtech.console.domain.vo.ServiceStatVo;
 import com.tongtech.console.domain.ServiceStat;
 
@@ -65,4 +67,6 @@ public interface ServiceStatService
      */
     public int deleteServiceStatByStatId(Long statId);
 
+
+    ServiceNodeStatVo selectServiceNodeStatGroup(RdsNodeStatQueryVo queryVo);
 }

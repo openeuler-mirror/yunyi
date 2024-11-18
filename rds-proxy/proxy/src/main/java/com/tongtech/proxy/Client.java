@@ -272,7 +272,7 @@ public class Client {
 
     private static final Vector<String> splitString1(String src) {
         Vector<String> res = new Vector<>(1);
-        if (src == null || src == ""){
+        if (src.equals(null) || src.equals("")){
             return res;
         }
         //用来存取到的字符
@@ -311,75 +311,42 @@ public class Client {
     }
 
     private static final Vector<String> splitString(String src) {
-
-        Vector<String> spliter = new Vector<>();
-
-        if (src == null) {
-            return spliter;
+        Vector<String> res = new Vector<>(1);
+        if (src.equals(null) || src.equals("")){
+            return res;
         }
-
-        int begin = 0, end = 0;
-        int len = src != null ? src.length() : 0;
-        StringBuilder buf = new StringBuilder(128);
-
-        //for (int i = 0; i < max; i++) {
-        char seperater = ' ';
-        while (true) {
-            // 跳过连续找到非空格的第一个字符
-            begin = end;// 不能加1，否则src的第一个字符可能会被漏掉
-            while (begin < len) {
-                if (seperater == ' ' && (src.charAt(begin) == '"' || src.charAt(begin) == '\'')) {
-                    seperater = src.charAt(begin);
-                    begin++;
-                    break;
-                } else if (src.charAt(begin) != seperater) {
-                    break;
-                }
-                begin++;
+        //用来存取到的字符
+        char c1;
+        //定义一个变量来储存分隔符
+        char sep = ' ';
+        //用来临时存储取到的字符
+        String str = new String();
+        //判断是否有单双引号
+        boolean flagdan = false;
+        boolean flagshuang = false;
+        for (int i = 0;i<src.length();i++){
+            c1 = src.charAt(i);
+            if (c1 == '\'' && flagshuang == false){
+                flagdan = !flagdan;
+            } else if (c1 == '"' && flagdan == false) {
+                flagshuang = !flagshuang;
             }
 
-            // 找到下1个分隔字符
-            end = begin;
-            boolean shift = false;
-            buf.setLength(0);
-            if (end < len) {
-                while (end < len) {
-                    char b = src.charAt(end);
-                    if (shift) {
-                        // 被转义的字符
-                        // \r 系统内有特殊用途
-                        if (b == 'r') {
-                            // "\\r"
-                            buf.append('\r');
-                        } else if (b == 'x' || b == 'X') {
-                            // 例如："\x0d"
-                            buf.append('\\');
-                            buf.append(b);
-                        } else {
-                            buf.append(b);
-                        }
-                        shift = false;
-                    } else if (b == '\\') {
-                        // 转义符
-                        shift = true;
-                    } else if (b == seperater) {
-                        if (seperater != ' ') {
-                            seperater = ' ';
-                            end++;
-                        }
-                        break;
-                    } else {
-                        buf.append(b);
-                    }
-                    end++;
+            if (c1 == sep){
+                //判断这个空格是否在单双引号内
+                if (flagdan == true || flagshuang == true){
+                    str += Character.toString(c1);
+                }else {
+                    res.add(str);
+                    str = "";
                 }
-                spliter.add(buf.toString());
-            }
-            if (end >= len) {
-                break;
+            }else {
+                str += Character.toString(c1);
             }
         }
-        return spliter;
+        res.add(str);
+
+        return res;
     }
 
     /**
