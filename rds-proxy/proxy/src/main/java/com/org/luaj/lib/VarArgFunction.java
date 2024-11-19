@@ -25,7 +25,7 @@ import com.org.luaj.LuaThread;
 import com.org.luaj.LuaValue;
 import com.org.luaj.Varargs;
 
-/** Abstract base class for Java function implementations that takes varaiable arguments and 
+/** Abstract base class for Java function implementations that takes variable arguments and 
  * returns multiple return values. 
  * <p>
  * Subclasses need only implement {@link LuaValue#invoke(Varargs)} to complete this class,
