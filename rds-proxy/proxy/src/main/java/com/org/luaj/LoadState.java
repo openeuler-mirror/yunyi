@@ -148,7 +148,7 @@ public class LoadState {
 	
 	
 	/** Load a 4-byte int value from the input stream
-	 * @return the int value laoded.  
+	 * @return the int value loaded.  
 	 **/
 	int loadInt() throws IOException {
 		is.readFully(buf,0,4);
@@ -158,7 +158,7 @@ public class LoadState {
 	}
 	
 	/** Load an array of int values from the input stream
-	 * @return the array of int values laoded.  
+	 * @return the array of int values loaded.  
 	 **/
 	int[] loadIntArray() throws IOException {
 		int n = loadInt();
@@ -180,7 +180,7 @@ public class LoadState {
 	}
 	
 	/** Load a long  value from the input stream
-	 * @return the long value laoded.  
+	 * @return the long value loaded.  
 	 **/
 	long loadInt64() throws IOException {
 		int a,b;
@@ -195,7 +195,7 @@ public class LoadState {
 	}
 
 	/** Load a lua strin gvalue from the input stream
-	 * @return the {@link LuaString} value laoded.  
+	 * @return the {@link LuaString} value loaded.  
 	 **/
 	LuaString loadString() throws IOException {
 		int size = this.luacSizeofSizeT == 8? (int) loadInt64(): loadInt();
