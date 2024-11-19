@@ -134,7 +134,7 @@ public class RdsClientController extends BaseController {
     public AjaxResult keyList(@RequestBody RdsVo rdsVo) {
         try (JedisDataClient jedisClient = selectClientDB(rdsVo)) {
             ScanParams params = new ScanParams();
-            if (rdsVo.getKey().equals("")) {
+            if (StringUtils.isEmpty(rdsVo.getKey())) {
                 params.match("*");
             } else {
                 if (rdsVo.getKeyPatternPrecise()) {
