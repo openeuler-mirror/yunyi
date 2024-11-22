@@ -158,7 +158,7 @@ public class LuaThread extends LuaValue {
 
 	/**
 	 * Get the currently running thread. 
-	 * @return {@link LuaThread} that is currenly running
+	 * @return {@link LuaThread} that is currently running
 	 */
 	public static LuaThread getRunning() {
 		return running_thread;
