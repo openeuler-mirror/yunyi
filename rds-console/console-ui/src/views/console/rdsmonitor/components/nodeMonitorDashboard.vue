@@ -1,7 +1,11 @@
 <template>
   <div class="uhry-wrapper">
     <div class="uhry-chart-wrapper">
-      <div class="uhry-chart" :id="echart.elementId" :style="{width: chartStyle,height:'200px'}"></div>
+      <div
+        class="uhry-chart"
+        :id="echart.elementId"
+        :style="{ width: chartStyle, height: '200px' }"
+      ></div>
     </div>
   </div>
 </template>
@@ -9,8 +13,8 @@
 <script>
 import * as echarts from 'echarts';
 export default {
-  components:{},
-  props:{
+  components: {},
+  props: {
     echart: Object,
     chartWidth: Number
   },
@@ -24,13 +28,13 @@ export default {
       this.eventRefreshEcharts()
     }
   },
-  data(){
+  data() {
     return {
       chart: undefined,
       chartStyle: ''
     }
   },
-  methods:{
+  methods: {
     //刷新图表
     eventRefreshEcharts: function () {
       if (this.chart === undefined) {
@@ -38,7 +42,7 @@ export default {
         this.chart = echarts.init(dom)
       }
       let option = {
-        
+
         color: ['#409EFF'],
         grid: {
           right: 10,
@@ -47,8 +51,8 @@ export default {
           containLabel: true
         },
         tooltip: {
-    trigger: 'axis'
-  },
+          trigger: 'axis'
+        },
         title: {
           text: this.echart.title,
           textStyle: {
@@ -95,16 +99,15 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-  .uhry-wrapper {
+.uhry-wrapper {
+  .uhry-chart-wrapper {
+    padding: 10px;
+    border: solid 1px rgb(102, 177, 255);
+    border-radius: 5px;
 
-    .uhry-chart-wrapper {
-      padding: 10px;
-      border: solid 1px rgb(102, 177, 255);
-      border-radius: 5px;
-
-      .uhry-chart {
-        height: 350px;
-      }
+    .uhry-chart {
+      height: 350px;
     }
   }
+}
 </style>
