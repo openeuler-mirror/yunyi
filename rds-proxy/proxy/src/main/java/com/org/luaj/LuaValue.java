@@ -77,7 +77,7 @@ import com.org.luaj.lib.jse.JsePlatform;
  * globals.get("require").call(LuaValue.valueOf("main"));
  * } </pre>
  * For this to work the file must be in the current directory, or in the class path,
- * dependening on the platform.
+ * depending on the platform.
  * See {@link JsePlatform} and {@link JmePlatform} for details.
  * <p>
  * In general a {@link LuaError} may be thrown on any operation when the
@@ -1899,9 +1899,9 @@ public class LuaValue extends Varargs {
     }
 
     /**
-     * Get the environemnt for an instance.
+     * Get the environment for an instance.
      *
-     * @return {@link LuaValue} currently set as the instances environent.
+     * @return {@link LuaValue} currently set as the instances environment.
      */
     public LuaValue getfenv() {
         typerror("function or thread");
