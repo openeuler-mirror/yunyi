@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
+
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -74,12 +76,12 @@ public class SysDictTypeServiceImpl implements ISysDictTypeService
     public List<SysDictData> selectDictDataByType(String dictType)
     {
         List<SysDictData> dictDatas = DictUtils.getDictCache(dictType);
-        if (StringUtils.isNotEmpty(dictDatas))
+        if (!CollectionUtils.isEmpty(dictDatas))
         {
             return dictDatas;
         }
         dictDatas = dictDataMapper.selectDictDataByType(dictType);
-        if (StringUtils.isNotEmpty(dictDatas))
+        if (!CollectionUtils.isEmpty(dictDatas))
         {
             DictUtils.setDictCache(dictType, dictDatas);
             return dictDatas;
