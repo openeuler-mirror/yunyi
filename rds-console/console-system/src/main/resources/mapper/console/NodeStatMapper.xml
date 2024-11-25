@@ -219,6 +219,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <if test="endCreateSecond != null">
             AND create_second &lt;= #{endCreateSecond}
         </if>
-        AND expired=0 GROUP BY node_id,DATE_FORMAT(FROM_UNIXTIME(create_second),#{interval.groupTimeFormater})
+        AND expired=0 GROUP BY node_id
     </select>
 </mapper>
