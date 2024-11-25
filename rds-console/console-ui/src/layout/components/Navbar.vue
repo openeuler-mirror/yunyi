@@ -2,20 +2,12 @@
   <div class="navbar">
     <hamburger id="hamburger-container" :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
 
-    <breadcrumb id="breadcrumb-container" class="breadcrumb-container" v-if="!topNav"/>
-    <top-nav id="topmenu-container" class="topmenu-container" v-if="topNav"/>
+    <breadcrumb v-if="!topNav" id="breadcrumb-container" class="breadcrumb-container" />
+    <top-nav v-if="topNav" id="topmenu-container" class="topmenu-container" />
 
     <div class="right-menu">
       <template v-if="device!=='mobile'">
         <search id="header-search" class="right-menu-item" />
-        
-        <el-tooltip content="源码地址" effect="dark" placement="bottom">
-          <ruo-yi-git id="ruoyi-git" class="right-menu-item hover-effect" />
-        </el-tooltip>
-
-        <el-tooltip content="文档地址" effect="dark" placement="bottom">
-          <ruo-yi-doc id="ruoyi-doc" class="right-menu-item hover-effect" />
-        </el-tooltip>
 
         <screenfull id="screenfull" class="right-menu-item hover-effect" />
 
@@ -39,6 +31,19 @@
           </el-dropdown-item>
           <el-dropdown-item divided @click.native="logout">
             <span>退出登录</span>
+          </el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
+      <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click" @command="handleCommand">
+        <span class="el-dropdown-link">
+          {{ language }}<i class="el-icon-arrow-down el-icon--right" />
+        </span>
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item command="zh">
+            <span>中文</span>
+          </el-dropdown-item>
+          <el-dropdown-item command="en">
+            <span>英文</span>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
@@ -89,6 +94,11 @@ export default {
       get() {
         return this.$store.state.settings.topNav
       }
+    },
+    language: {
+      get() {
+        return localStorage.getItem('lang') === 'en' ? '英文' : '中文'
+      }
     }
   },
   methods: {
@@ -102,9 +112,13 @@ export default {
         type: 'warning'
       }).then(() => {
         this.$store.dispatch('LogOut').then(() => {
-          location.href = '/index';
+          location.href = '/index'
         })
-      }).catch(() => {});
+      }).catch(() => {})
+    },
+    handleCommand(command) {
+      localStorage.setItem('lang', command)
+      location.reload()
     }
   }
 }

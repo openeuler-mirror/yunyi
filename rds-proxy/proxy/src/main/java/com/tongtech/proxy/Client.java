@@ -80,60 +80,25 @@ public class Client {
 //        argv = new String[]{"get", "aaa"};
 
         List<String> commands = new ArrayList<>();
+        Map<String, String> map = parseArgv(argv);
 
-        for (int i = 0; i < argv.length; i++) {
-            if ("-h".equalsIgnoreCase(argv[i])
-                    || "--host".equalsIgnoreCase(argv[i])) {
-                if (i + 1 < argv.length) {
-                    host = argv[++i];
-                } else {
-                    System.out.println("invalid parameter -h");
-                    Usage();
-                }
-            } else if ("-p".equalsIgnoreCase(argv[i])
-                    || "--port".equalsIgnoreCase(argv[i])) {
-                try {
-                    port = Integer.parseInt(argv[++i]);
-                } catch (Exception e) {
-                    System.out.println("invalid parameter -p: " + e.getMessage());
-                    Usage();
-                }
-            } else if ("-u".equalsIgnoreCase(argv[i])
-                    || "--user".equalsIgnoreCase(argv[i])) {
-                if (i + 1 < argv.length) {
-                    username = argv[++i];
-                } else {
-                    System.out.println("invalid parameter -u");
-                    Usage();
-                }
-            } else if ("-a".equalsIgnoreCase(argv[i])) {
-                if (i + 1 < argv.length) {
-                    passwd = argv[++i];
-                } else {
-                    System.out.println("invalid parameter -a");
-                    Usage();
-                }
-            } else if ("-s".equalsIgnoreCase(argv[i])
-                    || "--secure".equalsIgnoreCase(argv[i])) {
-                is_secure = true;
-            } else if ("-r".equalsIgnoreCase(argv[i])
-                    || "--redis".equalsIgnoreCase(argv[i])) {
-                redis_wrapper = true;
-            } else if ("-c".equalsIgnoreCase(argv[i])
-                    || "--cluster".equalsIgnoreCase(argv[i])) {
-                redis_wrapper = true;
-                cluster = true;
-            } else if ("--help".equalsIgnoreCase(argv[i])) {
-                Usage();
-            } else {
-                if (!argv[i].startsWith("-")) {
-                    commands.add(argv[i]);
-                } else {
-                    System.out.println("Unknow parament: " + argv[i]);
-                    Usage();
-                }
-            }
+        if (argv.length == 0 || "--help".equals(argv[0])) {
+            Usage();
+            return;
         }
+        host = map.getOrDefault("h", map.getOrDefault("host", "127.0.0.1"));
+        try {
+            port = Integer.valueOf(map.getOrDefault("p", map.getOrDefault("port", "6379")));
+        } catch (Exception e) {
+            port = 6379;
+        }
+        username = map.getOrDefault("u", map.getOrDefault("user", ""));
+        passwd = map.getOrDefault("a", "");
+        is_secure = Boolean.parseBoolean(map.getOrDefault("s", map.getOrDefault("secure", "")));
+        redis_wrapper = Boolean.parseBoolean(map.getOrDefault("r", map.getOrDefault("redis", "")));
+        cluster = Boolean.parseBoolean(map.getOrDefault("c", map.getOrDefault("cluster", "")));
+
+
 
         final Socket socket = createConnection(host, port);
         InetSocketAddress address = (InetSocketAddress) socket.getRemoteSocketAddress();

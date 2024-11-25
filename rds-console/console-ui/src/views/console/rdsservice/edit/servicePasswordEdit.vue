@@ -142,10 +142,12 @@ export default {
 
           this.loading = true;
           updateServicePassword(postData).then(response => {
-            this.$modal.msgSuccess("密码修改成功");
-            this.open = false;
-            this.$emit('transfer', this.form);
-            this.loading = false;
+            if (response.code == 200) {
+              this.$modal.msgSuccess("密码修改成功");
+              this.open = false;
+              this.$emit('transfer', this.form);
+              this.loading = false;
+            }
           });
 
         }

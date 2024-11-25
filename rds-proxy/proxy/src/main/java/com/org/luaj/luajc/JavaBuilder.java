@@ -96,7 +96,7 @@ public class JavaBuilder {
 	
 	
 	
-	// varable naming
+	// variable naming
 	private static final String PREFIX_CONSTANT     = "k";
 	private static final String PREFIX_UPVALUE      = "u";
 	private static final String PREFIX_PLAIN_SLOT   = "s";
