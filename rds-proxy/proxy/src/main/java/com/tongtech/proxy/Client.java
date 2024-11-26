@@ -235,45 +235,45 @@ public class Client {
         return params;
     }
 
-    private static final Vector<String> splitString1(String src) {
-        Vector<String> res = new Vector<>(1);
-        if (src.equals(null) || src.equals("")){
-            return res;
-        }
-        //用来存取到的字符
-        char c1;
-        //定义一个变量来储存分隔符
-        char sep = ' ';
-        //用来临时存储取到的字符
-        String str = new String();
-        //判断是否有单双引号
-        boolean flagdan = false;
-        boolean flagshuang = false;
-        for (int i = 0;i<src.length();i++){
-            c1 = src.charAt(i);
-            if (c1 == '\'' && flagshuang == false){
-                flagdan = !flagdan;
-            } else if (c1 == '"' && flagdan == false) {
-                flagshuang = !flagshuang;
-            }
-
-            if (c1 == sep){
-                //判断这个空格是否在单双引号内
-                if (flagdan == true || flagshuang == true){
-                    str += Character.toString(c1);
-                }else {
-                    res.add(str);
-                    str = "";
-                }
-            }else {
-                str += Character.toString(c1);
-            }
-        }
-        res.add(str);
-//        System.out.println(res);
-
-        return res;
-    }
+//    private static final Vector<String> splitString1(String src) {
+//        Vector<String> res = new Vector<>(1);
+//        if (src.equals(null) || src.equals("")){
+//            return res;
+//        }
+//        //用来存取到的字符
+//        char c1;
+//        //定义一个变量来储存分隔符
+//        char sep = ' ';
+//        //用来临时存储取到的字符
+//        String str = new String();
+//        //判断是否有单双引号
+//        boolean flagdan = false;
+//        boolean flagshuang = false;
+//        for (int i = 0;i<src.length();i++){
+//            c1 = src.charAt(i);
+//            if (c1 == '\'' && flagshuang == false){
+//                flagdan = !flagdan;
+//            } else if (c1 == '"' && flagdan == false) {
+//                flagshuang = !flagshuang;
+//            }
+//
+//            if (c1 == sep){
+//                //判断这个空格是否在单双引号内
+//                if (flagdan == true || flagshuang == true){
+//                    str += Character.toString(c1);
+//                }else {
+//                    res.add(str);
+//                    str = "";
+//                }
+//            }else {
+//                str += Character.toString(c1);
+//            }
+//        }
+//        res.add(str);
+////        System.out.println(res);
+//
+//        return res;
+//    }
 
     private static final Vector<String> splitString(String src) {
         Vector<String> res = new Vector<>(1);
@@ -522,19 +522,34 @@ public class Client {
                 }
                 return;
             } else {
+
                 StringBuilder buf = new StringBuilder();
-                int len = head != null ? head.length() : 0;
-                for (int i = 0; i < len; ++i) {
-                    buf.append(' ');
+                if (head != null) {
+                    buf.append(" ".repeat(head.length() + 1));
+                } else {
+                    buf.append(" ");
                 }
-                buf.append(' ');
-                for (int i = 0; i < list.size(); ++i) {
-                    if (i == 0) {
-                        printResp(list.get(i), prompt, " " + (i + 1) + ") ");
-                    } else {
-                        printResp(list.get(i), prompt, buf.toString() + (i + 1) + ") ");
+                for (int i = 0; i < list.size(); i++) {
+                    String prefix = String.format("%d) ", i + 1);
+                    if (i > 0) {
+                        prefix = buf.toString() + prefix;
                     }
+                    printResp(list.get(i), prompt, prefix);
                 }
+
+//                StringBuilder buf = new StringBuilder();
+//                int len = head != null ? head.length() : 0;
+//                for (int i = 0; i < len; ++i) {
+//                    buf.append(' ');
+//                }
+//                buf.append(' ');
+//                for (int i = 0; i < list.size(); ++i) {
+//                    if (i == 0) {
+//                        printResp(list.get(i), prompt, " " + (i + 1) + ") ");
+//                    } else {
+//                        printResp(list.get(i), prompt, buf.toString() + (i + 1) + ") ");
+//                    }
+//                }
             }
             return;
         } else/* if (resp instanceof String)*/ {
