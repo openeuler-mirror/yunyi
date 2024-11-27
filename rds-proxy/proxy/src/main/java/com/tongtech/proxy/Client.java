@@ -525,7 +525,9 @@ public class Client {
 
                 StringBuilder buf = new StringBuilder();
                 if (head != null) {
-                    buf.append(" ".repeat(head.length() + 1));
+                    for (int i = 0; i<head.length()+1;++i){
+                        buf.append(' ');
+                    }
                 } else {
                     buf.append(" ");
                 }
