@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import java.io.IOException;
 import java.util.*;
@@ -161,7 +162,7 @@ public class RdsCenterDataTask {
             List<RdsNode> nodes = nodeService.selectRdsNodesByServiceId(serv.getServiceId());
             Map<String, RdsNode> nodesMap = nodes.stream().collect(Collectors.toMap(RdsNode::getInstance, node -> node));
 
-            if(statServ.getNodes() != null) {
+            if(!CollectionUtils.isEmpty(statServ.getNodes())) {
                 List<StatWorkerNode> statWorkerNodes = statServ.getNodes().stream()
                         .filter(n->n.getExpired() == false).collect(Collectors.toList());
                 for(StatWorkerNode statNode : statWorkerNodes) {
@@ -191,7 +192,7 @@ public class RdsCenterDataTask {
             }
 
             //处理代理节点-如果存在
-            if(statServ.getProxies() != null) {
+            if(!CollectionUtils.isEmpty(statServ.getProxies())) {
                 List<StatProxyNode> statProxyNodes = statServ.getProxies().stream()
                         .filter(n -> n.getExpired() == false).collect(Collectors.toList());
                 if (statProxyNodes != null) {
