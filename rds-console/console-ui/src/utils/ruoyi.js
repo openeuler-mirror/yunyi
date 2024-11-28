@@ -6,25 +6,34 @@
  */
 
 // 日期格式化
-export function parseTime(time, pattern) {
-  if (arguments.length === 0 || !time) {
-    return null
-  }
-  const format = pattern || '{y}-{m}-{d} {h}:{i}:{s}'
-  let date
+export function parseTime(time, pattern = '{y}-{m}-{d} {h}:{i}:{s}') {
+  if (!time) return null;
+
+  let date;
+  
+  // 判断 time 的类型并进行转换
   if (typeof time === 'object') {
-    date = time
+    date = time;
   } else {
-    if ((typeof time === 'string') && (/^[0-9]+$/.test(time))) {
-      time = parseInt(time)
-    } else if (typeof time === 'string') {
-      time = time.replace(new RegExp(/-/gm), '/').replace('T', ' ').replace(new RegExp(/\.[\d]{3}/gm), '');
+    if (typeof time === 'string') {
+      if (/^\d+$/.test(time)) {
+        time = parseInt(time, 10);
+      } else {
+        time = time
+          .replace(/-/g, '/')
+          .replace('T', ' ')
+          .replace(/\.\d{3}/g, '');
+      }
     }
-    if ((typeof time === 'number') && (time.toString().length === 10)) {
-      time = time * 1000
+    if (typeof time === 'number' && time.toString().length === 10) {
+      time *= 1000;
     }
-    date = new Date(time)
+    date = new Date(time);
   }
+
+  if (isNaN(date.getTime())) return null; // 无效日期校验
+
+  // 格式化时间
   const formatObj = {
     y: date.getFullYear(),
     m: date.getMonth() + 1,
@@ -32,19 +41,16 @@ export function parseTime(time, pattern) {
     h: date.getHours(),
     i: date.getMinutes(),
     s: date.getSeconds(),
-    a: date.getDay()
-  }
-  const time_str = format.replace(/{(y|m|d|h|i|s|a)+}/g, (result, key) => {
-    let value = formatObj[key]
-    // Note: getDay() returns 0 on Sunday
-    if (key === 'a') { return ['日', '一', '二', '三', '四', '五', '六'][value] }
-    if (result.length > 0 && value < 10) {
-      value = '0' + value
-    }
-    return value || 0
-  })
-  return time_str
+    a: date.getDay(),
+  };
+
+  return pattern.replace(/{(y|m|d|h|i|s|a)+}/g, (match, key) => {
+    let value = formatObj[key];
+    if (key === 'a') return ['日', '一', '二', '三', '四', '五', '六'][value];
+    return value < 10 && match.length > 0 ? `0${value}` : value;
+  });
 }
+
 
 // 表单重置
 export function resetForm(refName) {
