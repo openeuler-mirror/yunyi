@@ -247,7 +247,7 @@ public class RdsCenterDataTask {
 
             //找到对应的哨兵服务，如果不存在就创建新的服务
             String serviceName = statSentinel.getGroup();
-            if(StringUtils.isNotEmpty(serviceName)) {
+            if(StringUtils.isNotBlank(serviceName)) {
                 serv = servService.selectServiceBy(serviceName);
                 if (serv == null) {
                     serv = new RdsService(serviceName, DeployModeEnum.SENTINEL, this.defaulVersion);
