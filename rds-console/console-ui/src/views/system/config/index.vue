@@ -295,19 +295,11 @@ export default {
     submitForm: function() {
       this.$refs['form'].validate(valid => {
         if (valid) {
-          if (this.form.configId !== undefined) {
-            updateConfig(this.form).then(response => {
-              this.$modal.msgSuccess(this.$t('dialog.editSuccess'))
-              this.open = false
-              this.getList()
-            })
-          } else {
-            addConfig(this.form).then(response => {
-              this.$modal.msgSuccess(this.$t('dialog.addSuccess'))
-              this.open = false
-              this.getList()
-            })
-          }
+          (!this.form.configId ? addConfig(this.form) : updateConfig(this.form)).then(response => {
+            this.$modal.msgSuccess(!this.form.configId ? this.$t('dialog.addSuccess') : this.$t('dialog.editSuccess'))
+            this.open = false
+            this.getList()
+          })
         }
       })
     },
