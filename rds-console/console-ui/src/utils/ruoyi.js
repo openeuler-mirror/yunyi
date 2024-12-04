@@ -141,19 +141,23 @@ export function praseStrEmpty(str) {
 
 // 数据合并
 export function mergeRecursive(source, target) {
-  for (var p in target) {
-    try {
-      if (target[p].constructor == Object) {
-        source[p] = mergeRecursive(source[p], target[p]);
+  if (!source || typeof source !== 'object') source = {};
+  if (!target || typeof target !== 'object') return source;
+
+  for (const key in target) {
+    if (Object.prototype.hasOwnProperty.call(target, key)) {
+      const targetValue = target[key];
+      const sourceValue = source[key];
+
+      if (targetValue && typeof targetValue === 'object' && !Array.isArray(targetValue)) {
+        source[key] = mergeRecursive(sourceValue, targetValue);
       } else {
-        source[p] = target[p];
+        source[key] = targetValue;
       }
-    } catch (e) {
-      source[p] = target[p];
     }
   }
   return source;
-};
+}
 
 /**
  * 构造树型结构数据
