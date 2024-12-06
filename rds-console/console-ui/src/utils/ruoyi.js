@@ -141,68 +141,73 @@ export function praseStrEmpty(str) {
 
 // 数据合并
 export function mergeRecursive(source, target) {
-  for (var p in target) {
-    try {
-      if (target[p].constructor == Object) {
-        source[p] = mergeRecursive(source[p], target[p]);
+  if (!source || typeof source !== 'object') source = {};
+  if (!target || typeof target !== 'object') return source;
+
+  for (const key in target) {
+    if (Object.prototype.hasOwnProperty.call(target, key)) {
+      const targetValue = target[key];
+      const sourceValue = source[key];
+
+      if (targetValue && typeof targetValue === 'object' && !Array.isArray(targetValue)) {
+        source[key] = mergeRecursive(sourceValue, targetValue);
       } else {
-        source[p] = target[p];
+        source[key] = targetValue;
       }
-    } catch (e) {
-      source[p] = target[p];
     }
   }
   return source;
-};
+}
 
 /**
  * 构造树型结构数据
- * @param {*} data 数据源
- * @param {*} id id字段 默认 'id'
- * @param {*} parentId 父节点字段 默认 'parentId'
- * @param {*} children 孩子节点字段 默认 'children'
+ * @param {Array} data 数据源
+ * @param {string} [id='id'] id字段
+ * @param {string} [parentId='parentId'] 父节点字段
+ * @param {string} [children='children'] 孩子节点字段
+ * @returns {Array} 树型结构数据
  */
-export function handleTree(data, id, parentId, children) {
-  let config = {
-    id: id || 'id',
-    parentId: parentId || 'parentId',
-    childrenList: children || 'children'
-  };
+export function handleTree(data, id = 'id', parentId = 'parentId', children = 'children') {
+  const config = { id, parentId, children };
+  const childrenListMap = new Map();
+  const nodeMap = new Map();
+  const tree = [];
 
-  var childrenListMap = {};
-  var nodeIds = {};
-  var tree = [];
+  // 构建节点映射和子节点映射
+  for (const item of data) {
+    const pid = item[config.parentId];
+    const itemId = item[config.id];
 
-  for (let d of data) {
-    let parentId = d[config.parentId];
-    if (childrenListMap[parentId] == null) {
-      childrenListMap[parentId] = [];
+    if (!childrenListMap.has(pid)) {
+      childrenListMap.set(pid, []);
     }
-    nodeIds[d[config.id]] = d;
-    childrenListMap[parentId].push(d);
+    childrenListMap.get(pid).push(item);
+    nodeMap.set(itemId, item);
   }
 
-  for (let d of data) {
-    let parentId = d[config.parentId];
-    if (nodeIds[parentId] == null) {
-      tree.push(d);
+  // 构造树的根节点
+  for (const item of data) {
+    const pid = item[config.parentId];
+    if (!nodeMap.has(pid)) {
+      tree.push(item);
     }
   }
 
-  for (let t of tree) {
-    adaptToChildrenList(t);
-  }
-
-  function adaptToChildrenList(o) {
-    if (childrenListMap[o[config.id]] !== null) {
-      o[config.childrenList] = childrenListMap[o[config.id]];
-    }
-    if (o[config.childrenList]) {
-      for (let c of o[config.childrenList]) {
-        adaptToChildrenList(c);
+  // 递归组装子节点
+  const buildTree = (node) => {
+    const nodeId = node[config.id];
+    if (childrenListMap.has(nodeId)) {
+      node[config.children] = childrenListMap.get(nodeId);
+      for (const child of node[config.children]) {
+        buildTree(child);
       }
     }
+  };
+
+  for (const rootNode of tree) {
+    buildTree(rootNode);
   }
+
   return tree;
 }
 
