@@ -448,17 +448,20 @@ public class Client {
         List<String> data = splitString(msg.trim());
         if (data.size() > 0) {
             String cmd = data.get(0).toLowerCase(Locale.ROOT);
-            if (AllNodesCmd.contains(cmd)) {
-                isClustercmd = true;
-            }
-            if (FirstNodesCmd.contains(cmd)) {
-                isFirstCmd = true;
-            }
-            if (UnExcapteCommands.contains(cmd)) {
-                NeedEscape = false;
-            } else {
-                NeedEscape = true;
-            }
+            isClustercmd = AllNodesCmd.contains(cmd);
+            isFirstCmd = FirstNodesCmd.contains(cmd);
+            NeedEscape = !UnExcapteCommands.contains(cmd);
+//            if (AllNodesCmd.contains(cmd)) {
+//                isClustercmd = true;
+//            }
+//            if (FirstNodesCmd.contains(cmd)) {
+//                isFirstCmd = true;
+//            }
+//            if (UnExcapteCommands.contains(cmd)) {
+//                NeedEscape = false;
+//            } else {
+//                NeedEscape = true;
+//            }
         }
         if (redis_wrapper) {
             StringBuilder buf = new StringBuilder();
