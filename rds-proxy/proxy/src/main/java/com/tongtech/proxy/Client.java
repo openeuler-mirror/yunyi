@@ -483,13 +483,19 @@ public class Client {
             msg = buf.toString();
         } else {
             if (msg != null) {
-                if (msg.indexOf("\\r") >= 0) {
-                    msg = msg.replace("\\r", "\r");
-                }
-                msg = msg.trim() + "\n";
+                msg = msg.replace("\\r", "\r");
+                msg = msg.trim() + System.lineSeparator();
             } else {
-                msg = "\\n";
+                msg = System.lineSeparator();
             }
+//            if (msg != null) {
+//                if (msg.indexOf("\\r") >= 0) {
+//                    msg = msg.replace("\\r", "\r");
+//                }
+//                msg = msg.trim() + "\n";
+//            } else {
+//                msg = "\\n";
+//            }
         }
         if (cluster && isClustercmd) {
             for (Socket s : Sockets.keySet()) {
