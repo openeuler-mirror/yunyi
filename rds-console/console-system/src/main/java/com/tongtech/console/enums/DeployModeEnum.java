@@ -36,7 +36,7 @@ public enum DeployModeEnum {
     }
 
     public static DeployModeEnum parse(String name) {
-        if(StringUtils.isNotEmpty(name)) {
+        if(StringUtils.isNotBlank(name)) {
             String iName = name.trim().toLowerCase();
             if (SINGLE.name.equals(iName) || SINGLE.name2.equals(iName)) {
                 return SINGLE;
