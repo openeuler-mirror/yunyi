@@ -178,23 +178,16 @@ export function objectMerge(target, source) {
 }
 
 /**
- * @param {HTMLElement} element
- * @param {string} className
+ * 切换指定 HTML 元素的类名。
+ * 如果类名存在，则移除；如果类名不存在，则添加。
+ * @param {HTMLElement} element - 目标元素。
+ * @param {string} className - 需要切换的类名。
  */
 export function toggleClass(element, className) {
   if (!element || !className) {
-    return
+    return;
   }
-  let classString = element.className
-  const nameIndex = classString.indexOf(className)
-  if (nameIndex === -1) {
-    classString += '' + className
-  } else {
-    classString =
-      classString.substr(0, nameIndex) +
-      classString.substr(nameIndex + className.length)
-  }
-  element.className = classString
+  element.classList.toggle(className);
 }
 
 /**
