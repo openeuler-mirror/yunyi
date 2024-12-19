@@ -191,14 +191,24 @@ export function toggleClass(element, className) {
 }
 
 /**
- * @param {string} type
- * @returns {Date}
+ * 根据指定类型返回时间：
+ * - type 为 'start'：返回当前时间往前推 90 天的时间戳。
+ * - 其他情况：返回当天零点的时间对象。
+ *
+ * @param {string} type - 时间类型 ('start' 或其他)
+ * @returns {Date} 返回特定时间的 `Date` 对象
  */
 export function getTime(type) {
+  const now = new Date(); // 当前时间
+
   if (type === 'start') {
-    return new Date().getTime() - 3600 * 1000 * 24 * 90
+    // 90 天前的时间戳
+    const ninetyDaysAgo = now.getTime() - 3600 * 1000 * 24 * 90;
+    return new Date(ninetyDaysAgo); // 返回日期对象
   } else {
-    return new Date(new Date().toDateString())
+    // 当天零点时间
+    const todayStart = new Date(now.toDateString());
+    return todayStart;
   }
 }
 
