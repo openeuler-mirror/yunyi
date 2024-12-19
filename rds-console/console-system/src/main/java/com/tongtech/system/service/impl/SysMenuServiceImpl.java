@@ -92,7 +92,7 @@ public class SysMenuServiceImpl implements ISysMenuService
         Set<String> permsSet = new HashSet<>();
         for (String perm : perms)
         {
-            if (StringUtils.isNotEmpty(perm))
+            if (StringUtils.isNotBlank(perm))
             {
                 permsSet.addAll(Arrays.asList(perm.trim().split(",")));
             }
@@ -113,7 +113,7 @@ public class SysMenuServiceImpl implements ISysMenuService
         Set<String> permsSet = new HashSet<>();
         for (String perm : perms)
         {
-            if (StringUtils.isNotEmpty(perm))
+            if (StringUtils.isNotBlank(perm))
             {
                 permsSet.addAll(Arrays.asList(perm.trim().split(",")));
             }
@@ -404,7 +404,7 @@ public class SysMenuServiceImpl implements ISysMenuService
     public String getComponent(SysMenu menu)
     {
         String component = UserConstants.LAYOUT;
-        if (StringUtils.isNotEmpty(menu.getComponent()) && !isMenuFrame(menu))
+        if (StringUtils.isNotBlank(menu.getComponent()) && !isMenuFrame(menu))
         {
             component = menu.getComponent();
         }
