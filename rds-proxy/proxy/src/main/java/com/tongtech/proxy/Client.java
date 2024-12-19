@@ -466,30 +466,47 @@ public class Client {
         if (redis_wrapper) {
             StringBuilder buf = new StringBuilder();
             buf.append('*').append(data.size()).append("\r\n");
+
             for (String s : data) {
-                int len = -1;
-                if (s != null) {
-                    if (s.length() == 0) {
-                        len = 0;
-                    } else {
-                        len = s.getBytes(StandardCharsets.UTF_8).length;
-                    }
+                if (s == null) {
+                    continue;
                 }
+                int len = s.isEmpty() ? 0 : s.getBytes(StandardCharsets.UTF_8).length;
                 buf.append('$').append(len).append("\r\n");
                 if (len >= 0) {
                     buf.append(s).append("\r\n");
                 }
             }
+//            for (String s : data) {
+//                int len = -1;
+//                if (s != null) {
+//                    if (s.length() == 0) {
+//                        len = 0;
+//                    } else {
+//                        len = s.getBytes(StandardCharsets.UTF_8).length;
+//                    }
+//                }
+//                buf.append('$').append(len).append("\r\n");
+//                if (len >= 0) {
+//                    buf.append(s).append("\r\n");
+//                }
+//            }
             msg = buf.toString();
         } else {
             if (msg != null) {
-                if (msg.indexOf("\\r") >= 0) {
-                    msg = msg.replace("\\r", "\r");
-                }
-                msg = msg.trim() + "\n";
+                msg = msg.replace("\\r", "\r");
+                msg = msg.trim() + System.lineSeparator();
             } else {
-                msg = "\\n";
+                msg = System.lineSeparator();
             }
+//            if (msg != null) {
+//                if (msg.indexOf("\\r") >= 0) {
+//                    msg = msg.replace("\\r", "\r");
+//                }
+//                msg = msg.trim() + "\n";
+//            } else {
+//                msg = "\\n";
+//            }
         }
         if (cluster && isClustercmd) {
             for (Socket s : Sockets.keySet()) {
