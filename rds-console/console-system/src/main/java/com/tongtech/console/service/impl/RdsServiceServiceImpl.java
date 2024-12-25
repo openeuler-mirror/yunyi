@@ -111,7 +111,7 @@ public class RdsServiceServiceImpl implements RdsServiceService
     public RestCenterClient getCenterClient(RdsService centerServ) {
         RestCenterClient centerClient = null;
         if(UhConsoleConfig.getDeployEnvEnum() == K8S) { //如果是K8S模式，通过中心服务中的地址来连接
-            if(StringUtils.isNotBlank(centerServ.getHostAddress()) && centerServ.getAdminPort() > 0) {
+            if(StringUtils.isNotEmpty(centerServ.getHostAddress()) && centerServ.getAdminPort() > 0) {
                 StringBuilder url = new StringBuilder(centerServ.getHostAddress().length() + 10);
                 url.append("http://").append(centerServ.getHostAddress().trim())
                         .append(':').append(centerServ.getAdminPort());
