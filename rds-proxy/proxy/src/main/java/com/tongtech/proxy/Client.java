@@ -446,11 +446,19 @@ public class Client {
         boolean isClustercmd = false;
         boolean isFirstCmd = false;
         List<String> data = splitString(msg.trim());
-        if (data.size() > 0) {
-            String cmd = data.get(0).toLowerCase(Locale.ROOT);
-            isClustercmd = AllNodesCmd.contains(cmd);
-            isFirstCmd = FirstNodesCmd.contains(cmd);
-            NeedEscape = !UnExcapteCommands.contains(cmd);
+        if (data.isEmpty()) {
+            return; // 提前返回，避免不必要的处理
+        }
+        String cmd = data.get(0).toLowerCase(Locale.ROOT);
+        isClustercmd = AllNodesCmd.contains(cmd);
+        isFirstCmd = FirstNodesCmd.contains(cmd);
+        NeedEscape = !UnExcapteCommands.contains(cmd);
+//        if (data.size() > 0) {
+//            String cmd = data.get(0).toLowerCase(Locale.ROOT);
+//            isClustercmd = AllNodesCmd.contains(cmd);
+//            isFirstCmd = FirstNodesCmd.contains(cmd);
+//            NeedEscape = !UnExcapteCommands.contains(cmd);
+//        }
 //            if (AllNodesCmd.contains(cmd)) {
 //                isClustercmd = true;
 //            }
@@ -462,7 +470,6 @@ public class Client {
 //            } else {
 //                NeedEscape = true;
 //            }
-        }
         if (redis_wrapper) {
             StringBuilder buf = new StringBuilder();
             buf.append('*').append(data.size()).append("\r\n");
