@@ -62,17 +62,32 @@ public class SysRoleServiceImpl implements ISysRoleService
     {
         List<SysRole> userRoles = roleMapper.selectRolePermissionByUserId(userId);
         List<SysRole> roles = selectRoleAll();
-        for (SysRole role : roles)
-        {
-            for (SysRole userRole : userRoles)
-            {
-                if (role.getRoleId().longValue() == userRole.getRoleId().longValue())
-                {
-                    role.setFlag(true);
-                    break;
-                }
+//        for (SysRole role : roles)
+//        {
+//            for (SysRole userRole : userRoles)
+//            {
+//                if (role.getRoleId().longValue() == userRole.getRoleId().longValue())
+//                {
+//                    role.setFlag(true);
+//                    break;
+//                }
+//            }
+//        }
+//        return roles;
+
+        // 使用 Set 来存储用户角色的 ID
+        Set<Long> userRoleIds = new HashSet<>();
+        for (SysRole userRole : userRoles) {
+            userRoleIds.add(userRole.getRoleId());
+        }
+
+        // 遍历所有角色，并检查其是否在用户角色ID集合中
+        for (SysRole role : roles) {
+            if (userRoleIds.contains(role.getRoleId())) {
+                role.setFlag(true);
             }
         }
+
         return roles;
     }
 
