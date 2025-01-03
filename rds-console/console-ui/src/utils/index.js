@@ -254,26 +254,52 @@ export function debounce(func, wait, immediate) {
 }
 
 /**
- * This is just a simple version of deep copy
- * Has a lot of edge cases bug
- * If you want to use a perfect deep copy, use lodash's _.cloneDeep
- * @param {Object} source
- * @returns {Object}
+ * A simple deep clone function that handles more edge cases.
+ * It still does not handle all possible cases, but is improved compared to the original.
+ * For a perfect deep clone, you should use lodash's _.cloneDeep.
+ * @param {any} source - The source to clone.
+ * @param {Map} map - Used to handle circular references.
+ * @returns {any} - The deep cloned object.
  */
-export function deepClone(source) {
-  if (!source && typeof source !== 'object') {
-    throw new Error('error arguments', 'deepClone')
+export function deepClone(source, map = new Map()) {
+  // Check for null or undefined
+  if (source === null || typeof source !== 'object') {
+    return source;
   }
-  const targetObj = source.constructor === Array ? [] : {}
-  Object.keys(source).forEach(keys => {
-    if (source[keys] && typeof source[keys] === 'object') {
-      targetObj[keys] = deepClone(source[keys])
-    } else {
-      targetObj[keys] = source[keys]
-    }
-  })
-  return targetObj
+
+  // If the value is already in the map, this means we're dealing with a circular reference
+  if (map.has(source)) {
+    return map.get(source);
+  }
+
+  // Create a new target based on the type of the source
+  let target;
+  if (Array.isArray(source)) {
+    target = [];
+  } else if (source instanceof Date) {
+    target = new Date(source);
+  } else if (source instanceof RegExp) {
+    target = new RegExp(source.source, source.flags);
+  } else if (source instanceof Set) {
+    target = new Set();
+  } else if (source instanceof Map) {
+    target = new Map();
+  } else {
+    target = {};
+  }
+
+  // Store the source object in the map to handle circular references
+  map.set(source, target);
+
+  // Recursively clone the properties
+  for (const key of Object.keys(source)) {
+    const value = source[key];
+    target[key] = deepClone(value, map);  // Recursively clone each property
+  }
+
+  return target;
 }
+
 
 /**
  * @param {Array} arr
