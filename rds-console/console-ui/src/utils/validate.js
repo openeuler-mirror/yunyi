@@ -185,3 +185,16 @@ export function getDiffProps(obj, otherObj, skipProps=['__ob__']) {
   }
   return changed;
 }
+
+/**
+ * 校验手机号是否符合格式
+ * @param {string} phone - 需要校验的手机号
+ * @param {RegExp} [regex] - 可选，自定义正则表达式，默认为中国大陆手机号规则
+ * @returns {boolean} 是否为有效手机号
+ */
+export function validatePhoneNumber(phone, regex = /^1[3-9]\d{9}$/) {
+  if (typeof phone !== 'string') {
+    throw new Error('参数必须是字符串');
+  }
+  return regex.test(phone);
+}
