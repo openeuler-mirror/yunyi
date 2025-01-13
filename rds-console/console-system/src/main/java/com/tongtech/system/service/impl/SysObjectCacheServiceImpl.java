@@ -75,7 +75,8 @@ public class SysObjectCacheServiceImpl implements SysObjectCacheService
         SysObjectCache c = sysObjectCacheMapper.selectSysObjectCacheByObjKey(key);
         long time = System.currentTimeMillis();
         if(c != null) {
-            if(c.getExpireTime() == null || c.getExpireTime() > time ) {
+            Long expireTime = c.getExpireTime();
+            if(expireTime == null || expireTime > time ) {
                 return (T)ObjectSerializeUtils.deserialize(c.getObjValue());
             }
             else {
@@ -83,9 +84,7 @@ public class SysObjectCacheServiceImpl implements SysObjectCacheService
                 return null;
             }
         }
-        else {
-            return null;
-        }
+        return null;
 
     }
 
