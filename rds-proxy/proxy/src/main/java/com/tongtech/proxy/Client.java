@@ -285,31 +285,60 @@ public class Client {
         //定义一个变量来储存分隔符
         char sep = ' ';
         //用来临时存储取到的字符
-        String str = new String();
+//        String str = new String();
+        StringBuilder str = new StringBuilder();
         //判断是否有单双引号
         boolean flagdan = false;
         boolean flagshuang = false;
-        for (int i = 0;i<src.length();i++){
+        for (int i = 0; i < src.length(); i++) {
             c1 = src.charAt(i);
-            if (c1 == '\'' && flagshuang == false){
+
+            // 处理引号
+            if (c1 == '\'') {
                 flagdan = !flagdan;
-            } else if (c1 == '"' && flagdan == false) {
+            } else if (c1 == '"') {
                 flagshuang = !flagshuang;
             }
 
-            if (c1 == sep){
-                //判断这个空格是否在单双引号内
-                if (flagdan == true || flagshuang == true){
-                    str += Character.toString(c1);
-                }else {
-                    res.add(str);
-                    str = "";
+            // 处理分隔符
+            if (c1 == sep) {
+                // 如果不在任何引号内，则分割字符串
+                if (!flagdan && !flagdan) {
+                    res.add(str.toString());
+                    str = new StringBuilder();
+                } else {
+                    str.append(c1);
                 }
-            }else {
-                str += Character.toString(c1);
+            } else {
+                str.append(c1);
             }
         }
-        res.add(str);
+
+        // 添加最后一个收集到的字符串（如果有）
+        if (str.length() > 0) {
+            res.add(str.toString());
+        }
+//        for (int i = 0;i<src.length();i++){
+//            c1 = src.charAt(i);
+//            if (c1 == '\'' && flagshuang == false){
+//                flagdan = !flagdan;
+//            } else if (c1 == '"' && flagdan == false) {
+//                flagshuang = !flagshuang;
+//            }
+//
+//            if (c1 == sep){
+//                //判断这个空格是否在单双引号内
+//                if (flagdan == true || flagshuang == true){
+//                    str += Character.toString(c1);
+//                }else {
+//                    res.add(str);
+//                    str = "";
+//                }
+//            }else {
+//                str += Character.toString(c1);
+//            }
+//        }
+//        res.add(str);
 
         return res;
     }
