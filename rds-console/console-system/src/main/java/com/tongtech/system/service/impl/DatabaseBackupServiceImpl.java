@@ -65,9 +65,17 @@ public class DatabaseBackupServiceImpl implements IDatabaseBackupService {
 
     @Override
     public List<File> cleanExpiredBackup(int maxHistory) {
-        File backDir = AppHomeConfig.getAbsoluteFile(AppHomeConfig.DATABASE_BACKUP_PATH);
-        File[] hisBackFiles = backDir.listFiles();
         List<File> deletedFiles = new ArrayList<File>();
+        File backDir = AppHomeConfig.getAbsoluteFile(AppHomeConfig.DATABASE_BACKUP_PATH);
+        if (!backDir.exists() || !backDir.isDirectory()) {
+            logger.warn("Backup directory does not exist or is not a directory. Directory=" + backDir.getAbsolutePath());
+            return deletedFiles;
+        }
+        File[] hisBackFiles = backDir.listFiles();
+        if (hisBackFiles == null) {
+            logger.warn("No backup files found in directory. Directory=" + backDir.getAbsolutePath());
+            return deletedFiles;
+        }
         for(File hisBackFile : hisBackFiles) {
             String hisFileName = hisBackFile.getName();
             String[] ns = hisFileName.split(SPLITER);
